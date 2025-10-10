@@ -5,8 +5,7 @@ import {
     Eye,
     Type,
     Contrast,
-    ChevronLeft,
-    ChevronRight,
+    MoreVertical,
     ZoomIn,
     ZoomOut,
     RotateCcw
@@ -58,7 +57,7 @@ function AccessibilityTray() {
 
     return (
         <div
-            className={`fixed right-0 top-1/2 -translate-y-1/2 bg-foreground shadow-2xl rounded-l-2xl transition-transform duration-200 ease-out z-50 will-change-transform ${isOpen ? "translate-x-0" : "translate-x-[calc(100%-48px)]"
+            className={`fixed right-0 top-1/2 -translate-y-1/2 bg-foreground shadow-2xl rounded-l-2xl transition-transform duration-200 ease-out z-50 will-change-transform ${isOpen ? "translate-x-0" : "translate-x-full"
                 }`}
             role="complementary"
             aria-label="Ferramentas de acessibilidade"
@@ -66,19 +65,15 @@ function AccessibilityTray() {
             {/* Toggle Button */}
             <button
                 onClick={toggleOpen}
-                className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-16 bg-accent hover:bg-accent/90 rounded-l-xl flex items-center justify-center transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-background"
+                className="absolute cursor-pointer -left-7 top-1/2 -translate-y-1/2 w-7 h-16 bg-accent hover:bg-accent/90 rounded-l-xl flex items-center justify-center transition-colors duration-150"
                 aria-label={isOpen ? "Fechar ferramentas de acessibilidade" : "Abrir ferramentas de acessibilidade"}
                 aria-expanded={isOpen}
             >
-                {isOpen ? (
-                    <ChevronRight className="w-6 h-6 text-background" />
-                ) : (
-                    <ChevronLeft className="w-6 h-6 text-background" />
-                )}
+                <MoreVertical className="w-6 h-6 text-background" />
             </button>
 
             {/* Tray Content */}
-            <div className="w-64 p-6 ml-12">
+            <div className="w-64 p-6">
                 <div className="flex items-center gap-2 mb-6">
                     <Eye className="w-5 h-5 text-accent" />
                     <h2 className="text-background text-lg font-semibold">
@@ -97,7 +92,7 @@ function AccessibilityTray() {
                             <button
                                 onClick={decreaseFontSize}
                                 disabled={fontSize <= 80}
-                                className="p-2 bg-accent hover:bg-accent/90 disabled:bg-accent/40 disabled:cursor-not-allowed rounded-lg transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-background"
+                                className="inline-block px-6 py-1 rounded-md transition-all hover:opacity-90 active:scale-95 bg-accent text-background border-2 border-accent disabled:opacity-40 disabled:cursor-not-allowed"
                                 aria-label="Diminuir tamanho do texto"
                             >
                                 <ZoomOut className="w-4 h-4 text-background" />
@@ -108,7 +103,7 @@ function AccessibilityTray() {
                             <button
                                 onClick={increaseFontSize}
                                 disabled={fontSize >= 150}
-                                className="p-2 bg-accent hover:bg-accent/90 disabled:bg-accent/40 disabled:cursor-not-allowed rounded-lg transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-background"
+                                className="inline-block px-6 py-1 rounded-md transition-all hover:opacity-90 active:scale-95 bg-accent text-background border-2 border-accent disabled:opacity-40 disabled:cursor-not-allowed"
                                 aria-label="Aumentar tamanho do texto"
                             >
                                 <ZoomIn className="w-4 h-4 text-background" />
@@ -124,10 +119,7 @@ function AccessibilityTray() {
                         </label>
                         <button
                             onClick={toggleHighContrast}
-                            className={`w-full p-3 rounded-lg transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-background ${highContrast
-                                    ? "bg-accent text-background"
-                                    : "bg-background/20 text-background hover:bg-background/30"
-                                }`}
+                            className="inline-block px-6 py-1 rounded-md transition-all hover:opacity-90 active:scale-95 bg-accent text-background border-2 border-accent w-full"
                             aria-pressed={highContrast}
                         >
                             {highContrast ? "Ativado" : "Desativado"}
@@ -142,10 +134,7 @@ function AccessibilityTray() {
                         </label>
                         <button
                             onClick={toggleGrayscale}
-                            className={`w-full p-3 rounded-lg transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-background ${grayscale
-                                    ? "bg-accent text-background"
-                                    : "bg-background/20 text-background hover:bg-background/30"
-                                }`}
+                            className="inline-block px-6 py-1 rounded-md transition-all hover:opacity-90 active:scale-95 bg-accent text-background border-2 border-accent w-full"
                             aria-pressed={grayscale}
                         >
                             {grayscale ? "Ativado" : "Desativado"}
@@ -155,11 +144,11 @@ function AccessibilityTray() {
                     {/* Reset Button */}
                     <button
                         onClick={resetSettings}
-                        className="w-full p-3 bg-background/20 hover:bg-background/30 text-background rounded-lg transition-colors duration-150 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-background"
+                        className="px-6 py-1 rounded-md transition-all hover:opacity-90 active:scale-95 bg-accent text-background border-2 border-accent w-full flex items-center justify-center gap-2"
                         aria-label="Restaurar configurações padrão"
                     >
                         <RotateCcw className="w-4 h-4" />
-                        Restaurar padrão
+                        Restaurar
                     </button>
                 </div>
             </div>
