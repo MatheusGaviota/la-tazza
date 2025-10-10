@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`${poppins.variable} ${alumniSans.variable} antialiased`}
+        className={`${poppins.variable} ${alumniSans.variable} antialiased pt-[92px]`}
       >
         <Navbar />
         {children}

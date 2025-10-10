@@ -16,7 +16,7 @@ export default function Navbar() {
     ];
 
     return (
-        <header className="w-full border-b bg-foreground">
+        <header className="fixed top-0 left-0 right-0 w-full border-b bg-foreground z-50">
             {/* barra superior pequena */}
             <div className="bg-accent h-7" aria-hidden />
 
