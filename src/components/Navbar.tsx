@@ -21,7 +21,7 @@ export default function Navbar() {
             <div className="bg-accent h-7" aria-hidden />
 
             <nav
-                className="max-w-[1200px] mx-auto px-4"
+                className="max-w-[1400px] mx-auto px-4"
                 aria-label="Navegação principal"
             >
                 <div className="flex items-center justify-between h-16">
@@ -50,7 +50,7 @@ export default function Navbar() {
                             <Button text="Login" href="/login" variant="accent" className="text-base px-6" />
                         </div>
                         <div className="hidden md:block">
-                            <Button text="Registro" href="/register" variant="ghost-accent" className="text-base px-6" />
+                            <Button text="Registro" href="/registro" variant="ghost-accent" className="text-base px-6" />
                         </div>
 
                         {/* mobile menu button */}
