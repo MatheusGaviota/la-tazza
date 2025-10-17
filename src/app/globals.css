@@ -11,6 +11,8 @@
   --color-background: var(--background);
   --color-accent: var(--accent);
   --color-foreground: var(--foreground);
+  --font-poppins: var(--font-poppins);
+  --font-alumni: var(--font-alumni);
 }
 
 /* @media (prefers-color-scheme: dark) {
