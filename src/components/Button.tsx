@@ -18,9 +18,9 @@ export default function Button({ text, href, variant = "accent", className = "" 
       : variant === "fore"
       ? "bg-foreground text-background border-2 border-foreground"
       : variant === "ghost-accent"
-      ? "bg-transparent text-background border-2 border-accent"
+      ? "bg-transparent text-accent border-2 border-accent"
       : variant === "ghost-fore"
-      ? "bg-transparent text-background border-2 border-foreground"
+      ? "bg-transparent text-foreground border-2 border-foreground"
       : ""
   const combinedClasses = `${baseClasses} ${variantClasses} ${className}`.trim();
 
