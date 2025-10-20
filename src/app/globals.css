@@ -27,3 +27,13 @@ body {
   color: var(--foreground);
   font-family: var(--font-poppins);
 }
+
+/* Ocultar scrollbar do carrossel */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
