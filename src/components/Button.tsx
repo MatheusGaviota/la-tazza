@@ -2,14 +2,13 @@ import Link from "next/link";
 
 type ButtonProps = {
   text: string;
-  href: string;
+  href?: string;
+  onClick?: () => void;
   variant?: "accent" | "fore" | "ghost-accent" | "ghost-fore" | "ghost";
   className?: string;
 };
 
-export default function Button({ text, href, variant = "accent", className = "" }: ButtonProps) {
-  const isExternal = /^(https?:|mailto:|tel:)/i.test(href);
-
+export default function Button({ text, href, onClick, variant = "accent", className = "" }: ButtonProps) {
   const baseClasses =
     "inline-block px-6 py-1 rounded-md transition-all hover:opacity-90 active:scale-95";
   const variantClasses =
@@ -24,6 +23,21 @@ export default function Button({ text, href, variant = "accent", className = "" 
       : ""
   const combinedClasses = `${baseClasses} ${variantClasses} ${className}`.trim();
 
+  // Se onClick for fornecido, renderiza um button
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        className={combinedClasses}
+      >
+        {text}
+      </button>
+    );
+  }
+
+  // Se href for externo, renderiza um link externo
+  const isExternal = href && /^(https?:|mailto:|tel:)/i.test(href);
   if (isExternal) {
     return (
       <a
@@ -37,8 +51,9 @@ export default function Button({ text, href, variant = "accent", className = "" 
     );
   }
 
+  // Caso contrário, renderiza um Link do Next.js
   return (
-    <Link href={href} className={combinedClasses}>
+    <Link href={href || "/"} className={combinedClasses}>
       {text}
     </Link>
   );
