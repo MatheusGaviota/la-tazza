@@ -6,7 +6,7 @@ import Button from './Button';
 const ASSETS = {
     background: 'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760125507/background-image_t09rja.png',
     coffeeGrains: 'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760930207/coffe-grains_bynu6v.png',
-    highlightElement: 'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760725664/coffe-cup-starbucks_mr5gcm.png',
+    highlightElement: 'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760982320/coffe-cup-starbucks_mr5gcm.png',
 } as const;
 
 // Animation styles
