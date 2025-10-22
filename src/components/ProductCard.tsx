@@ -15,7 +15,7 @@ export default function ProductCard({
     onAddToCart
 }: ProductCardProps) {
     return (
-        <article className="border-3 rounded-xl border-foreground overflow-hidden h-full flex flex-col">
+        <article className="border-2 rounded-xl border-foreground overflow-hidden h-full flex flex-col">
             <div className="relative w-full h-48 sm:h-56 md:h-64">
                 <Image
                     src={imageUrl}
