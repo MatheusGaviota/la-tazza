@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Poppins, Alumni_Sans } from "next/font/google";
 import "./globals.css";
 import "./high-contrast.css";
-import Navbar from "@/components/Navbar";
-import AccessibilityTray from "@/components/AccessibilityTray";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -30,10 +28,8 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`${poppins.variable} ${alumniSans.variable} antialiased pt-[92px]`}
+        className={`${poppins.variable} ${alumniSans.variable} antialiased`}
       >
-        <Navbar />
-        <AccessibilityTray />
         {children}
       </body>
     </html>
