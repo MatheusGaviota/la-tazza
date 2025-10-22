@@ -25,11 +25,11 @@ export default function ProductCard({
                     className="rounded-t-xl object-cover"
                 />
             </div>
-            <div className='p-4 sm:p-5 md:p-6 space-y-2 sm:space-y-3 flex-1 flex flex-col'>
-                <h3 className="font-alumni font-semibold text-3xl sm:text-4xl text-foreground text-center">
+            <div className='p-3 space-y-2 sm:space-y-3 flex-1 flex flex-col'>
+                <h3 className="font-alumni font-semibold text-2xl text-foreground text-center">
                 {title}
                 </h3>
-                <p className="text-center text-sm sm:text-base text-foreground flex-1">
+                <p className="text-center text-sm text-foreground flex-1">
                     {description}
                 </p>
                 <Button
