@@ -18,6 +18,8 @@ export default function Navbar() {
     return (
         <header className="fixed top-0 left-0 right-0 w-full border-b bg-foreground z-50">
             {/* barra superior pequena */}
+            {/* TODO: Adicionar links das redes sociais nesta barra superior */}
+            {/* TODO: Fazer barra superior diminuir de tamanho quando scroll ir para baixo */}
             <div className="bg-accent h-7" aria-hidden />
 
             <nav
@@ -52,6 +54,7 @@ export default function Navbar() {
                         <div className="hidden md:block">
                             <Button text="Registro" href="/registro" variant="ghost-accent" className="text-base px-6" />
                         </div>
+                        {/* TODO: Adicionar ícones de carrinho e perfil quando usuário estiver logado */}
 
                         {/* mobile menu button */}
                         <button
