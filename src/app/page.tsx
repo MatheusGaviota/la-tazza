@@ -1,9 +1,12 @@
+import Link from "next/link";
 import Hero from "@/components/Hero";
 import Carousel from "@/components/Carousel";
 import ProductCard from "@/components/ProductCard";
 import CourseCard from "@/components/CourseCard";
+import { ArrowRight } from "lucide-react";
 
 export default function Home() {
+  // TODO: Remover dados mocados dos produtos e buscar de uma API/banco de dados
   const products = [
     {
       imageUrl: "https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png",
@@ -27,6 +30,7 @@ export default function Home() {
     }
   ];
 
+  // TODO: Remover dados mocados dos cursos e buscar de uma API/banco de dados
   const courses = [
     {
       imageUrl: "https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png",
@@ -57,9 +61,15 @@ export default function Home() {
   return (
     <main>
       <Hero />
-      <section className="w-full max-w-[1400px] mx-auto flex flex-col items-center px-4 py-15">
-        <h2 className="font-alumni text-4xl sm:text-5xl md:text-6xl font-semibold text-foreground">Destaques</h2>
-        <p className="sm:text-center text-base sm:text-lg text-foreground max-w-185 mt-3">Confira nossos pacotes de grãos especiais e os cursos mais bem avaliados do momento, selecionados para quem busca qualidade e experiência.</p>
+      <section className="w-full max-w-[1400px] mx-auto flex flex-col items-center px-4 pt-15">
+        <h2 className="font-alumni text-4xl sm:text-5xl md:text-6xl font-semibold text-foreground">Grãos Premium Selecionados</h2>
+        <p className="sm:text-center text-base sm:text-lg text-foreground max-w-185 mt-3">Confira nossos pacotes de grãos especiais, selecionados para quem busca qualidade e experiência.</p>
+        <div className="w-full text-left sm:text-right mt-4 sm:mt-0 sm:order-last sm:mb-0 sm:mt-4">
+          {/* TODO: Trocar href para página de produtos após criação */}
+          <Link href="/" className="inline-flex items-center gap-2 text-foreground hover:text-accent transition-colors text-base sm:text-base font-medium">
+            Ver todos os produtos <ArrowRight size={18} />
+          </Link>
+        </div>
         <div className="mt-6 sm:mt-8 w-full">
           <Carousel 
             items={products.map((product, index) => (
@@ -72,6 +82,17 @@ export default function Home() {
             ))}
             desktopColumns={4}
           />
+        </div>
+      </section>
+
+      <section className="w-full max-w-[1400px] mx-auto flex flex-col items-center px-4 py-15">
+        <h2 className="font-alumni text-4xl sm:text-5xl md:text-6xl font-semibold text-foreground">Domine a Arte do Café</h2>
+        <p className="sm:text-center text-base sm:text-lg text-foreground max-w-185 mt-3">Conheça os cursos mais bem avaliados do momento, desenvolvidos para aprimorar suas habilidades no mundo do café.</p>
+        <div className="w-full text-left sm:text-right mt-4 sm:mt-0 sm:order-last sm:mb-0 sm:mt-4">
+          {/* TODO: Trocar href para página de cursos após criação */}
+          <Link href="/" className="inline-flex items-center gap-2 text-foreground hover:text-accent transition-colors text-base sm:text-base font-medium">
+            Ver todos os cursos <ArrowRight size={18} />
+          </Link>
         </div>
         <div className="mt-6 sm:mt-8 w-full">
           <Carousel 
