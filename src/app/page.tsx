@@ -101,9 +101,9 @@ export default function Home() {
         />
         <div className="w-full max-w-[1400px] mx-auto flex flex-col items-center px-4 py-15 relative z-10">
           <div className="grid grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-7 w-full">
-            <div className="bg-background rounded-md">OPA</div>
-            <div className="bg-accent rounded-md">OPA</div>
-            <div className="bg-background rounded-md">OPA</div>
+            <div className="bg-background rounded-md">TESTE</div>
+            <div className="bg-accent rounded-md">TESTE</div>
+            <div className="bg-background rounded-md">TESTE</div>
           </div>
         </div>
       </section>
