@@ -120,6 +120,7 @@ export default function Home() {
           }}
           aria-hidden="true"
         />
+        {/* Seção para apresentar planos do clube */}
         <div className="w-full max-w-[1400px] mx-auto flex flex-col items-center px-4 py-15 relative z-10">
           <div className="grid grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-7 w-full">
             <div className="bg-background rounded-md">TESTE</div>
@@ -128,6 +129,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* TODO: Adicionar seção com posts do blog */}
+      {/* TODO: Adicionar seção de avaliações de clientes */}
+      {/* TODO: Adicionar seção sobre a empresa/marca */}
     </main>
   );
 }
