@@ -30,11 +30,22 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`${poppins.variable} ${alumniSans.variable} antialiased pt-[92px]`}
+        className={`${poppins.variable} ${alumniSans.variable} antialiased`}
       >
+        <div 
+          id="grayscale-overlay" 
+          className="hidden fixed inset-0 pointer-events-none z-[9999]"
+          style={{ 
+            backdropFilter: 'grayscale(100%)',
+            WebkitBackdropFilter: 'grayscale(100%)'
+          }}
+          aria-hidden="true"
+        />
         <Navbar />
         <AccessibilityTray />
-        {children}
+        <main id="main-content" className="pt-[92px]">
+          {children}
+        </main>
       </body>
     </html>
   );

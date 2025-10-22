@@ -26,7 +26,10 @@ function AccessibilityTray() {
     }, [highContrast]);
 
     useEffect(() => {
-        document.body.style.filter = grayscale ? "grayscale(100%)" : "none";
+        const grayscaleOverlay = document.getElementById("grayscale-overlay");
+        if (grayscaleOverlay) {
+            grayscaleOverlay.style.display = grayscale ? "block" : "none";
+        }
     }, [grayscale]);
 
     const increaseFontSize = useCallback(() => {
