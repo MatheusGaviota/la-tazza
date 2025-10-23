@@ -1,21 +1,24 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Button from "../Button";
+import { useState } from 'react';
+import Button from '../Button';
 
 interface ProfilePhotoProps {
   userName: string;
   onPhotoChange?: (file: File) => void;
 }
 
-export default function ProfilePhoto({ userName, onPhotoChange }: ProfilePhotoProps) {
+export default function ProfilePhoto({
+  userName,
+  onPhotoChange,
+}: ProfilePhotoProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const getInitials = (name: string) => {
     return name
-      .split(" ")
+      .split(' ')
       .map((n) => n[0])
-      .join("")
+      .join('')
       .toUpperCase()
       .slice(0, 2);
   };
@@ -37,16 +40,20 @@ export default function ProfilePhoto({ userName, onPhotoChange }: ProfilePhotoPr
   };
 
   return (
-    <section className="rounded-lg border-2 border-foreground p-6 mb-6" aria-labelledby="profile-photo-title">
-      <h2 id="profile-photo-title" className="text-2xl font-semibold text-foreground mb-6">
+    <section
+      className="rounded-lg border-2 border-foreground p-6 mb-6"
+      aria-labelledby="profile-photo-title"
+    >
+      <h2
+        id="profile-photo-title"
+        className="text-2xl font-semibold text-foreground mb-6"
+      >
         Foto de Perfil
       </h2>
 
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
         {/* Avatar Container */}
-        <div
-          className="relative flex-shrink-0"
-        >
+        <div className="relative flex-shrink-0">
           {/* Avatar */}
           <div className="w-40 h-40 rounded-full border-4 border-accent overflow-hidden bg-accent/10 flex items-center justify-center">
             {previewUrl ? (
@@ -90,18 +97,20 @@ export default function ProfilePhoto({ userName, onPhotoChange }: ProfilePhotoPr
 
         {/* Info e Botões */}
         <div className="flex-1 text-center md:text-left">
-          <h3 className="text-xl font-semibold text-foreground mb-2">{userName}</h3>
+          <h3 className="text-xl font-semibold text-foreground mb-2">
+            {userName}
+          </h3>
           <p className="text-foreground/70 mb-6">
             {previewUrl
-              ? "Clique no ícone da câmera para mudar sua foto de perfil"
-              : "Adicione uma foto de perfil para personalizar sua conta"}
+              ? 'Clique no ícone da câmera para mudar sua foto de perfil'
+              : 'Adicione uma foto de perfil para personalizar sua conta'}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3">
             <label htmlFor="upload-button">
               <Button
-                text={previewUrl ? "Alterar Foto" : "Fazer Upload"}
-                onClick={() => document.getElementById("photo-upload")?.click()}
+                text={previewUrl ? 'Alterar Foto' : 'Fazer Upload'}
+                onClick={() => document.getElementById('photo-upload')?.click()}
                 variant="accent"
                 className="w-full sm:w-auto text-center"
               />
