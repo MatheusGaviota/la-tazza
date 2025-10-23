@@ -4,13 +4,13 @@ type ButtonProps = {
   text: string;
   href?: string;
   onClick?: () => void;
-  variant?: "accent" | "fore" | "ghost-accent" | "ghost-fore" | "ghost";
+  variant?: "accent" | "fore" | "ghost-accent" | "ghost-fore" | "ghost" | "danger";
   className?: string;
 };
 
 export default function Button({ text, href, onClick, variant = "accent", className = "" }: ButtonProps) {
   const baseClasses =
-    "inline-block px-6 py-1 rounded-md transition-all hover:opacity-90 active:scale-95";
+    "inline-block px-6 py-1 rounded-md transition-all hover:opacity-90 active:scale-95 cursor-pointer";
   const variantClasses =
     variant === "accent"
       ? "bg-accent text-background border-2 border-accent"
@@ -20,6 +20,8 @@ export default function Button({ text, href, onClick, variant = "accent", classN
       ? "bg-transparent text-accent border-2 border-accent"
       : variant === "ghost-fore"
       ? "bg-transparent text-foreground border-2 border-foreground"
+      : variant === "danger"
+      ? "bg-red-600 text-background border-2 border-red-600 hover:bg-red-700 hover:border-red-700"
       : ""
   const combinedClasses = `${baseClasses} ${variantClasses} ${className}`.trim();
 
