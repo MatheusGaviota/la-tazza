@@ -1,8 +1,8 @@
 /* High Contrast Mode */
 body.high-contrast {
-  --background: #FFFFFF;
+  --background: #ffffff;
   --foreground: #000000;
-  --accent: #0057FF;
+  --accent: #0057ff;
   background-color: var(--background);
   color: var(--foreground);
   filter: none !important;
@@ -10,23 +10,23 @@ body.high-contrast {
 
 /* Links */
 body.high-contrast a {
-  color: #0044FF;
+  color: #0044ff;
   text-decoration: underline;
 }
 
 body.high-contrast a:hover,
 body.high-contrast a:focus-visible {
-  color: #001E99;
+  color: #001e99;
 }
 
 /* Interactive Elements */
 body.high-contrast button,
-body.high-contrast [role="button"] {
+body.high-contrast [role='button'] {
   outline-color: var(--accent);
 }
 
 body.high-contrast button:focus-visible,
-body.high-contrast [role="button"]:focus-visible {
+body.high-contrast [role='button']:focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: 3px;
 }
@@ -38,14 +38,14 @@ body.high-contrast picture,
 body.high-contrast canvas,
 body.high-contrast svg,
 body.high-contrast [data-media],
-body.high-contrast [role="img"],
-body.high-contrast [style*="background-image"] {
+body.high-contrast [role='img'],
+body.high-contrast [style*='background-image'] {
   filter: grayscale(1) contrast(1.3) brightness(0.95) !important;
   opacity: 1 !important;
 }
 
 /* Preserve Transparency */
-body.high-contrast [style*="background-image"] {
+body.high-contrast [style*='background-image'] {
   background-color: transparent !important;
 }
 
