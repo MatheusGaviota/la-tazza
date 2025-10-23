@@ -1,25 +1,25 @@
-import type { Metadata } from "next";
-import { Poppins, Alumni_Sans } from "next/font/google";
-import "./globals.css";
-import "./high-contrast.css";
-import Navbar from "@/components/Navbar";
-import AccessibilityTray from "@/components/AccessibilityTray";
+import type { Metadata } from 'next';
+import { Poppins, Alumni_Sans } from 'next/font/google';
+import './globals.css';
+import './high-contrast.css';
+import Navbar from '@/components/Navbar';
+import AccessibilityTray from '@/components/AccessibilityTray';
 
 const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["100","200","300","400","500","600","700","800","900"],
+  variable: '--font-poppins',
+  subsets: ['latin'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
 });
 
 const alumniSans = Alumni_Sans({
-  variable: "--font-alumni",
-  subsets: ["latin"],
-  weight: ["100","200","300","400","500","600","700","800","900"],
+  variable: '--font-alumni',
+  subsets: ['latin'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
 });
 
 export const metadata: Metadata = {
-  title: "La Tazza",
-  description: "PLACEHOLDER",
+  title: 'La Tazza',
+  description: 'PLACEHOLDER',
 };
 
 export default function RootLayout({
@@ -32,12 +32,12 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} ${alumniSans.variable} antialiased`}
       >
-        <div 
-          id="grayscale-overlay" 
+        <div
+          id="grayscale-overlay"
           className="hidden fixed inset-0 pointer-events-none z-[9999]"
-          style={{ 
+          style={{
             backdropFilter: 'grayscale(100%)',
-            WebkitBackdropFilter: 'grayscale(100%)'
+            WebkitBackdropFilter: 'grayscale(100%)',
           }}
           aria-hidden="true"
         />
