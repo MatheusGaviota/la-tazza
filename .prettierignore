@@ -1,0 +1,31 @@
+# Dependências
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build output
+.next/
+out/
+dist/
+build/
+
+# Cache
+.turbo/
+.eslintcache
+
+# Arquivos de sistema
+.DS_Store
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Arquivos de configuração que não precisam formatação
+*.config.js
+*.config.ts
+next-env.d.ts
