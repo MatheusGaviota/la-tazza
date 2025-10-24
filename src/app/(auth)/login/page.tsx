@@ -54,7 +54,21 @@ export default function page() {
 
                         {/* Form */}
                         <form className="space-y-5">
-                            <h2 className="font-alumni text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground text-center">Login</h2>
+                            <h2 className="font-alumni text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground text-center">{isSignup ? 'Cadastro' : 'Login'}</h2>
+
+                            {isSignup && (
+                                <div>
+                                    <label htmlFor="name" className="sr-only">Nome</label>
+                                    <input
+                                        id="name"
+                                        type="text"
+                                        placeholder="Seu nome"
+                                        className="w-full px-4 py-3 border-2 border-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all text-sm sm:text-base"
+                                        required
+                                    />
+                                </div>
+                            )}
+
                             <div>
                                 <label htmlFor="email" className="sr-only">Email</label>
                                 <input
@@ -66,7 +80,7 @@ export default function page() {
                                 />
                             </div>
                             
-                            <div className="relative mb-2">
+                            <div className={`relative ${isSignup ? '' : 'mb-2'}`}>
                                 <label htmlFor="password" className="sr-only">Senha</label>
                                 <input
                                     id="password"
@@ -78,37 +92,56 @@ export default function page() {
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground transition-colors p-2"
+                                    className="absolute right-3 inset-y-0 flex items-center p-2 text-foreground/60 hover:text-foreground transition-colors"
                                     aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
                                 >
-                                    {showPassword ? (
-                                        <EyeOff className="w-5 h-5" />
-                                    ) : (
-                                        <Eye className="w-5 h-5" />
-                                    )}
+                                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
                             </div>
 
-                            <div className="flex justify-end">
-                                <a 
-                                    href="#" 
-                                    className="text-sm text-foreground hover:text-foreground hover:underline transition-colors"
-                                >
-                                    Esqueceu sua senha?
-                                </a>
-                            </div>
+                            {isSignup && (
+                                <div className="relative">
+                                    <label htmlFor="confirmPassword" className="sr-only">Confirmar senha</label>
+                                    <input
+                                        id="confirmPassword"
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        placeholder="Confirmar senha"
+                                        className="w-full px-4 py-3 pr-12 border-2 border-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all text-sm sm:text-base"
+                                        required
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        className="absolute right-3 inset-y-0 flex items-center p-2 text-foreground/60 hover:text-foreground transition-colors"
+                                        aria-label={showConfirmPassword ? "Esconder confirmação de senha" : "Mostrar confirmação de senha"}
+                                    >
+                                        {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                    </button>
+                                </div>
+                            )}
+
+                            {!isSignup && (
+                                <div className="flex justify-end">
+                                    <a 
+                                        href="#" 
+                                        className="text-sm text-foreground hover:text-foreground hover:underline transition-colors"
+                                    >
+                                        Esqueceu sua senha?
+                                    </a>
+                                </div>
+                            )}
 
                             <button
                                 type="submit"
                                 className="w-full bg-foreground text-background py-3 rounded-md font-semibold hover:bg-foreground transition-all hover:shadow-lg"
                             >
-                                Entrar
+                                {isSignup ? 'Criar conta' : 'Entrar'}
                             </button>
 
                             {/* Divider */}
                             <div className="flex items-center gap-4">
                                 <div className="flex-1 border-t border-foreground"></div>
-                                <span className="text-sm text-foreground">Ou se logue com</span>
+                                <span className="text-sm text-foreground">{isSignup ? 'Ou se cadastre com' : 'Ou se logue com'}</span>
                                 <div className="flex-1 border-t border-foreground"></div>
                             </div>
 
@@ -116,17 +149,21 @@ export default function page() {
                             <button
                                 type="button"
                                 className="w-full flex items-center justify-center gap-3 py-3 border-2 border-foreground/20 rounded-md hover:bg-accent/10 transition-all"
-                                aria-label="Login com Google"
+                                aria-label={isSignup ? "Cadastrar com Google" : "Login com Google"}
                             >
                                 <SocialIcon network="google" className="w-5 h-5 fill-foreground" />
-                                <span className="font-medium">Continuar com Google</span>
+                                <span className="font-medium">{isSignup ? 'Continuar com Google' : 'Continuar com Google'}</span>
                             </button>
                         </form>
 
-                    {/* Sign up link */}
+                    {/* Sign up / toggle link */}
                     <div className="pt-4">
                         <p className="text-center text-sm text-foreground/70">
-                            Não tem uma conta? <a href="#" className="font-semibold text-foreground hover:underline">Cadastre-se agora</a>
+                            {isSignup ? (
+                                <>Já tem uma conta? <button type="button" onClick={() => setIsSignup(false)} className="font-semibold text-foreground hover:underline">Faça login</button></>
+                            ) : (
+                                <>Não tem uma conta? <button type="button" onClick={() => setIsSignup(true)} className="font-semibold text-foreground hover:underline">Cadastre-se agora</button></>
+                            )}
                         </p>
                     </div>
                 </div>
