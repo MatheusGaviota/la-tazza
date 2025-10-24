@@ -16,6 +16,8 @@ const ASSETS = {
 
 export default function page() {
     const [showPassword, setShowPassword] = useState(false);
+    const [isSignup, setIsSignup] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const router = useRouter();
 
     return (
