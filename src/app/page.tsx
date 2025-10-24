@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import Carousel from "@/components/Carousel";
 import ProductCard from "@/components/ProductCard";
 import CourseCard from "@/components/CourseCard";
+import BlogCard from "@/components/BlogCard";
 import { ArrowRight } from "lucide-react";
 
 export default function Home() {
@@ -130,7 +131,49 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TODO: Adicionar seção com posts do blog */}
+      {/* Seção de Blog */}
+      <section className="w-full max-w-[1400px] mx-auto flex flex-col items-center px-4 py-15">
+        <h2 className="font-alumni text-4xl sm:text-5xl md:text-6xl font-semibold text-foreground">Histórias do Café</h2>
+        <p className="sm:text-center text-base sm:text-lg text-foreground max-w-185 mt-3">Descubra as últimas novidades, técnicas e inspirações do universo do café.</p>
+        <div className="w-full text-left sm:text-right mt-4 sm:order-last sm:mb-0 sm:mt-4">
+          <Link href="/blog" className="inline-flex items-center gap-2 text-foreground hover:text-accent transition-colors text-base sm:text-base font-medium">
+            Ver todos os posts <ArrowRight size={18} />
+          </Link>
+        </div>
+        <div className="mt-6 sm:mt-8 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <BlogCard
+            slug="arte-latte-para-iniciantes"
+            imageUrl="https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png"
+            title="Arte em Latte: Guia Completo para Iniciantes"
+            excerpt="Descubra os segredos por trás das belas criações de latte art e aprenda as técnicas fundamentais."
+            author="Maria Santos"
+            date="15 Out 2025"
+            readTime="8 min"
+            category="Técnicas"
+          />
+          <BlogCard
+            slug="historia-do-cafe-brasileiro"
+            imageUrl="https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png"
+            title="A História do Café Brasileiro"
+            excerpt="Uma viagem pela rica história do café no Brasil, desde sua chegada até se tornar um dos maiores produtores."
+            author="João Silva"
+            date="12 Out 2025"
+            readTime="12 min"
+            category="História"
+          />
+          <BlogCard
+            slug="receitas-de-cafe-gelado"
+            imageUrl="https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png"
+            title="5 Receitas Refrescantes de Café Gelado"
+            excerpt="Receitas práticas e deliciosas para os dias quentes, do clássico cold brew às criações mais modernas."
+            author="Pedro Oliveira"
+            date="8 Out 2025"
+            readTime="10 min"
+            category="Receitas"
+          />
+        </div>
+      </section>
+
       {/* TODO: Adicionar seção de avaliações de clientes */}
       {/* TODO: Adicionar seção sobre a empresa/marca */}
     </main>
