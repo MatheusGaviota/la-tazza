@@ -11,6 +11,7 @@ export default function Navbar() {
     { label: 'Início', href: '/' },
     { label: 'Produtos', href: '/produtos' },
     { label: 'Cursos', href: '/cursos' },
+    { label: 'Blog', href: '/blog' },
     { label: 'Lojas', href: '/lojas' },
     { label: 'Clube', href: '/clube' },
   ];
@@ -52,14 +53,6 @@ export default function Navbar() {
                 text="Login"
                 href="/login"
                 variant="accent"
-                className="text-base px-6"
-              />
-            </div>
-            <div className="hidden md:block">
-              <Button
-                text="Registro"
-                href="/registro"
-                variant="ghost-accent"
                 className="text-base px-6"
               />
             </div>
@@ -122,14 +115,6 @@ export default function Navbar() {
                   text="Login"
                   href="/login"
                   variant="accent"
-                  className="w-full text-center"
-                />
-              </li>
-              <li>
-                <Button
-                  text="Registro"
-                  href="/register"
-                  variant="ghost-accent"
                   className="w-full text-center"
                 />
               </li>
