@@ -8,7 +8,14 @@ export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [categoryFilter, setCategoryFilter] = useState('Todas');
 
-  const categories = ['Todas', 'Produtos', 'Cursos', 'Pedidos', 'Pagamento', 'Entrega'];
+  const categories = [
+    'Todas',
+    'Produtos',
+    'Cursos',
+    'Pedidos',
+    'Pagamento',
+    'Entrega',
+  ];
 
   const faqs = [
     {
@@ -98,7 +105,8 @@ export default function FAQPage() {
   ];
 
   const filteredFaqs = faqs.filter((faq) => {
-    const matchesCategory = categoryFilter === 'Todas' || faq.category === categoryFilter;
+    const matchesCategory =
+      categoryFilter === 'Todas' || faq.category === categoryFilter;
     const matchesSearch =
       faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
       faq.answer.toLowerCase().includes(searchTerm.toLowerCase());
@@ -176,8 +184,8 @@ export default function FAQPage() {
         {filteredFaqs.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-foreground/60 text-lg">
-              Nenhuma pergunta encontrada. Tente outros termos de busca ou entre em
-              contato conosco.
+              Nenhuma pergunta encontrada. Tente outros termos de busca ou entre
+              em contato conosco.
             </p>
           </div>
         ) : (
@@ -226,8 +234,8 @@ export default function FAQPage() {
             Ainda tem dúvidas?
           </h2>
           <p className="text-foreground/70 mb-6">
-            Nossa equipe está pronta para ajudar! Entre em contato e teremos prazer
-            em responder suas perguntas.
+            Nossa equipe está pronta para ajudar! Entre em contato e teremos
+            prazer em responder suas perguntas.
           </p>
           <a
             href="/contato"

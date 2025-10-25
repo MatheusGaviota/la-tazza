@@ -1,6 +1,12 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
 
 export interface CartItem {
   id: string;
@@ -50,7 +56,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const addItem = (newItem: Omit<CartItem, 'quantity'>) => {
     setItems((currentItems) => {
       const existingItem = currentItems.find((item) => item.id === newItem.id);
-      
+
       if (existingItem) {
         return currentItems.map((item) =>
           item.id === newItem.id
@@ -58,7 +64,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             : item
         );
       }
-      
+
       return [...currentItems, { ...newItem, quantity: 1 }];
     });
   };
@@ -72,7 +78,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeItem(id);
       return;
     }
-    
+
     setItems((currentItems) =>
       currentItems.map((item) =>
         item.id === id ? { ...item, quantity } : item
@@ -85,7 +91,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalPrice = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
   return (
     <CartContext.Provider

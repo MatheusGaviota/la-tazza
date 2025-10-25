@@ -2,7 +2,18 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Calendar, Clock, User, ArrowLeft, Share2, Facebook, Twitter, Linkedin, MessageCircle, ChevronUp } from 'lucide-react';
+import {
+  Calendar,
+  Clock,
+  User,
+  ArrowLeft,
+  Share2,
+  Facebook,
+  Twitter,
+  Linkedin,
+  MessageCircle,
+  ChevronUp,
+} from 'lucide-react';
 import BlogCard from '@/components/Cards/BlogCard';
 import { useState, useEffect } from 'react';
 
@@ -26,14 +37,14 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
       // Detectar seção ativa para o índice
       const sections = document.querySelectorAll('h2[id]');
       let current = '';
-      
+
       sections.forEach((section) => {
         const sectionTop = (section as HTMLElement).offsetTop;
         if (window.scrollY >= sectionTop - 100) {
           current = section.id;
         }
       });
-      
+
       setActiveSection(current);
     };
 
@@ -51,13 +62,22 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 
     switch (platform) {
       case 'facebook':
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+        window.open(
+          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+          '_blank'
+        );
         break;
       case 'twitter':
-        window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`, '_blank');
+        window.open(
+          `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
+          '_blank'
+        );
         break;
       case 'linkedin':
-        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+        window.open(
+          `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+          '_blank'
+        );
         break;
       case 'copy':
         await navigator.clipboard.writeText(url);
@@ -472,8 +492,8 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
                     </span>
                   </div>
                   <p className="text-foreground/80 text-sm leading-relaxed">
-                    A dica de usar água e detergente para treinar é genial!
-                    Vou economizar muito café e leite praticando. Valeu!
+                    A dica de usar água e detergente para treinar é genial! Vou
+                    economizar muito café e leite praticando. Valeu!
                   </p>
                   <button className="text-sm text-accent hover:underline mt-2">
                     Responder

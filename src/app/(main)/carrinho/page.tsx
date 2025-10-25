@@ -1,17 +1,27 @@
 'use client';
 
 import { useCart } from '@/contexts/CartContext';
-import { ShoppingCart, Plus, Minus, Trash2, ArrowRight, ShoppingBag, Tag, Truck } from 'lucide-react';
+import {
+  ShoppingCart,
+  Plus,
+  Minus,
+  Trash2,
+  ArrowRight,
+  ShoppingBag,
+  Tag,
+  Truck,
+} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
 export default function CarrinhoPage() {
-  const { items, updateQuantity, removeItem, totalPrice, clearCart } = useCart();
+  const { items, updateQuantity, removeItem, totalPrice, clearCart } =
+    useCart();
   const [cupomCode, setCupomCode] = useState('');
   const [cupomAplicado, setCupomAplicado] = useState(false);
 
-  const frete = totalPrice > 150 ? 0 : 15.90;
+  const frete = totalPrice > 150 ? 0 : 15.9;
   const desconto = cupomAplicado ? totalPrice * 0.1 : 0;
   const total = totalPrice + frete - desconto;
 
@@ -122,7 +132,9 @@ export default function CarrinhoPage() {
                         </span>
                         <div className="flex items-center gap-2 border-2 border-accent/20 rounded-lg">
                           <button
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity - 1)
+                            }
                             className="p-2 hover:bg-accent/10 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent"
                             aria-label="Diminuir quantidade"
                           >
@@ -132,7 +144,9 @@ export default function CarrinhoPage() {
                             {item.quantity}
                           </span>
                           <button
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity + 1)
+                            }
                             className="p-2 hover:bg-accent/10 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent"
                             aria-label="Aumentar quantidade"
                           >
@@ -184,7 +198,10 @@ export default function CarrinhoPage() {
                         Aplicar Cupom
                       </button>
                       <p className="text-xs text-foreground/60">
-                        Experimente: <code className="bg-accent/10 px-1.5 py-0.5 rounded">LATAZZA10</code>
+                        Experimente:{' '}
+                        <code className="bg-accent/10 px-1.5 py-0.5 rounded">
+                          LATAZZA10
+                        </code>
                       </p>
                     </div>
                   ) : (

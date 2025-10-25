@@ -1,7 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Clock, Send, MessageSquare, Instagram, Facebook, Twitter } from 'lucide-react';
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Clock,
+  Send,
+  MessageSquare,
+  Instagram,
+  Facebook,
+  Twitter,
+} from 'lucide-react';
 
 export default function ContatoPage() {
   const [formData, setFormData] = useState({
@@ -16,7 +26,9 @@ export default function ContatoPage() {
   const [enviado, setEnviado] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };

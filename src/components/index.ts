@@ -2,10 +2,16 @@
 export { Navbar, Footer } from './Layout';
 
 // UI components
-export { Button, Toast, Carousel, AccessibilityTray } from './UI';
+export { Button, Toast, Carousel, AccessibilityTray, SocialIcon } from './UI';
 
 // Card components
-export { BlogCard, CourseCard, ProductCard } from './Cards';
+export {
+  BlogCard,
+  CourseCard,
+  ProductCard,
+  CourseDetailCard,
+  ReviewCard,
+} from './Cards';
 
 // Section components
 export { Hero } from './Sections';

@@ -12,7 +12,14 @@ interface CartDrawerProps {
 }
 
 export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
-  const { items, updateQuantity, removeItem, totalItems, totalPrice, clearCart } = useCart();
+  const {
+    items,
+    updateQuantity,
+    removeItem,
+    totalItems,
+    totalPrice,
+    clearCart,
+  } = useCart();
   const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
@@ -61,7 +68,10 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         <div className="flex items-center justify-between p-4 border-b-2 border-accent/20 bg-background sticky top-0 z-10">
           <div className="flex items-center gap-2">
             <ShoppingCart size={24} className="text-accent" />
-            <h2 id="cart-drawer-title" className="font-alumni text-2xl font-bold text-foreground">
+            <h2
+              id="cart-drawer-title"
+              className="font-alumni text-2xl font-bold text-foreground"
+            >
               Carrinho
             </h2>
             {totalItems > 0 && (
@@ -128,7 +138,9 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       <div className="flex items-center justify-between mt-auto">
                         <div className="flex items-center gap-2">
                           <button
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity - 1)
+                            }
                             className="p-1 rounded hover:bg-accent/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
                             aria-label="Diminuir quantidade"
                           >
@@ -138,7 +150,9 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                             {item.quantity}
                           </span>
                           <button
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity + 1)
+                            }
                             className="p-1 rounded hover:bg-accent/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
                             aria-label="Aumentar quantidade"
                           >

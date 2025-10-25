@@ -1,0 +1,29 @@
+import type { Metadata } from 'next';
+import Navbar from '@/components/Layout/Navbar';
+import Footer from '@/components/Layout/Footer';
+import AccessibilityTray from '@/components/UI/AccessibilityTray';
+import { CartProvider } from '@/contexts/CartContext';
+
+export const metadata: Metadata = {
+  title: 'La Tazza',
+  description: 'PLACEHOLDER',
+};
+
+export default function MainLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <>
+      <CartProvider>
+        <Navbar />
+        <AccessibilityTray />
+        <main id="main-content" className="pt-[92px]">
+          {children}
+        </main>
+        <Footer />
+      </CartProvider>
+    </>
+  );
+}

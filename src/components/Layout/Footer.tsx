@@ -1,5 +1,13 @@
 import Link from 'next/link';
-import { Mail, Phone, MapPin, Instagram, Facebook, Twitter, Coffee } from 'lucide-react';
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Instagram,
+  Facebook,
+  Twitter,
+  Coffee,
+} from 'lucide-react';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -172,8 +180,8 @@ export default function Footer() {
 
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-1.5">
-                Feito com <span className="text-accent">♥</span> para amantes de
-                café
+                Feito com <span className="text-accent">♥</span> para amantes
+                de café
               </span>
             </div>
           </div>

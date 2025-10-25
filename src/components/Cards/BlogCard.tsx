@@ -61,7 +61,9 @@ export default function BlogCard({
         <div className={`p-4 ${featured ? 'md:p-6' : ''}`}>
           <h3
             className={`font-alumni font-semibold text-foreground mb-2 line-clamp-2 group-hover:text-accent transition-colors ${
-              featured ? 'text-2xl md:text-3xl lg:text-4xl' : 'text-xl md:text-2xl'
+              featured
+                ? 'text-2xl md:text-3xl lg:text-4xl'
+                : 'text-xl md:text-2xl'
             }`}
           >
             {title}
@@ -69,7 +71,9 @@ export default function BlogCard({
 
           <p
             className={`text-foreground/70 mb-4 ${
-              featured ? 'text-base md:text-lg line-clamp-3' : 'text-sm line-clamp-2'
+              featured
+                ? 'text-base md:text-lg line-clamp-3'
+                : 'text-sm line-clamp-2'
             }`}
           >
             {excerpt}
