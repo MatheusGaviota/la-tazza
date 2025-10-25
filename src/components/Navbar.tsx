@@ -2,10 +2,15 @@
 
 import Link from 'next/link';
 import Button from './Button';
+import CartDrawer from './CartDrawer';
+import { useCart } from '@/contexts/CartContext';
 import { useState } from 'react';
+import { ShoppingCart } from 'lucide-react';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+  const { totalItems } = useCart();
 
   const navItems = [
     { label: 'Início', href: '/' },
@@ -47,7 +52,21 @@ export default function Navbar() {
                 </li>
               ))}
             </ul>
-            <div className="hidden md:block">
+            <div className="hidden md:flex items-center gap-3">
+              {/* Cart Icon */}
+              <button
+                onClick={() => setCartOpen(true)}
+                className="relative p-2 rounded-full hover:bg-accent/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
+                aria-label={`Carrinho com ${totalItems} ${totalItems === 1 ? 'item' : 'itens'}`}
+              >
+                <ShoppingCart size={24} className="text-background" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent text-background text-xs font-bold rounded-full flex items-center justify-center">
+                    {totalItems > 9 ? '9+' : totalItems}
+                  </span>
+                )}
+              </button>
+
               <Button
                 text="Login"
                 href="/login"
@@ -55,7 +74,7 @@ export default function Navbar() {
                 className="text-base px-6"
               />
             </div>
-            {/* TODO: Adicionar ícones de carrinho e perfil quando usuário estiver logado */}
+            {/* TODO: Adicionar ícone de perfil quando usuário estiver logado */}
 
             {/* mobile menu button */}
             <button
@@ -110,6 +129,19 @@ export default function Navbar() {
                 </li>
               ))}
               <li className="pt-2">
+                <button
+                  onClick={() => setCartOpen(true)}
+                  className="w-full flex items-center justify-between px-2 py-2 rounded hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent"
+                >
+                  <span>Carrinho</span>
+                  {totalItems > 0 && (
+                    <span className="px-2 py-0.5 bg-accent text-background text-xs font-bold rounded-full">
+                      {totalItems}
+                    </span>
+                  )}
+                </button>
+              </li>
+              <li className="pt-2">
                 <Button
                   text="Login"
                   href="/login"
@@ -121,6 +153,9 @@ export default function Navbar() {
           </div>
         )}
       </nav>
+
+      {/* Cart Drawer */}
+      <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
     </header>
   );
 }
