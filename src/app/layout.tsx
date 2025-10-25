@@ -5,6 +5,7 @@ import './high-contrast.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AccessibilityTray from '@/components/AccessibilityTray';
+import { CartProvider } from '@/contexts/CartContext';
 
 const poppins = Poppins({
   variable: '--font-poppins',
@@ -33,21 +34,23 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} ${alumniSans.variable} antialiased`}
       >
-        <div
-          id="grayscale-overlay"
-          className="hidden fixed inset-0 pointer-events-none z-[9999]"
-          style={{
-            backdropFilter: 'grayscale(100%)',
-            WebkitBackdropFilter: 'grayscale(100%)',
-          }}
-          aria-hidden="true"
-        />
-        <Navbar />
-        <AccessibilityTray />
-        <main id="main-content" className="pt-[92px]">
-          {children}
-        </main>
-        <Footer />
+        <CartProvider>
+          <div
+            id="grayscale-overlay"
+            className="hidden fixed inset-0 pointer-events-none z-[9999]"
+            style={{
+              backdropFilter: 'grayscale(100%)',
+              WebkitBackdropFilter: 'grayscale(100%)',
+            }}
+            aria-hidden="true"
+          />
+          <Navbar />
+          <AccessibilityTray />
+          <main id="main-content" className="pt-[92px]">
+            {children}
+          </main>
+          <Footer />
+        </CartProvider>
       </body>
     </html>
   );
