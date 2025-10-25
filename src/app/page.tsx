@@ -10,24 +10,36 @@ export default function Home() {
   // TODO: Remover dados mocados dos produtos e buscar de uma API/banco de dados
   const products = [
     {
+      id: "1",
       imageUrl: "https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png",
       title: "Expresso Masterpiece",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      description: "Blend exclusivo de grãos arábica para um café intenso e encorpado.",
+      price: 45.90,
+      category: "Café Especial"
     },
     {
+      id: "2",
       imageUrl: "https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png",
-      title: "Expresso Masterpiece",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      title: "Blend Suave",
+      description: "Combinação equilibrada para um café suave e aromático.",
+      price: 39.90,
+      category: "Café Especial"
     },
     {
+      id: "3",
       imageUrl: "https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png",
-      title: "Expresso Masterpiece",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      title: "Origens Premium",
+      description: "Seleção de grãos de origem única para paladares exigentes.",
+      price: 59.90,
+      category: "Café Premium"
     },
     {
+      id: "4",
       imageUrl: "https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png",
-      title: "Expresso Masterpiece",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      title: "Café Orgânico",
+      description: "Café cultivado de forma sustentável, sem agrotóxicos.",
+      price: 52.90,
+      category: "Café Orgânico"
     }
   ];
 
@@ -73,12 +85,15 @@ export default function Home() {
         </div>
         <div className="mt-6 sm:mt-8 w-full">
           <Carousel 
-            items={products.map((product, index) => (
+            items={products.map((product) => (
               <ProductCard
-                key={index}
+                key={product.id}
+                id={product.id}
                 imageUrl={product.imageUrl}
                 title={product.title}
                 description={product.description}
+                price={product.price}
+                category={product.category}
               />
             ))}
             desktopColumns={4}
