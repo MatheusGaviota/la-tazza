@@ -12,8 +12,7 @@ export default function Navbar() {
     { label: 'Produtos', href: '/produtos' },
     { label: 'Cursos', href: '/cursos' },
     { label: 'Blog', href: '/blog' },
-    { label: 'Lojas', href: '/lojas' },
-    { label: 'Clube', href: '/clube' },
+    { label: 'Contato', href: '/contato' },
   ];
 
   return (
