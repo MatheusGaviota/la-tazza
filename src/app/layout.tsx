@@ -3,6 +3,7 @@ import { Poppins, Alumni_Sans } from 'next/font/google';
 import './globals.css';
 import './high-contrast.css';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import AccessibilityTray from '@/components/AccessibilityTray';
 
 const poppins = Poppins({
@@ -46,6 +47,7 @@ export default function RootLayout({
         <main id="main-content" className="pt-[92px]">
           {children}
         </main>
+        <Footer />
       </body>
     </html>
   );
