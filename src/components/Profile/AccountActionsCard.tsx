@@ -1,6 +1,6 @@
 'use client';
 
-import Button from '../Button';
+import Button from '../UI/Button';
 
 interface AccountActionsCardProps {
   onLogout: () => void;
