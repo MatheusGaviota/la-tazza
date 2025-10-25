@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import { Poppins, Alumni_Sans } from 'next/font/google';
 import './globals.css';
 import './high-contrast.css';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import AccessibilityTray from '@/components/AccessibilityTray';
+import Navbar from '@/components/Layout/Navbar';
+import Footer from '@/components/Layout/Footer';
+import AccessibilityTray from '@/components/UI/AccessibilityTray';
 import { CartProvider } from '@/contexts/CartContext';
 
 const poppins = Poppins({

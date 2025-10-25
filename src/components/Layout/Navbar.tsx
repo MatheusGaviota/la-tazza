@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import Button from './Button';
-import CartDrawer from './CartDrawer';
+import Button from '../UI/Button';
+import CartDrawer from '../Cart/CartDrawer';
 import { useCart } from '@/contexts/CartContext';
 import { useState } from 'react';
 import { ShoppingCart } from 'lucide-react';

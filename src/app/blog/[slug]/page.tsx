@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Calendar, Clock, User, ArrowLeft, Share2, Facebook, Twitter, Linkedin, MessageCircle, ChevronUp } from 'lucide-react';
-import BlogCard from '@/components/BlogCard';
+import BlogCard from '@/components/Cards/BlogCard';
 import { useState, useEffect } from 'react';
 
 interface BlogPostPageProps {

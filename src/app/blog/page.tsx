@@ -1,4 +1,4 @@
-import BlogCard from '@/components/BlogCard';
+import BlogCard from '@/components/Cards/BlogCard';
 import { Search } from 'lucide-react';
 
 export default function BlogPage() {

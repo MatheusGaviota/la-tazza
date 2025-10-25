@@ -1,9 +1,9 @@
 import Link from "next/link";
-import Hero from "@/components/Hero";
-import Carousel from "@/components/Carousel";
-import ProductCard from "@/components/ProductCard";
-import CourseCard from "@/components/CourseCard";
-import BlogCard from "@/components/BlogCard";
+import Hero from "@/components/Sections/Hero";
+import Carousel from "@/components/UI/Carousel";
+import ProductCard from "@/components/Cards/ProductCard";
+import CourseCard from "@/components/Cards/CourseCard";
+import BlogCard from "@/components/Cards/BlogCard";
 import { ArrowRight } from "lucide-react";
 
 export default function Home() {

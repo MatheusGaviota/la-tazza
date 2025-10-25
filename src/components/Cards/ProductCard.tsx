@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import AddToCartButton from './AddToCartButton';
+import AddToCartButton from '../Cart/AddToCartButton';
 
 interface ProductCardProps {
   id: string;
