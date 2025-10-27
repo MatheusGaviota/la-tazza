@@ -4,13 +4,15 @@ import Link from 'next/link';
 import Button from '../UI/Button';
 import CartDrawer from '../Cart/CartDrawer';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { useState } from 'react';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, User } from 'lucide-react';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const { totalItems } = useCart();
+  const { isAuthenticated } = useAuth();
 
   const navItems = [
     { label: 'Início', href: '/' },
@@ -67,14 +69,23 @@ export default function Navbar() {
                 )}
               </button>
 
-              <Button
-                text="Login"
-                href="/login"
-                variant="accent"
-                className="text-base px-6"
-              />
+              {isAuthenticated ? (
+                <Link
+                  href="/perfil"
+                  className="p-2 rounded-full hover:bg-accent/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
+                  aria-label="Ir para perfil"
+                >
+                  <User size={24} className="text-background" />
+                </Link>
+              ) : (
+                <Button
+                  text="Login"
+                  href="/login"
+                  variant="accent"
+                  className="text-base px-6"
+                />
+              )}
             </div>
-            {/* TODO: Adicionar ícone de perfil quando usuário estiver logado */}
 
             {/* mobile menu button */}
             <button
@@ -142,12 +153,23 @@ export default function Navbar() {
                 </button>
               </li>
               <li className="pt-2">
-                <Button
-                  text="Login"
-                  href="/login"
-                  variant="accent"
-                  className="w-full text-center"
-                />
+                {isAuthenticated ? (
+                  <Link
+                    href="/perfil"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-2 px-2 py-2 rounded hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent"
+                  >
+                    <User size={20} />
+                    <span>Perfil</span>
+                  </Link>
+                ) : (
+                  <Button
+                    text="Login"
+                    href="/login"
+                    variant="accent"
+                    className="w-full text-center"
+                  />
+                )}
               </li>
             </ul>
           </div>
