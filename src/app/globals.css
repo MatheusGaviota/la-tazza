@@ -66,3 +66,17 @@ body {
 .animate-spin {
   animation: spin 1s linear infinite;
 }
+
+/* Animação de shimmer para skeleton */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+}
