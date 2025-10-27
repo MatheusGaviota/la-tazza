@@ -12,6 +12,7 @@ import {
   Facebook,
   Twitter,
 } from 'lucide-react';
+import Input from '@/components/UI/Input';
 
 export default function ContatoPage() {
   const [formData, setFormData] = useState({
@@ -105,69 +106,48 @@ export default function ContatoPage() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Nome e Email */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor="nome"
-                      className="block text-sm font-medium text-foreground mb-2"
-                    >
-                      Nome Completo *
-                    </label>
-                    <input
-                      type="text"
-                      id="nome"
-                      name="nome"
-                      value={formData.nome}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 rounded-lg border-2 border-accent/20 bg-background text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all"
-                      placeholder="Seu nome"
-                    />
-                  </div>
+                  <Input
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    label="Nome Completo"
+                    value={formData.nome}
+                    onChange={handleChange}
+                    variant="accent"
+                    placeholder="Seu nome"
+                    required
+                  />
 
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium text-foreground mb-2"
-                    >
-                      E-mail *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 rounded-lg border-2 border-accent/20 bg-background text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all"
-                      placeholder="seu@email.com"
-                    />
-                  </div>
+                  <Input
+                    type="email"
+                    id="email"
+                    name="email"
+                    label="E-mail"
+                    value={formData.email}
+                    onChange={handleChange}
+                    variant="accent"
+                    placeholder="seu@email.com"
+                    required
+                  />
                 </div>
 
                 {/* Telefone e Assunto */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor="telefone"
-                      className="block text-sm font-medium text-foreground mb-2"
-                    >
-                      Telefone
-                    </label>
-                    <input
-                      type="tel"
-                      id="telefone"
-                      name="telefone"
-                      value={formData.telefone}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg border-2 border-accent/20 bg-background text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all"
-                      placeholder="(00) 00000-0000"
-                    />
-                  </div>
+                  <Input
+                    type="tel"
+                    id="telefone"
+                    name="telefone"
+                    label="Telefone"
+                    value={formData.telefone}
+                    onChange={handleChange}
+                    variant="accent"
+                    placeholder="(00) 00000-0000"
+                  />
 
                   <div>
                     <label
                       htmlFor="assunto"
-                      className="block text-sm font-medium text-foreground mb-2"
+                      className="block text-sm font-medium text-foreground/70 mb-2"
                     >
                       Assunto *
                     </label>
@@ -213,7 +193,7 @@ export default function ContatoPage() {
                 <button
                   type="submit"
                   disabled={enviando}
-                  className="w-full sm:w-auto px-8 py-3 bg-accent text-background rounded-lg font-medium hover:bg-accent/90 transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-8 py-3 bg-accent text-background rounded-lg font-medium hover:bg-accent/90 transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {enviando ? (
                     <>
