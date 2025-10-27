@@ -12,6 +12,7 @@ type ButtonProps = {
     | 'ghost'
     | 'danger';
   className?: string;
+  disabled?: boolean;
 };
 
 export default function Button({
@@ -20,28 +21,32 @@ export default function Button({
   onClick,
   variant = 'accent',
   className = '',
+  disabled = false,
 }: ButtonProps) {
   const baseClasses =
-    'inline-block px-6 py-1 rounded-md transition-all hover:opacity-90 active:scale-95 cursor-pointer';
+    'inline-block px-6 py-1 rounded-md transition-all hover:opacity-90 active:scale-95 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-0';
+  const disabledClasses = disabled
+    ? 'opacity-50 cursor-not-allowed pointer-events-none'
+    : '';
   const variantClasses =
     variant === 'accent'
-      ? 'bg-accent text-background border-2 border-accent'
+      ? 'bg-accent text-background border-2 border-accent focus:ring-accent'
       : variant === 'fore'
-        ? 'bg-foreground text-background border-2 border-foreground'
+        ? 'bg-foreground text-background border-2 border-foreground focus:ring-foreground'
         : variant === 'ghost-accent'
-          ? 'bg-transparent text-accent border-2 border-accent'
+          ? 'bg-transparent text-accent border-2 border-accent focus:ring-accent'
           : variant === 'ghost-fore'
-            ? 'bg-transparent text-foreground border-2 border-foreground'
+            ? 'bg-transparent text-foreground border-2 border-foreground focus:ring-foreground'
             : variant === 'danger'
-              ? 'bg-red-600 text-background border-2 border-red-600 hover:bg-red-700 hover:border-red-700'
+              ? 'bg-red-600 text-background border-2 border-red-600 hover:bg-red-700 hover:border-red-700 focus:ring-red-600'
               : '';
   const combinedClasses =
-    `${baseClasses} ${variantClasses} ${className}`.trim();
+    `${baseClasses} ${variantClasses} ${disabledClasses} ${className}`.trim();
 
   // Se onClick for fornecido, renderiza um button
   if (onClick) {
     return (
-      <button type="button" onClick={onClick} className={combinedClasses}>
+      <button type="button" onClick={onClick} className={combinedClasses} disabled={disabled}>
         {text}
       </button>
     );
