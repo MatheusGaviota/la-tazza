@@ -81,7 +81,6 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
         break;
       case 'copy':
         await navigator.clipboard.writeText(url);
-        alert('Link copiado para a área de transferência!');
         break;
     }
   };
@@ -407,7 +406,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
               <div className="flex justify-end mt-3">
                 <button
                   type="submit"
-                  className="px-6 py-2.5 bg-accent text-background rounded-lg font-medium hover:bg-accent/90 transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                  className="px-6 py-2.5 bg-accent text-background rounded-lg font-medium hover:bg-accent/90 transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0"
                 >
                   Publicar Comentário
                 </button>
@@ -523,7 +522,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 p-3 bg-accent text-background rounded-full shadow-lg hover:bg-accent/90 transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 z-50 animate-fade-in"
+          className="fixed bottom-6 right-6 p-3 bg-accent text-background rounded-full shadow-lg hover:bg-accent/90 transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0 z-50 animate-fade-in"
           aria-label="Voltar ao topo"
         >
           <ChevronUp size={24} />

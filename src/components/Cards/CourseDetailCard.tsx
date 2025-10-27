@@ -148,7 +148,7 @@ export default function CourseDetailCard({
               </div>
             </div>
             <button
-              className="px-6 py-3 bg-accent text-background rounded-lg font-medium hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 transition-all transform hover:scale-105 active:scale-95"
+              className="px-6 py-3 bg-accent text-background rounded-lg font-medium hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0 transition-all transform hover:scale-105 active:scale-95"
               aria-label={`Inscrever-se no curso ${title}`}
             >
               Ver mais

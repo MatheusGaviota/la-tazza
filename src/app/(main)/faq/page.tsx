@@ -168,7 +168,7 @@ export default function FAQPage() {
                     categoryFilter === category
                       ? 'bg-accent text-background hover:bg-accent/90'
                       : 'bg-background border-2 border-accent/20 text-foreground hover:border-accent hover:bg-accent/5'
-                  } focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2`}
+                  } focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0`}
                   aria-pressed={categoryFilter === category}
                 >
                   {category}
@@ -239,7 +239,7 @@ export default function FAQPage() {
           </p>
           <a
             href="/contato"
-            className="inline-block px-8 py-3 bg-accent text-background rounded-lg font-medium hover:bg-accent/90 transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+            className="inline-block px-8 py-3 bg-accent text-background rounded-lg font-medium hover:bg-accent/90 transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0"
           >
             Falar com a Equipe
           </a>

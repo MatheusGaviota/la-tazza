@@ -163,7 +163,7 @@ export default function Footer() {
               />
               <button
                 type="submit"
-                className="px-6 py-2.5 bg-accent text-foreground rounded-lg font-medium hover:bg-accent/90 transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-foreground whitespace-nowrap"
+                className="px-6 py-2.5 bg-accent text-foreground rounded-lg font-medium hover:bg-accent/90 transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0 whitespace-nowrap"
               >
                 Inscrever-se
               </button>
