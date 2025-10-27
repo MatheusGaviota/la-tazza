@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import Button from '../UI/Button';
+import Input from '../UI/Input';
 
 interface PersonalInfo {
   name: string;
   email: string;
   phone: string;
-  cpf: string;
   birthDate: string;
 }
 
@@ -103,12 +103,6 @@ export default function PersonalInfoCard({
           </div>
           <div>
             <dt className="block text-sm font-medium text-foreground/70 mb-1">
-              CPF
-            </dt>
-            <dd className="text-foreground font-medium">{userData.cpf || '-'}</dd>
-          </div>
-          <div>
-            <dt className="block text-sm font-medium text-foreground/70 mb-1">
               Data de Nascimento
             </dt>
             <dd className="text-foreground font-medium">
@@ -125,121 +119,64 @@ export default function PersonalInfoCard({
           aria-label="Formulário de edição de informações pessoais"
         >
           <div className="grid md:grid-cols-2 gap-4 mb-6">
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-foreground/70 mb-1"
-              >
-                Nome Completo <span aria-label="obrigatório">*</span>
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={editData.name}
-                onChange={(e) =>
-                  setEditData({ ...editData, name: e.target.value })
-                }
-                className="w-full px-3 py-2 border-2 border-accent/30 rounded-md focus:outline-none focus:ring-2 focus:ring-accent text-foreground"
-                required
-                minLength={3}
-                maxLength={100}
-                aria-required="true"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-foreground/70 mb-1"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={editData.email}
-                className="w-full px-3 py-2 border-2 border-accent/30 rounded-md bg-background/50 text-foreground/70 cursor-not-allowed"
-                disabled
-                title="O email não pode ser alterado"
-                aria-readonly="true"
-              />
-              <p className="text-xs text-foreground/50 mt-1" id="email-help">
-                O email não pode ser alterado
-              </p>
-            </div>
-            <div>
-              <label
-                htmlFor="phone"
-                className="block text-sm font-medium text-foreground/70 mb-1"
-              >
-                Telefone
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={editData.phone}
-                onChange={(e) =>
-                  setEditData({ ...editData, phone: e.target.value })
-                }
-                className="w-full px-3 py-2 border-2 border-accent/30 rounded-md focus:outline-none focus:ring-2 focus:ring-accent text-foreground"
-                placeholder="(XX) XXXXX-XXXX"
-                aria-describedby="phone-help"
-              />
-              <p className="text-xs text-foreground/50 mt-1" id="phone-help">
-                Formato: (XX) XXXXX-XXXX
-              </p>
-            </div>
-            <div>
-              <label
-                htmlFor="cpf"
-                className="block text-sm font-medium text-foreground/70 mb-1"
-              >
-                CPF
-              </label>
-              <input
-                type="text"
-                id="cpf"
-                name="cpf"
-                value={editData.cpf}
-                className="w-full px-3 py-2 border-2 border-accent/30 rounded-md bg-background/50 text-foreground/70 cursor-not-allowed"
-                disabled
-                title="O CPF não pode ser alterado"
-                aria-readonly="true"
-              />
-              <p className="text-xs text-foreground/50 mt-1" id="cpf-help">
-                O CPF não pode ser alterado
-              </p>
-            </div>
-            <div>
-              <label
-                htmlFor="birthDate"
-                className="block text-sm font-medium text-foreground/70 mb-1"
-              >
-                Data de Nascimento
-              </label>
-              <input
-                type="date"
-                id="birthDate"
-                name="birthDate"
-                value={editData.birthDate}
-                onChange={(e) =>
-                  setEditData({ ...editData, birthDate: e.target.value })
-                }
-                className="w-full px-3 py-2 border-2 border-accent/30 rounded-md focus:outline-none focus:ring-2 focus:ring-accent text-foreground"
-                max={new Date().toISOString().split('T')[0]}
-                aria-describedby="birthDate-help"
-              />
-              <p className="text-xs text-foreground/50 mt-1" id="birthDate-help">
-                Não pode ser uma data futura
-              </p>
-            </div>
+            <Input
+              type="text"
+              id="name"
+              name="name"
+              label="Nome Completo"
+              value={editData.name}
+              onChange={(e) =>
+                setEditData({ ...editData, name: e.target.value })
+              }
+              variant="accent"
+              required
+              minLength={3}
+              maxLength={100}
+            />
+
+            <Input
+              type="email"
+              id="email"
+              name="email"
+              label="Email"
+              value={editData.email}
+              variant="accent"
+              disabled
+              helpText="O email não pode ser alterado"
+            />
+
+            <Input
+              type="tel"
+              id="phone"
+              name="phone"
+              label="Telefone"
+              value={editData.phone}
+              onChange={(e) =>
+                setEditData({ ...editData, phone: e.target.value })
+              }
+              variant="accent"
+              placeholder="(XX) XXXXX-XXXX"
+              helpText="Formato: (XX) XXXXX-XXXX"
+            />
+
+            <Input
+              type="date"
+              id="birthDate"
+              name="birthDate"
+              label="Data de Nascimento"
+              value={editData.birthDate}
+              onChange={(e) =>
+                setEditData({ ...editData, birthDate: e.target.value })
+              }
+              variant="accent"
+              max={new Date().toISOString().split('T')[0]}
+              helpText="Não pode ser uma data futura"
+            />
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               type="submit"
-              className="px-6 py-2 bg-accent text-background font-semibold rounded-md hover:bg-accent/90 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+              className="px-6 py-2 bg-accent text-background font-semibold rounded-md hover:bg-accent/90 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0"
               aria-label="Salvar alterações nas informações pessoais"
             >
               Salvar Alterações
@@ -247,7 +184,7 @@ export default function PersonalInfoCard({
             <button
               type="button"
               onClick={handleCancel}
-              className="px-6 py-2 text-foreground font-semibold rounded-md hover:bg-foreground/10 transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2"
+              className="px-6 py-2 text-foreground font-semibold rounded-md hover:bg-foreground/10 transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-0"
               aria-label="Cancelar edição"
             >
               Cancelar

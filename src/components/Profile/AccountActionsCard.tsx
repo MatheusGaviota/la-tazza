@@ -12,19 +12,11 @@ export default function AccountActionsCard({
   onDeleteAccount,
 }: AccountActionsCardProps) {
   const handleLogout = () => {
-    if (confirm('Deseja realmente sair da sua conta?')) {
-      onLogout();
-    }
+    onLogout();
   };
 
   const handleDelete = () => {
-    if (
-      confirm(
-        'Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.'
-      )
-    ) {
-      onDeleteAccount();
-    }
+    onDeleteAccount();
   };
 
   return (
