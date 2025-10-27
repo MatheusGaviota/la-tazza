@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import AccessibilityTray from '@/components/UI/AccessibilityTray';
 
 export const metadata: Metadata = {
-  title: 'La Tazza - Autenticação',
+  title: 'Autenticação - La Tazza',
   description: 'Login e registro de usuários',
 };
 
