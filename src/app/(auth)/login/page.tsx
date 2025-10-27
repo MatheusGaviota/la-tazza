@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import SocialIcon from '@/components/UI/SocialIcon';
@@ -37,7 +37,7 @@ const initialFormState: FormState = {
 
 export default function LoginPage() {
   const router = useRouter();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, loading } = useAuth();
 
   const [isSignup, setIsSignup] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -48,12 +48,6 @@ export default function LoginPage() {
   const [showResetForm, setShowResetForm] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
   const [resetSuccess, setResetSuccess] = useState(false);
-
-  // Redirecionar se já autenticado
-  if (isAuthenticated && user) {
-    router.push('/');
-    return null;
-  }
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,6 +145,31 @@ export default function LoginPage() {
     [resetEmail]
   );
 
+  /**
+   * IMPORTANTE: Redirecionar APENAS dentro de useEffect para evitar
+   * o erro "Cannot update a component while rendering a different component"
+   * Nunca fazer router.push() diretamente no corpo do componente
+   */
+  useEffect(() => {
+    if (!loading && isAuthenticated && user) {
+      router.push('/');
+    }
+  }, [isAuthenticated, user, loading, router]);
+
+  // Mostrar loading enquanto verifica autenticação
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
+  // Não renderizar o formulário se já estiver autenticado
+  if (isAuthenticated && user) {
+    return null;
+  }
+
   return (
     <div className="relative w-screen h-screen flex items-center justify-center md:justify-end overflow-hidden">
       {/* Background */}
@@ -166,7 +185,7 @@ export default function LoginPage() {
 
       {/* Login Card */}
       <div className="relative z-10 w-full max-w-md max-sm:max-w-none mx-4 md:mr-12 py-12 h-full max-sm:flex max-sm:justify-center sm:items-center">
-        <div className="relative overflow-auto flex flex-col bg-background rounded-md p-6 sm:p-8 max-h-[90vh] min-h-[480px] sm:min-h-full max-sm:w-full overflow-hidden justify-between">
+        <div className="relative overflow-auto flex flex-col bg-background rounded-md p-6 sm:p-8 max-h-[90vh] min-h-[480px] sm:min-h-full max-sm:w-full justify-between">
           {/* Back button */}
           <button
             type="button"
