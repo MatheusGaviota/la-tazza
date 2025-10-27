@@ -21,11 +21,13 @@ export default function ProfilePage() {
   const {
     userData,
     isSaving,
+    isUploadingPhoto,
     toast,
     deleteModal,
     handleSavePersonalInfo,
     handleChangePassword,
     handlePhotoChange,
+    handleRemovePhoto,
     showToast,
     closeToast,
     openDeleteModal,
@@ -88,7 +90,10 @@ export default function ProfilePage() {
         <div className="space-y-6">
           <ProfilePhotoCard
             userName={userData.name}
+            currentPhotoUrl={user?.photoURL}
             onPhotoChange={handlePhotoChange}
+            onPhotoRemove={handleRemovePhoto}
+            isUploading={isUploadingPhoto}
           />
           <PersonalInfoCard
             userData={userData}
