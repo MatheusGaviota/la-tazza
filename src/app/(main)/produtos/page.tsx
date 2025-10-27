@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import ProductCard from '@/components/Cards/ProductCard';
-import { ProductFilters } from '@/components/Sections';
+import { ProductFilters } from '@/components/Products';
 import { Filter, LayoutGrid, LayoutList, SlidersHorizontal } from 'lucide-react';
 
 // TODO: Remover dados mocados e buscar de uma API/banco de dados

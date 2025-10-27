@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Hero from '@/components/Sections/Hero';
+import Hero from '@/components/Products/Hero';
 import Carousel from '@/components/UI/Carousel';
 import ProductCard from '@/components/Cards/ProductCard';
 import CourseCard from '@/components/Cards/CourseCard';

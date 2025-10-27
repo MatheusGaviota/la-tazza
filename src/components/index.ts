@@ -14,7 +14,7 @@ export {
 } from './Cards';
 
 // Section components
-export { Hero } from './Sections';
+export { Hero } from './Products';
 
 // Cart components
 export { CartDrawer, AddToCartButton } from './Cart';
