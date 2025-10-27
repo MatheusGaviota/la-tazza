@@ -94,9 +94,8 @@ export default function Home() {
           busca qualidade e experiência.
         </p>
         <div className="w-full text-left sm:text-right mt-4 sm:order-last sm:mb-0 sm:mt-4">
-          {/* TODO: Trocar href para página de produtos após criação */}
           <Link
-            href="/"
+            href="/produtos"
             className="inline-flex items-center gap-2 text-foreground hover:text-accent transition-colors text-base sm:text-base font-medium"
           >
             Ver todos os produtos <ArrowRight size={18} />
