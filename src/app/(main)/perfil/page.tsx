@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { useProtectedRoute, useProfile } from '@/hooks';
 import { Toast } from '@/components/UI';
 import {
@@ -35,6 +36,15 @@ export default function ProfilePage() {
     handleConfirmDelete,
     setDeletePassword,
   } = useProfile(user);
+
+  // Atualiza o título da página com o nome do usuário
+  useEffect(() => {
+    if (userData.name) {
+      document.title = `${userData.name} - La Tazza`;
+    } else {
+      document.title = 'Meu Perfil - La Tazza';
+    }
+  }, [userData.name]);
 
   if (loading || isSaving) {
     return <ProfileSkeleton />;
