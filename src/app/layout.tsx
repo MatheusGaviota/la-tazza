@@ -1,6 +1,7 @@
 import { Poppins, Alumni_Sans } from 'next/font/google';
 import './globals.css';
 import './high-contrast.css';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 const poppins = Poppins({
   variable: '--font-poppins',
@@ -24,16 +25,18 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} ${alumniSans.variable} antialiased`}
       >
-        <div
-          id="grayscale-overlay"
-          className="hidden fixed inset-0 pointer-events-none z-[9999]"
-          style={{
-            backdropFilter: 'grayscale(100%)',
-            WebkitBackdropFilter: 'grayscale(100%)',
-          }}
-          aria-hidden="true"
-        />
-        {children}
+        <AuthProvider>
+          <div
+            id="grayscale-overlay"
+            className="hidden fixed inset-0 pointer-events-none z-[9999]"
+            style={{
+              backdropFilter: 'grayscale(100%)',
+              WebkitBackdropFilter: 'grayscale(100%)',
+            }}
+            aria-hidden="true"
+          />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

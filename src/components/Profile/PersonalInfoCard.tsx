@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Button from '../Button';
+import Button from '../UI/Button';
 
 interface PersonalInfo {
   name: string;
@@ -22,6 +22,23 @@ export default function PersonalInfoCard({
 }: PersonalInfoCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState(userData);
+
+  // Format date-of-birth deterministically to avoid SSR/client hydration mismatches.
+  // We parse the date as a date-only value and format it with timeZone 'UTC'
+  // so server and client produce the same string regardless of host timezone.
+  const formatBirthDate = (dateStr: string) => {
+    if (!dateStr) return '';
+    // Expecting ISO date like 'YYYY-MM-DD' from the server/database.
+    const parts = dateStr.split('-');
+    if (parts.length < 3) {
+      // Fallback to Date parsing if format is unexpected.
+      const d = new Date(dateStr);
+      return new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' }).format(d);
+    }
+    const [y, m, d] = parts;
+    const date = new Date(Date.UTC(Number(y), Number(m) - 1, Number(d)));
+    return new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' }).format(date);
+  };
 
   const handleSave = () => {
     onSave(editData);
@@ -86,7 +103,7 @@ export default function PersonalInfoCard({
               Data de Nascimento
             </label>
             <p className="text-foreground font-medium">
-              {new Date(userData.birthDate).toLocaleDateString('pt-BR')}
+              {formatBirthDate(userData.birthDate)}
             </p>
           </div>
         </div>
