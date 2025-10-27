@@ -12,7 +12,6 @@ import {
   onAuthStateChanged,
   signOut,
   User,
-  IdTokenResult,
 } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 
@@ -39,17 +38,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const handleSignOut = useCallback(async () => {
     try {
       setError(null);
+      setLoading(true);
       await signOut(auth);
       setUser(null);
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Erro ao fazer logout';
       setError(message);
+      setLoading(false);
       throw err;
     }
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
