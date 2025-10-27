@@ -34,3 +34,14 @@ export { useCart } from '@/contexts/CartContext';
  * ```
  */
 export { useProtectedRoute } from './useProtectedRoute';
+
+/**
+ * Hook customizado para gerenciar toda a lógica do perfil do usuário
+ * Inclui manipulação de dados pessoais, senha, exclusão de conta e toasts
+ * @example
+ * ```tsx
+ * const { userData, handleSavePersonalInfo, toast } = useProfile(user);
+ * ```
+ */
+export { useProfile } from './useProfile';
+export type { PersonalInfo, PasswordData, ToastState, DeleteAccountModal } from './useProfile';
