@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { updateProfile, User } from 'firebase/auth';
 import { deleteUserAccount, changePassword, logout } from '@/lib/auth.service';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   validatePhone,
   validateBirthDate,
@@ -37,11 +38,13 @@ export interface DeleteAccountModal {
 interface UseProfileReturn {
   userData: PersonalInfo;
   isSaving: boolean;
+  isUploadingPhoto: boolean;
   toast: ToastState;
   deleteModal: DeleteAccountModal;
   handleSavePersonalInfo: (data: PersonalInfo) => Promise<void>;
   handleChangePassword: (data: PasswordData) => Promise<void>;
-  handlePhotoChange: (file: File) => void;
+  handlePhotoChange: (file: File) => Promise<void>;
+  handleRemovePhoto: () => Promise<void>;
   showToast: (message: string, type?: 'success' | 'error') => void;
   closeToast: () => void;
   openDeleteModal: () => void;
@@ -51,6 +54,7 @@ interface UseProfileReturn {
 }
 
 export const useProfile = (user: User | null): UseProfileReturn => {
+  const { refreshUser } = useAuth();
   const [userData, setUserData] = useState<PersonalInfo>({
     name: '',
     email: '',
@@ -58,6 +62,7 @@ export const useProfile = (user: User | null): UseProfileReturn => {
     birthDate: '',
   });
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [toast, setToast] = useState<ToastState>({
     show: false,
     message: '',
@@ -165,9 +170,111 @@ export const useProfile = (user: User | null): UseProfileReturn => {
     }
   };
 
-  const handlePhotoChange = (file: File) => {
-    // TODO: Implementar upload de foto de perfil
-    console.log('Foto alterada:', file);
+  const handlePhotoChange = async (file: File): Promise<void> => {
+    if (!user) {
+      showToast('Usuário não autenticado', 'error');
+      return;
+    }
+
+    setIsUploadingPhoto(true);
+
+    try {
+      // Criar FormData para o upload
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'la-tazza/profile-photos');
+      formData.append('publicId', `user-${user.uid}`);
+
+      // Fazer upload para Cloudinary via API (irá substituir se já existir)
+      const response = await fetch('/api/cloudinary/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erro ao fazer upload da imagem');
+      }
+
+      const result = await response.json();
+      const photoUrl = result.data.secureUrl;
+
+      // Adicionar timestamp para evitar cache do navegador
+      const urlWithTimestamp = `${photoUrl}?t=${Date.now()}`;
+
+      // Atualizar perfil do Firebase com a nova URL da foto
+      await updateProfile(user, {
+        photoURL: urlWithTimestamp,
+      });
+
+      // Forçar reload e refresh do contexto para propagar mudanças
+      await user.reload();
+      await refreshUser();
+      
+      console.log('✅ Foto atualizada:', urlWithTimestamp);
+      console.log('📸 URL do usuário após refresh:', user.photoURL);
+
+      showToast('Foto de perfil atualizada com sucesso!', 'success');
+    } catch (error) {
+      console.error('Erro ao atualizar foto:', error);
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Erro ao atualizar foto de perfil';
+      showToast(message, 'error');
+      throw error; // Propagar erro para reverter preview no componente
+    } finally {
+      setIsUploadingPhoto(false);
+    }
+  };
+
+  const handleRemovePhoto = async (): Promise<void> => {
+    if (!user) {
+      showToast('Usuário não autenticado', 'error');
+      return;
+    }
+
+    setIsUploadingPhoto(true);
+
+    try {
+      const publicId = `la-tazza/profile-photos/user-${user.uid}`;
+
+      // 1. Remover a URL do Firebase PRIMEIRO (evita referências quebradas)
+      await updateProfile(user, {
+        photoURL: '',
+      });
+
+      // 2. Forçar reload e refresh do contexto para propagar mudanças
+      await user.reload();
+      await refreshUser();
+
+      // 3. Aguardar um momento para garantir propagação
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      // 4. Deletar foto do Cloudinary em segundo plano (não bloquear fluxo)
+      fetch('/api/cloudinary/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ publicId }),
+      }).catch((error) => {
+        console.warn('Erro ao deletar imagem do Cloudinary:', error);
+        // Não bloquear o fluxo - imagem pode não existir
+      });
+
+      showToast('Foto de perfil removida com sucesso!', 'success');
+    } catch (error) {
+      console.error('Erro ao remover foto:', error);
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Erro ao remover foto de perfil';
+      showToast(message, 'error');
+      throw error;
+    } finally {
+      setIsUploadingPhoto(false);
+    }
   };
 
   const openDeleteModal = () => {
@@ -222,11 +329,13 @@ export const useProfile = (user: User | null): UseProfileReturn => {
   return {
     userData,
     isSaving,
+    isUploadingPhoto,
     toast,
     deleteModal,
     handleSavePersonalInfo,
     handleChangePassword,
     handlePhotoChange,
+    handleRemovePhoto,
     showToast,
     closeToast,
     openDeleteModal,
