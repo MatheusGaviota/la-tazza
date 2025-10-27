@@ -1,18 +1,41 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '../UI/Button';
+import LoadingSpinner from '../UI/LoadingSpinner';
 
 interface ProfilePhotoProps {
   userName: string;
-  onPhotoChange?: (file: File) => void;
+  currentPhotoUrl?: string | null;
+  onPhotoChange?: (file: File) => Promise<void>;
+  onPhotoRemove?: () => Promise<void>;
+  isUploading?: boolean;
 }
 
 export default function ProfilePhoto({
   userName,
+  currentPhotoUrl,
   onPhotoChange,
+  onPhotoRemove,
+  isUploading = false,
 }: ProfilePhotoProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    // Sincronizar preview com a foto atual do Firebase
+    // Trata string vazia como null (indica remoção explícita)
+    const photoUrl = currentPhotoUrl && currentPhotoUrl.trim() !== '' ? currentPhotoUrl : null;
+    setPreviewUrl(photoUrl);
+    setImageError(false); // Reset error state ao mudar URL
+  }, [currentPhotoUrl]);
+
+  const handleImageError = () => {
+    // Se a imagem falhar ao carregar, remover preview e limpar cache
+    console.warn('Falha ao carregar imagem de perfil, removendo preview');
+    setImageError(true);
+    setPreviewUrl(null);
+  };
 
   const getInitials = (name: string) => {
     return name
@@ -23,20 +46,79 @@ export default function ProfilePhoto({
       .slice(0, 2);
   };
 
-  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-      onPhotoChange?.(file);
+  const validateFile = (file: File): string | null => {
+    // Validar tipo de arquivo
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      return 'Formato inválido. Use JPG, PNG, GIF ou WEBP.';
     }
+
+    // Validar tamanho (máx 5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB em bytes
+    if (file.size > maxSize) {
+      return 'Arquivo muito grande. Tamanho máximo: 5MB.';
+    }
+
+    return null;
   };
 
-  const handleRemovePhoto = () => {
-    setPreviewUrl(null);
+  const handlePhotoUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validar arquivo
+    const validationError = validateFile(file);
+    if (validationError) {
+      alert(validationError);
+      event.target.value = '';
+      return;
+    }
+
+    // Preview local
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+
+    // Fazer upload
+    if (onPhotoChange) {
+      try {
+        await onPhotoChange(file);
+      } catch (error) {
+        // Reverter preview em caso de erro
+        setPreviewUrl(currentPhotoUrl || null);
+        console.error('Erro no upload:', error);
+      }
+    }
+
+    // Limpar input
+    event.target.value = '';
+  };
+
+  const handleRemovePhoto = async () => {
+    if (onPhotoRemove) {
+      try {
+        await onPhotoRemove();
+        setPreviewUrl(null);
+        setImageError(false);
+        
+        // Limpar possível cache do navegador para esta imagem
+        if (currentPhotoUrl) {
+          // Força o navegador a descartar o cache desta URL
+          const img = new Image();
+          img.src = currentPhotoUrl + '?invalidate=' + Date.now();
+        }
+      } catch (error) {
+        console.error('Erro ao remover foto:', error);
+        // Manter o preview em caso de erro
+      }
+    } else {
+      setPreviewUrl(null);
+      setImageError(false);
+    }
   };
 
   return (
@@ -55,13 +137,20 @@ export default function ProfilePhoto({
         {/* Avatar Container */}
         <div className="relative flex-shrink-0">
           {/* Avatar */}
-          <div className="w-40 h-40 rounded-full border-4 border-accent overflow-hidden bg-accent/10 flex items-center justify-center">
-            {previewUrl ? (
+          <div className="w-40 h-40 rounded-full border-4 border-accent overflow-hidden bg-accent/10 flex items-center justify-center relative">
+            {isUploading && (
+              <div className="absolute inset-0 bg-background/80 flex items-center justify-center z-10">
+                <LoadingSpinner size="lg" />
+              </div>
+            )}
+            {previewUrl && !imageError ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
+                key={previewUrl}
                 src={previewUrl}
                 alt={userName}
                 className="w-full h-full object-cover"
+                onError={handleImageError}
               />
             ) : (
               <span className="text-5xl font-bold text-accent">
@@ -73,7 +162,9 @@ export default function ProfilePhoto({
           {/* Badge com ícone de câmera */}
           <label
             htmlFor="photo-upload"
-            className="absolute bottom-0 right-0 bg-accent text-background rounded-full p-3 cursor-pointer hover:bg-accent/90 transition-all shadow-md border-2 border-background"
+            className={`absolute bottom-0 right-0 bg-accent text-background rounded-full p-3 cursor-pointer hover:bg-accent/90 transition-all shadow-md border-2 border-background ${
+              isUploading ? 'opacity-50 pointer-events-none' : ''
+            }`}
             title="Clique para alterar foto"
           >
             <svg
@@ -88,9 +179,10 @@ export default function ProfilePhoto({
             <input
               type="file"
               id="photo-upload"
-              accept="image/*"
+              accept="image/jpeg,image/png,image/gif,image/webp"
               onChange={handlePhotoUpload}
               className="hidden"
+              disabled={isUploading}
             />
           </label>
         </div>
@@ -101,7 +193,7 @@ export default function ProfilePhoto({
             {userName}
           </h3>
           <p className="text-foreground/70 mb-6">
-            {previewUrl
+            {previewUrl && !imageError
               ? 'Clique no ícone da câmera para mudar sua foto de perfil'
               : 'Adicione uma foto de perfil para personalizar sua conta'}
           </p>
@@ -109,25 +201,29 @@ export default function ProfilePhoto({
           <div className="flex flex-col sm:flex-row gap-3">
             <label htmlFor="upload-button">
               <Button
-                text={previewUrl ? 'Alterar Foto' : 'Fazer Upload'}
-                onClick={() => document.getElementById('photo-upload')?.click()}
+                text={previewUrl && !imageError ? 'Alterar Foto' : 'Fazer Upload'}
+                onClick={() =>
+                  document.getElementById('photo-upload')?.click()
+                }
                 variant="accent"
                 className="w-full sm:w-auto text-center"
+                disabled={isUploading}
               />
             </label>
 
-            {previewUrl && (
+            {previewUrl && !imageError && (
               <Button
                 text="Remover Foto"
                 onClick={handleRemovePhoto}
                 variant="ghost-fore"
                 className="w-full sm:w-auto text-center"
+                disabled={isUploading}
               />
             )}
           </div>
 
           <p className="text-xs text-foreground/60 mt-4">
-            Formatos aceitos: JPG, PNG, GIF (máx. 5MB)
+            Formatos aceitos: JPG, PNG, GIF, WEBP (máx. 5MB)
           </p>
         </div>
       </div>
