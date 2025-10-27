@@ -22,3 +22,15 @@ export { useAuth } from '@/contexts/AuthContext';
  * ```
  */
 export { useCart } from '@/contexts/CartContext';
+
+/**
+ * Hook para proteger rotas que requerem autenticação
+ * Redireciona automaticamente usuários não autenticados
+ * @example
+ * ```tsx
+ * const { user, loading } = useProtectedRoute({ redirectTo: '/login' });
+ * 
+ * if (loading) return <LoadingSpinner />;
+ * ```
+ */
+export { useProtectedRoute } from './useProtectedRoute';
