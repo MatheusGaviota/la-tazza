@@ -2,10 +2,11 @@
 
 import Image from 'next/image';
 import { useState, useCallback, useEffect } from 'react';
-import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import SocialIcon from '@/components/UI/SocialIcon';
 import LoadingSpinner from '@/components/UI/LoadingSpinner';
+import Input from '@/components/UI/Input';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   loginWithEmail,
@@ -40,8 +41,6 @@ export default function LoginPage() {
   const { user, isAuthenticated, loading } = useAuth();
 
   const [isSignup, setIsSignup] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formState, setFormState] = useState<FormState>(initialFormState);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -91,9 +90,7 @@ export default function LoginPage() {
           await loginWithEmail(loginData);
         }
 
-        // Limpar formulário após sucesso
         setFormState(initialFormState);
-        router.push('/');
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Erro na autenticação';
@@ -102,7 +99,7 @@ export default function LoginPage() {
         setIsLoading(false);
       }
     },
-    [isSignup, formState, router]
+    [isSignup, formState]
   );
 
   const handleGoogleLogin = useCallback(async () => {
@@ -112,7 +109,6 @@ export default function LoginPage() {
     try {
       await loginWithGoogle();
       setFormState(initialFormState);
-      router.push('/');
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Erro ao fazer login com Google';
@@ -120,7 +116,7 @@ export default function LoginPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [router]);
+  }, []);
 
   const handleResetPassword = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -165,9 +161,13 @@ export default function LoginPage() {
     );
   }
 
-  // Não renderizar o formulário se já estiver autenticado
+  // Se já estiver autenticado, mostra loading enquanto redireciona
   if (isAuthenticated && user) {
-    return null;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
   }
 
   return (
@@ -233,21 +233,16 @@ export default function LoginPage() {
                 </div>
               )}
 
-              <div>
-                <label htmlFor="reset-email" className="sr-only">
-                  Email
-                </label>
-                <input
-                  id="reset-email"
-                  type="email"
-                  placeholder="Seu email"
-                  value={resetEmail}
-                  onChange={(e) => setResetEmail(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all text-sm sm:text-base"
-                  required
-                  disabled={isLoading}
-                />
-              </div>
+              <Input
+                id="reset-email"
+                type="email"
+                placeholder="Seu email"
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+                variant="foreground"
+                required
+                disabled={isLoading}
+              />
 
               <button
                 type="submit"
@@ -294,108 +289,54 @@ export default function LoginPage() {
 
                 {/* Name field (signup only) */}
                 {isSignup && (
-                  <div>
-                    <label htmlFor="name" className="sr-only">
-                      Nome
-                    </label>
-                    <input
-                      id="name"
-                      type="text"
-                      placeholder="Seu nome completo"
-                      value={formState.name}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border-2 border-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all text-sm sm:text-base disabled:bg-gray-100 disabled:cursor-not-allowed"
-                      required={isSignup}
-                      disabled={isLoading}
-                    />
-                  </div>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="Seu nome completo"
+                    value={formState.name}
+                    onChange={handleInputChange}
+                    variant="foreground"
+                    required={isSignup}
+                    disabled={isLoading}
+                  />
                 )}
 
                 {/* Email field */}
-                <div>
-                  <label htmlFor="email" className="sr-only">
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    placeholder="Seu endereço de email"
-                    value={formState.email}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border-2 border-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all text-sm sm:text-base disabled:bg-gray-100 disabled:cursor-not-allowed"
-                    required
-                    disabled={isLoading}
-                  />
-                </div>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Seu endereço de email"
+                  value={formState.email}
+                  onChange={handleInputChange}
+                  variant="foreground"
+                  required
+                  disabled={isLoading}
+                />
 
                 {/* Password field */}
-                <div className="relative">
-                  <label htmlFor="password" className="sr-only">
-                    Senha
-                  </label>
-                  <input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Sua senha"
-                    value={formState.password}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 pr-12 border-2 border-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all text-sm sm:text-base disabled:bg-gray-100 disabled:cursor-not-allowed"
-                    required
-                    disabled={isLoading}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 inset-y-0 flex items-center p-2 text-foreground/60 hover:text-foreground transition-colors disabled:cursor-not-allowed"
-                    aria-label={
-                      showPassword ? 'Esconder senha' : 'Mostrar senha'
-                    }
-                    disabled={isLoading}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
-                    )}
-                  </button>
-                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Sua senha"
+                  value={formState.password}
+                  onChange={handleInputChange}
+                  variant="foreground"
+                  required
+                  disabled={isLoading}
+                />
 
                 {/* Confirm password field (signup only) */}
                 {isSignup && (
-                  <div className="relative">
-                    <label htmlFor="confirmPassword" className="sr-only">
-                      Confirmar senha
-                    </label>
-                    <input
-                      id="confirmPassword"
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      placeholder="Confirme sua senha"
-                      value={formState.confirmPassword}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 pr-12 border-2 border-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all text-sm sm:text-base disabled:bg-gray-100 disabled:cursor-not-allowed"
-                      required={isSignup}
-                      disabled={isLoading}
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                      className="absolute right-3 inset-y-0 flex items-center p-2 text-foreground/60 hover:text-foreground transition-colors disabled:cursor-not-allowed"
-                      aria-label={
-                        showConfirmPassword
-                          ? 'Esconder confirmação de senha'
-                          : 'Mostrar confirmação de senha'
-                      }
-                      disabled={isLoading}
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff className="w-5 h-5" />
-                      ) : (
-                        <Eye className="w-5 h-5" />
-                      )}
-                    </button>
-                  </div>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    placeholder="Confirme sua senha"
+                    value={formState.confirmPassword}
+                    onChange={handleInputChange}
+                    variant="foreground"
+                    required={isSignup}
+                    disabled={isLoading}
+                  />
                 )}
 
                 {/* Forgot password link (login only) */}
