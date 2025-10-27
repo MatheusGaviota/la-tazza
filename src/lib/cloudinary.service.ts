@@ -72,6 +72,7 @@ export const uploadImage = async (
       folder: options.folder,
       resource_type: 'image',
       overwrite: options.overwrite ?? false,
+      invalidate: true, // Invalida cache do CDN ao substituir
     };
 
     if (options.publicId) {
