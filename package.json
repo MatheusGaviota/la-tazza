@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "firebase:deploy-rules": "firebase deploy --only firestore:rules,storage",
+    "firebase:serve": "firebase serve --only firestore,functions",
+    "firebase:emulators": "firebase emulators:start"
   },
   "dependencies": {
     "cloudinary": "^2.8.0",
