@@ -206,65 +206,73 @@ export default function LoginPage() {
 
           {/* Reset Password Form */}
           {showResetForm ? (
-            <form
-              onSubmit={handleResetPassword}
-              className="space-y-5"
-              noValidate
-            >
-              <h2 className="font-alumni text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground text-center">
-                Recuperar Senha
-              </h2>
-
-              {resetSuccess && (
-                <div
-                  className="p-4 bg-green-100 border border-green-400 rounded-md text-green-800 text-sm"
-                  role="alert"
+            <>
+              {/* Centro: formulário */}
+              <div className="flex-1 flex items-center justify-center w-full">
+                <form
+                  onSubmit={handleResetPassword}
+                  className="w-full max-w-md space-y-5"
+                  noValidate
                 >
-                  Email de recuperação enviado! Verifique sua caixa de entrada.
-                </div>
-              )}
+                  <h2 className="font-alumni text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground text-center">
+                    Recuperar Senha
+                  </h2>
 
-              {error && (
-                <div
-                  className="p-4 bg-red-100 border border-red-400 rounded-md text-red-800 text-sm"
-                  role="alert"
+                  {resetSuccess && (
+                    <div
+                      className="p-4 bg-green-100 border border-green-400 rounded-md text-green-800 text-sm"
+                      role="alert"
+                    >
+                      Email de recuperação enviado! Verifique sua caixa de entrada.
+                    </div>
+                  )}
+
+                  {error && (
+                    <div
+                      className="p-4 bg-red-100 border border-red-400 rounded-md text-red-800 text-sm"
+                      role="alert"
+                    >
+                      {error}
+                    </div>
+                  )}
+
+                  <Input
+                    id="reset-email"
+                    type="email"
+                    placeholder="Seu email"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    variant="foreground"
+                    required
+                    disabled={isLoading}
+                  />
+
+                  <button
+                    type="submit"
+                    className="w-full bg-foreground text-background py-3 rounded-md font-semibold hover:bg-foreground transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    disabled={isLoading}
+                  >
+                    {isLoading && <LoadingSpinner size="sm" />}
+                    {isLoading ? 'Enviando...' : 'Enviar Email'}
+                  </button>
+                </form>
+              </div>
+
+              {/* Rodapé: botão voltar fixo na base do cartão */}
+              <div className="pt-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowResetForm(false);
+                    setError(null);
+                    setResetSuccess(false);
+                  }}
+                  className="w-full text-foreground font-semibold hover:underline py-2"
                 >
-                  {error}
-                </div>
-              )}
-
-              <Input
-                id="reset-email"
-                type="email"
-                placeholder="Seu email"
-                value={resetEmail}
-                onChange={(e) => setResetEmail(e.target.value)}
-                variant="foreground"
-                required
-                disabled={isLoading}
-              />
-
-              <button
-                type="submit"
-                className="w-full bg-foreground text-background py-3 rounded-md font-semibold hover:bg-foreground transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                disabled={isLoading}
-              >
-                {isLoading && <LoadingSpinner size="sm" />}
-                {isLoading ? 'Enviando...' : 'Enviar Email'}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setShowResetForm(false);
-                  setError(null);
-                  setResetSuccess(false);
-                }}
-                className="w-full text-foreground font-semibold hover:underline py-2"
-              >
-                Voltar para login
-              </button>
-            </form>
+                  Voltar para login
+                </button>
+              </div>
+            </>
           ) : (
             <>
               {/* Login/Signup Form */}
@@ -313,17 +321,32 @@ export default function LoginPage() {
                   disabled={isLoading}
                 />
 
-                {/* Password field */}
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Sua senha"
-                  value={formState.password}
-                  onChange={handleInputChange}
-                  variant="foreground"
-                  required
-                  disabled={isLoading}
-                />
+                {/* Password field + 'Esqueceu sua senha?' agrupados (login) */}
+                <div className="w-full space-y-1">
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Sua senha"
+                    value={formState.password}
+                    onChange={handleInputChange}
+                    variant="foreground"
+                    required
+                    disabled={isLoading}
+                  />
+
+                  {/* Forgot password link (login only) - fica mais próximo do input */}
+                  {!isSignup && (
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => setShowResetForm(true)}
+                        className="text-sm text-foreground hover:text-foreground hover:underline transition-colors"
+                      >
+                        Esqueceu sua senha?
+                      </button>
+                    </div>
+                  )}
+                </div>
 
                 {/* Confirm password field (signup only) */}
                 {isSignup && (
@@ -337,19 +360,6 @@ export default function LoginPage() {
                     required={isSignup}
                     disabled={isLoading}
                   />
-                )}
-
-                {/* Forgot password link (login only) */}
-                {!isSignup && (
-                  <div className="flex justify-end">
-                    <button
-                      type="button"
-                      onClick={() => setShowResetForm(true)}
-                      className="text-sm text-foreground hover:text-foreground hover:underline transition-colors"
-                    >
-                      Esqueceu sua senha?
-                    </button>
-                  </div>
                 )}
 
                 {/* Submit button */}
