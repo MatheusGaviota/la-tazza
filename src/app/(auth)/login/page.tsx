@@ -19,7 +19,7 @@ import {
 
 const ASSETS = {
   background:
-    'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761620692/background-login_k6m6ai.png',
+    'https://res.cloudinary.com/dyenpzpcr/image/upload/background-login_k6m6ai.png',
 } as const;
 
 interface FormState {
