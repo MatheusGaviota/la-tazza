@@ -45,3 +45,12 @@ export { useProtectedRoute } from './useProtectedRoute';
  */
 export { useProfile } from './useProfile';
 export type { PersonalInfo, PasswordData, ToastState, DeleteAccountModal } from './useProfile';
+
+/**
+ * Hook que retorna um ID estável que não causa hydration mismatch
+ * @example
+ * ```tsx
+ * const id = useStableId('input');
+ * ```
+ */
+export { useStableId } from './useStableId';

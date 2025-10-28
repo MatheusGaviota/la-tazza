@@ -2,6 +2,7 @@
 
 import { forwardRef, useState, InputHTMLAttributes } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { useStableId } from '@/hooks/useStableId';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -30,7 +31,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   ) => {
     const [showPassword, setShowPassword] = useState(false);
     const isPassword = type === 'password';
-    const inputId = id || props.name || `input-${Math.random().toString(36).slice(2, 11)}`;
+    const generatedId = useStableId('input');
+    const inputId = id || props.name || generatedId;
     const helpTextId = helpText ? `${inputId}-help` : undefined;
     const errorId = error ? `${inputId}-error` : undefined;
 
