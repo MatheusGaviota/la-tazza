@@ -60,7 +60,7 @@ function AccessibilityTray() {
 
   return (
     <div
-      className={`fixed bg-foreground shadow-2xl transition-transform duration-200 ease-out z-50 will-change-transform
+      className={`fixed bg-foreground transition-transform duration-200 ease-out z-50 will-change-transform
                 sm:right-0 sm:top-1/2 sm:-translate-y-1/2 sm:rounded-l-2xl
                 max-sm:bottom-0 max-sm:left-0 max-sm:right-0 max-sm:rounded-t-2xl max-sm:w-full
                 ${

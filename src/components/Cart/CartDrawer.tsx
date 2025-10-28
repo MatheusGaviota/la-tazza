@@ -57,7 +57,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-[450px] bg-background shadow-2xl z-50 flex flex-col transition-transform duration-300 ${
+        className={`fixed top-0 right-0 h-full w-full sm:w-[450px] bg-background z-50 flex flex-col transition-transform duration-300 ${
           isClosing ? 'translate-x-full' : 'translate-x-0'
         }`}
         role="dialog"

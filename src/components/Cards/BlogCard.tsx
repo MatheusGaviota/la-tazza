@@ -52,7 +52,7 @@ export default function BlogCard({
           <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent opacity-60 transition-opacity duration-300 group-hover:opacity-80" />
 
           <div className="absolute top-3 left-3">
-            <span className="px-3 py-1 text-xs font-semibold bg-accent text-background rounded-full shadow-md">
+            <span className="px-3 py-1 text-xs font-semibold bg-accent text-background rounded-full">
               {category}
             </span>
           </div>

@@ -33,7 +33,7 @@ export const DeleteAccountModal = ({
       aria-labelledby="delete-modal-title"
     >
       <div
-        className="bg-background border-2 border-destructive/50 rounded-lg p-6 max-w-md w-full shadow-2xl"
+        className="bg-background border-2 border-destructive/50 rounded-lg p-6 max-w-md w-full"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Ícone de alerta */}

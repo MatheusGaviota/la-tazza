@@ -371,7 +371,7 @@ export default function LoginPage() {
                 {/* Submit button */}
                 <button
                   type="submit"
-                  className="w-full bg-foreground text-background py-3 rounded-md font-semibold hover:bg-foreground transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full bg-foreground text-background py-3 rounded-md font-semibold hover:bg-foreground transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   disabled={isLoading}
                 >
                   {isLoading && <LoadingSpinner size="sm" />}

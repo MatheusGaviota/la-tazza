@@ -199,7 +199,7 @@ export default function Navbar() {
                   {/* Dropdown Menu */}
                   {dropdownOpen && (
                     <div
-                      className="absolute right-0 mt-2 w-56 bg-background rounded-lg shadow-lg border border-accent/20 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+                      className="absolute right-0 mt-2 w-56 bg-background rounded-lg border border-accent/20 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200"
                       role="menu"
                       aria-orientation="vertical"
                       aria-labelledby="user-menu"

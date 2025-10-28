@@ -20,7 +20,7 @@ export default function ProductCard({
   category = 'Café Especial',
 }: ProductCardProps) {
   return (
-    <article className="border-2 rounded-xl border-foreground overflow-hidden h-full flex flex-col group hover:shadow-lg transition-shadow">
+    <article className="border-2 rounded-xl border-foreground overflow-hidden h-full flex flex-col group">
       <Link href={`/produtos/${id}`} className="relative w-full h-48 sm:h-56 md:h-64 overflow-hidden block">
         <Image
           src={imageUrl}
