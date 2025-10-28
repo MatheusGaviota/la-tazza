@@ -9,12 +9,17 @@
     "lint": "eslint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "firebase:deploy-rules": "firebase deploy --only firestore:rules,storage",
+    "firebase:deploy-rules": "firebase deploy --only firestore:rules",
     "firebase:serve": "firebase serve --only firestore,functions",
-    "firebase:emulators": "firebase emulators:start"
+    "firebase:emulators": "firebase emulators:start",
+    "admin": "tsx scripts/admin/cli.ts",
+    "admin:create": "npm run admin create-user",
+    "admin:list": "npm run admin list-users",
+    "admin:help": "npm run admin help"
   },
   "dependencies": {
     "cloudinary": "^2.8.0",
+    "dotenv": "^17.2.3",
     "firebase": "^12.4.0",
     "lucide-react": "^0.545.0",
     "next": "15.5.4",
@@ -29,8 +34,10 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
+    "firebase-admin": "^13.5.0",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
+    "tsx": "^4.20.6",
     "typescript": "^5"
   }
 }
