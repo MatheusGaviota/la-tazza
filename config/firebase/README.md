@@ -7,16 +7,16 @@ Esta pasta contém todas as configurações organizadas do Firebase para o proje
 ```
 config/firebase/
 ├── client.ts          # Configuração do cliente Firebase (Auth, Firestore)
-├── firebase.json      # Configuração do Firebase CLI
 ├── firestore.rules    # Regras de segurança do Firestore
-├── firestore.indexes.json  # Índices compostos do Firestore
-└── storage.rules      # Regras de segurança do Storage
+└── firestore.indexes.json  # Índices compostos do Firestore
 ```
 
 ## 📄 Arquivos
 
 ### `client.ts`
+
 Configuração principal do Firebase para uso no cliente:
+
 - Inicialização do Firebase App
 - Configuração do Authentication
 - Configuração do Firestore
@@ -24,30 +24,34 @@ Configuração principal do Firebase para uso no cliente:
 - Exports das instâncias singleton
 
 ### `firebase.json`
+
 Configuração do Firebase CLI:
-- Regras do Firestore e Storage
+
+- Regras do Firestore
 - Configuração de emuladores
 - Configuração de hosting (opcional)
 
 ### `firestore.rules`
+
 Regras de segurança para o Firestore Database:
+
 - Leitura pública para produtos, cursos e workshops
 - Controle de escrita apenas para usuários autenticados
 - Posts do blog: publicados são públicos, rascunhos são privados
 
 ### `firestore.indexes.json`
+
 Índices compostos para otimização de consultas:
+
 - Produtos por categoria e data
 - Cursos por nível e data
 - Workshops por data
 - Posts por status de publicação e categoria
 
-### `storage.rules`
-Regras de segurança para o Firebase Storage (backup para Cloudinary)
-
 ## 🚀 Como Usar
 
 ### Importação no código
+
 ```typescript
 import { auth, db } from '@/lib/firebase';
 // ou diretamente
@@ -55,11 +59,13 @@ import { auth, db } from '@/config/firebase/client';
 ```
 
 ### Deploy das regras
+
 ```bash
 npm run firebase:deploy-rules
 ```
 
 ### Emuladores para desenvolvimento
+
 ```bash
 npm run firebase:emulators
 ```

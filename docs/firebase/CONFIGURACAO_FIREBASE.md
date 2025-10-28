@@ -97,10 +97,6 @@ Regras de segurança para o Firestore:
 - Workshops por data
 - Posts por status de publicação e categoria
 
-### `config/firebase/storage.rules`
-
-Regras de segurança para o Firebase Storage (backup para Cloudinary)
-
 ### `config/firebase/client.ts`
 
 Configuração TypeScript organizada do Firebase:
