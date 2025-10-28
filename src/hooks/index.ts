@@ -47,6 +47,18 @@ export { useProfile } from './useProfile';
 export type { PersonalInfo, PasswordData, ToastState, DeleteAccountModal } from './useProfile';
 
 /**
+ * Hook para verificar se o usuário atual é administrador
+ * Consulta o Firestore para verificar o campo isAdmin
+ * @example
+ * ```tsx
+ * const { isAdmin, loading } = useAdmin();
+ * 
+ * if (!isAdmin) return <div>Acesso negado</div>;
+ * ```
+ */
+export { useAdmin } from './useAdmin';
+
+/**
  * Hook que retorna um ID estável que não causa hydration mismatch
  * @example
  * ```tsx
