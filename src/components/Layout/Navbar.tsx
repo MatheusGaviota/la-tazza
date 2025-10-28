@@ -6,16 +6,19 @@ import CartDrawer from '../Cart/CartDrawer';
 import Skeleton from '../UI/Skeleton';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { useState, useEffect } from 'react';
-import { ShoppingCart, User } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { ShoppingCart, User, LogOut, UserCircle } from 'lucide-react';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const { totalItems } = useCart();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, signOut } = useAuth();
   const [imageError, setImageError] = useState(false);
   const [isLoadingPhoto, setIsLoadingPhoto] = useState(true);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -32,6 +35,57 @@ export default function Navbar() {
     console.log('🔔 Navbar: photoURL mudou para:', user?.photoURL);
     setImageError(false);
   }, [user?.photoURL]);
+
+  // Fechar dropdown ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownOpen]);
+
+  // Limpar timeout ao desmontar
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setDropdownOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setDropdownOpen(false);
+    }, 200);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      setDropdownOpen(false);
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
+  };
 
   const handleImageError = () => {
     setImageError(true);
@@ -105,35 +159,84 @@ export default function Navbar() {
               </button>
 
               {isAuthenticated ? (
-                <Link
-                  href="/perfil"
-                  className="relative rounded-full hover:ring-2 hover:ring-accent/50 transition-all focus:outline-none focus:ring-2 focus:ring-accent"
-                  aria-label="Ir para perfil"
+                <div
+                  ref={dropdownRef}
+                  className="relative"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
                 >
-                  {isLoadingPhoto ? (
-                    <Skeleton
-                      variant="circular"
-                      width={40}
-                      height={40}
-                      animation="pulse"
-                    />
-                  ) : hasPhoto && !imageError ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      key={user?.photoURL}
-                      src={user?.photoURL || ''}
-                      alt={user?.displayName || 'Foto de perfil'}
-                      className="w-10 h-10 rounded-full object-cover border-2 border-accent"
-                      onError={handleImageError}
-                    />
-                  ) : (
-                    <div className="w-10 h-10 rounded-full bg-background border-2 border-accent flex items-center justify-center">
-                      <span className="text-sm font-bold text-accent">
-                        {user?.displayName ? getInitials(user.displayName) : <User size={20} className="text-accent" />}
-                      </span>
+                  <Link
+                    href="/perfil"
+                    className="relative rounded-full hover:ring-2 hover:ring-accent/50 transition-all focus:outline-none focus:ring-2 focus:ring-accent block"
+                    aria-label="Ir para perfil"
+                  >
+                    {isLoadingPhoto ? (
+                      <Skeleton
+                        variant="circular"
+                        width={40}
+                        height={40}
+                        animation="pulse"
+                      />
+                    ) : hasPhoto && !imageError ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        key={user?.photoURL}
+                        src={user?.photoURL || ''}
+                        alt={user?.displayName || 'Foto de perfil'}
+                        className="w-10 h-10 rounded-full object-cover border-2 border-accent"
+                        onError={handleImageError}
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-background border-2 border-accent flex items-center justify-center">
+                        <span className="text-sm font-bold text-accent">
+                          {user?.displayName ? getInitials(user.displayName) : <User size={20} className="text-accent" />}
+                        </span>
+                      </div>
+                    )}
+                  </Link>
+
+                  {/* Dropdown Menu */}
+                  {dropdownOpen && (
+                    <div
+                      className="absolute right-0 mt-2 w-56 bg-background rounded-lg shadow-lg border border-accent/20 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="user-menu"
+                    >
+                      {/* User Info */}
+                      <div className="px-4 py-3 border-b border-accent/10">
+                        <p className="text-sm font-semibold text-foreground truncate">
+                          {user?.displayName || 'Usuário'}
+                        </p>
+                        <p className="text-xs text-foreground/60 truncate mt-0.5">
+                          {user?.email}
+                        </p>
+                      </div>
+
+                      {/* Menu Items */}
+                      <div className="py-1">
+                        <Link
+                          href="/perfil"
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-accent/10 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent"
+                          role="menuitem"
+                          onClick={() => setDropdownOpen(false)}
+                        >
+                          <UserCircle size={18} className="text-accent" />
+                          <span>Meu Perfil</span>
+                        </Link>
+
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-red-50 hover:text-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent"
+                          role="menuitem"
+                        >
+                          <LogOut size={18} className="text-current" />
+                          <span>Sair da conta</span>
+                        </button>
+                      </div>
                     </div>
                   )}
-                </Link>
+                </div>
               ) : (
                 <Button
                   text="Login"
