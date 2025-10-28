@@ -2,12 +2,8 @@
 
 import Image from 'next/image';
 import { useState, useCallback, useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import SocialIcon from '@/components/UI/SocialIcon';
 import LoadingSpinner from '@/components/UI/LoadingSpinner';
-import Button from '@/components/UI/Button';
-import Input from '@/components/UI/Input';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   loginWithEmail,
@@ -17,6 +13,7 @@ import {
   type AuthCredentials,
   type SignUpCredentials,
 } from '@/lib/auth.service';
+import { LoginCard } from '@/components';
 
 const ASSETS = {
   background:
@@ -48,6 +45,7 @@ export default function LoginPage() {
   const [showResetForm, setShowResetForm] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
   const [resetSuccess, setResetSuccess] = useState(false);
+  const [bgOpacity, setBgOpacity] = useState(0);
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,6 +151,11 @@ export default function LoginPage() {
     }
   }, [isAuthenticated, user, loading, router]);
 
+  // Animação do fundo: fade-in
+  useEffect(() => {
+    setBgOpacity(0.5);
+  }, []);
+
   // Mostrar loading enquanto verifica autenticação
   if (loading) {
     return (
@@ -180,283 +183,30 @@ export default function LoginPage() {
         fill
         priority
         quality={90}
-        className="object-cover object-center opacity-50"
+        className="object-cover object-center transition-opacity duration-1000"
+        style={{ opacity: bgOpacity }}
         role="presentation"
       />
 
-      {/* Login Card */}
-  <div className="relative z-10 w-full max-w-lg max-sm:max-w-none mx-4 py-8 h-auto max-sm:flex max-sm:justify-center sm:items-center">
-  <div className="relative overflow-auto flex flex-col bg-background rounded-md p-6 sm:p-8 max-h-[90vh] min-h-[360px] max-sm:w-full justify-between">
-          {/* Back button */}
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="absolute left-2 top-2 text-foreground/80 hover:text-foreground p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-foreground transition-colors"
-            aria-label="Voltar"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span className="sr-only">Voltar</span>
-          </button>
-
-          {/* Logo/Brand */}
-          <div className="flex justify-center items-center mb-6 md:mb-8">
-            <Image
-              src="https://res.cloudinary.com/dyenpzpcr/image/upload/v1761530835/Logo_hhbwde.png"
-              alt="La Tazza"
-              width={1000}
-              height={450}
-              className="w-30 sm:w-40 h-auto"
-              priority
-            />
-
-          </div>
-
-          {/* Reset Password Form */}
-          {showResetForm ? (
-            <>
-              {/* Centro: formulário */}
-              <div className="flex-1 flex items-center justify-center w-full">
-                <form
-                  onSubmit={handleResetPassword}
-                  className="w-full max-w-md space-y-5"
-                  noValidate
-                >
-                  <h2 className="font-alumni text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground text-center">
-                    Recuperar Senha
-                  </h2>
-
-                  {resetSuccess && (
-                    <div
-                      className="p-4 bg-green-100 border border-green-400 rounded-md text-green-800 text-sm"
-                      role="alert"
-                    >
-                      Email de recuperação enviado! Verifique sua caixa de entrada.
-                    </div>
-                  )}
-
-                  {error && (
-                    <div
-                      className="p-4 bg-red-100 border border-red-400 rounded-md text-red-800 text-sm"
-                      role="alert"
-                    >
-                      {error}
-                    </div>
-                  )}
-
-                  <Input
-                    id="reset-email"
-                    type="email"
-                    placeholder="Seu email"
-                    value={resetEmail}
-                    onChange={(e) => setResetEmail(e.target.value)}
-                    variant="foreground"
-                    required
-                    disabled={isLoading}
-                  />
-
-                  <Button
-                    type="submit"
-                    variant="fore"
-                    className="w-full flex items-center justify-center py-3"
-                    disabled={isLoading}
-                  >
-                    {isLoading && <LoadingSpinner size="sm" />}
-                    {isLoading ? 'Enviando...' : 'Enviar Email'}
-                  </Button>
-                </form>
-              </div>
-
-              {/* Rodapé: botão voltar fixo na base do cartão */}
-              <div className="pt-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowResetForm(false);
-                    setError(null);
-                    setResetSuccess(false);
-                  }}
-                  className="w-full text-foreground font-semibold hover:underline py-2"
-                >
-                  Voltar para login
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              {/* Login/Signup Form */}
-              <form
-                onSubmit={handleSubmit}
-                className="space-y-5"
-                noValidate
-              >
-                <h2 className="font-alumni text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground text-center">
-                  {isSignup ? 'Cadastro' : 'Login'}
-                </h2>
-
-                {/* Error Message */}
-                {error && (
-                  <div
-                    className="p-4 bg-red-100 border border-red-400 rounded-md text-red-800 text-sm"
-                    role="alert"
-                  >
-                    {error}
-                  </div>
-                )}
-
-                {/* Name field (signup only) */}
-                {isSignup && (
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="Seu nome completo"
-                    value={formState.name}
-                    onChange={handleInputChange}
-                    variant="foreground"
-                    required={isSignup}
-                    disabled={isLoading}
-                  />
-                )}
-
-                {/* Email field */}
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Seu endereço de email"
-                  value={formState.email}
-                  onChange={handleInputChange}
-                  variant="foreground"
-                  required
-                  disabled={isLoading}
-                />
-
-                {/* Password field + 'Esqueceu sua senha?' agrupados (login) */}
-                <div className="w-full space-y-1">
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="Sua senha"
-                    value={formState.password}
-                    onChange={handleInputChange}
-                    variant="foreground"
-                    required
-                    disabled={isLoading}
-                  />
-
-                  {/* Forgot password link (login only) - fica mais próximo do input */}
-                  {!isSignup && (
-                    <div className="flex justify-end">
-                      <button
-                        type="button"
-                        onClick={() => setShowResetForm(true)}
-                        className="text-sm text-foreground hover:text-foreground hover:underline transition-colors"
-                      >
-                        Esqueceu sua senha?
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                {/* Confirm password field (signup only) */}
-                {isSignup && (
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    placeholder="Confirme sua senha"
-                    value={formState.confirmPassword}
-                    onChange={handleInputChange}
-                    variant="foreground"
-                    required={isSignup}
-                    disabled={isLoading}
-                  />
-                )}
-
-                {/* Submit button */}
-                <Button
-                  type="submit"
-                  variant="fore"
-                  className="w-full flex items-center justify-center py-3"
-                  disabled={isLoading}
-                >
-                  {isLoading && <LoadingSpinner size="sm" />}
-                  {isSignup ? (
-                    isLoading ? (
-                      'Criando conta...'
-                    ) : (
-                      'Criar conta'
-                    )
-                  ) : isLoading ? (
-                    'Entrando...'
-                  ) : (
-                    'Entrar'
-                  )}
-                </Button>
-
-                {/* Divider */}
-                <div className="flex items-center gap-4">
-                  <div className="flex-1 border-t border-foreground"></div>
-                  <span className="text-sm text-foreground">
-                    {isSignup ? 'Ou se cadastre com' : 'Ou se logue com'}
-                  </span>
-                  <div className="flex-1 border-t border-foreground"></div>
-                </div>
-
-                {/* Google Login Button */}
-                <button
-                  type="button"
-                  onClick={handleGoogleLogin}
-                  className="w-full flex items-center justify-center gap-3 py-3 border-2 border-foreground/20 rounded-md hover:bg-accent/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  aria-label={
-                    isSignup ? 'Cadastrar com Google' : 'Fazer login com Google'
-                  }
-                  disabled={isLoading}
-                >
-                  {isLoading && <LoadingSpinner size="sm" />}
-                  {!isLoading && (
-                    <SocialIcon
-                      network="google"
-                      className="w-5 h-5 fill-foreground"
-                    />
-                  )}
-                  <span className="font-medium">
-                    {isSignup
-                      ? 'Cadastrar com Google'
-                      : 'Fazer login com Google'}
-                  </span>
-                </button>
-              </form>
-
-              {/* Toggle signup/login */}
-              <div className="pt-4">
-                <p className="text-center text-sm text-foreground/70">
-                  {isSignup ? (
-                    <>
-                      Já tem uma conta?{' '}
-                      <button
-                        type="button"
-                        onClick={handleToggleMode}
-                        className="font-semibold text-foreground hover:underline transition-colors"
-                      >
-                        Faça login
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      Não tem uma conta?{' '}
-                      <button
-                        type="button"
-                        onClick={handleToggleMode}
-                        className="font-semibold text-foreground hover:underline transition-colors"
-                      >
-                        Cadastre-se agora
-                      </button>
-                    </>
-                  )}
-                </p>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
+      <LoginCard
+        showResetForm={showResetForm}
+        isSignup={isSignup}
+        formState={formState}
+        handleInputChange={handleInputChange}
+        handleSubmit={handleSubmit}
+        handleGoogleLogin={handleGoogleLogin}
+        handleToggleMode={handleToggleMode}
+        error={error}
+        isLoading={isLoading}
+        setShowResetForm={setShowResetForm}
+        resetEmail={resetEmail}
+        setResetEmail={setResetEmail}
+        handleResetPassword={handleResetPassword}
+        resetSuccess={resetSuccess}
+        setError={setError}
+        setResetSuccess={setResetSuccess}
+        router={router}
+      />
     </div>
   );
 }
