@@ -1,9 +1,10 @@
 import Link from 'next/link';
 
 type ButtonProps = {
-  text: string;
+  text?: string;
   href?: string;
   onClick?: () => void;
+  type?: 'button' | 'submit' | 'reset';
   variant?:
     | 'accent'
     | 'fore'
@@ -13,6 +14,7 @@ type ButtonProps = {
     | 'danger';
   className?: string;
   disabled?: boolean;
+  children?: React.ReactNode;
 };
 
 export default function Button({
@@ -22,6 +24,8 @@ export default function Button({
   variant = 'accent',
   className = '',
   disabled = false,
+  children,
+  type,
 }: ButtonProps) {
   const baseClasses =
     'inline-block px-6 py-1 rounded-md transition-all hover:opacity-90 active:scale-95 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-0';
@@ -44,10 +48,13 @@ export default function Button({
     `${baseClasses} ${variantClasses} ${disabledClasses} ${className}`.trim();
 
   // Se onClick for fornecido, renderiza um button
-  if (onClick) {
+  // Se onClick ou type for fornecido, renderiza um button (suporta submit/reset)
+  if (onClick || type) {
     return (
-      <button type="button" onClick={onClick} className={combinedClasses} disabled={disabled}>
-        {text}
+      <button type={type ?? 'button'} onClick={onClick} className={combinedClasses} disabled={disabled}>
+        <span className="inline-flex items-center gap-2">
+          {children ?? text}
+        </span>
       </button>
     );
   }
@@ -62,7 +69,7 @@ export default function Button({
         rel="noopener noreferrer"
         className={combinedClasses}
       >
-        {text}
+        {children ?? text}
       </a>
     );
   }
@@ -70,7 +77,7 @@ export default function Button({
   // Caso contrário, renderiza um Link do Next.js
   return (
     <Link href={href || '/'} className={combinedClasses}>
-      {text}
+      {children ?? text}
     </Link>
   );
 }
