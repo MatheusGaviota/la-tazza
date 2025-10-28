@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Navbar from '@/components/Layout/Navbar';
 import Footer from '@/components/Layout/Footer';
-import AccessibilityTray from '@/components/UI/AccessibilityTray';
 import { CartProvider } from '@/contexts/CartContext';
 
 export const metadata: Metadata = {
@@ -18,7 +17,6 @@ export default function MainLayout({
     <>
       <CartProvider>
         <Navbar />
-        <AccessibilityTray />
         <main id="main-content" className="pt-[92px]">
           {children}
         </main>

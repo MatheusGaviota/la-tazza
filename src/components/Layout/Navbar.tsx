@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Button from '../UI/Button';
 import CartDrawer from '../Cart/CartDrawer';
 import Skeleton from '../UI/Skeleton';
+import Logo from './Logo';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useState, useEffect, useRef } from 'react';
@@ -124,8 +125,8 @@ export default function Navbar() {
       >
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-6">
-            <Link href="/" className="text-background text-xl font-semibold">
-              La Tazza
+            <Link href="/" aria-label="La Tazza - Início" className="block">
+              <Logo className="h-8 text-background" />
             </Link>
           </div>
 

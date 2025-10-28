@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import AccessibilityTray from '@/components/UI/AccessibilityTray';
 
 export const metadata: Metadata = {
   title: 'Autenticação - La Tazza',
@@ -13,7 +12,6 @@ export default function AuthLayout({
 }>) {
   return (
     <>
-      <AccessibilityTray />
       <div className="w-full min-h-screen bg-foreground">{children}</div>
     </>
   );

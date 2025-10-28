@@ -2,6 +2,7 @@ import { Poppins, Alumni_Sans } from 'next/font/google';
 import './globals.css';
 import './high-contrast.css';
 import { AuthProvider } from '@/contexts/AuthContext';
+import AccessibilityTray from '@/components/UI/AccessibilityTray';
 
 const poppins = Poppins({
   variable: '--font-poppins',
@@ -35,6 +36,7 @@ export default function RootLayout({
             }}
             aria-hidden="true"
           />
+          <AccessibilityTray />
           {children}
         </AuthProvider>
       </body>
