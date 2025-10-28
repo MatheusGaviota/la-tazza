@@ -14,7 +14,7 @@ export default function AuthLayout({
   return (
     <>
       <AccessibilityTray />
-      <div className="w-full min-h-screen">{children}</div>
+      <div className="w-full min-h-screen bg-foreground">{children}</div>
     </>
   );
 }
