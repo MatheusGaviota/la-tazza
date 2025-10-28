@@ -308,6 +308,31 @@ export const useProfile = (user: User | null): UseProfileReturn => {
     setDeleteModal((prev) => ({ ...prev, isDeleting: true, error: '' }));
 
     try {
+      // Tentar deletar a foto de perfil no Cloudinary antes de remover a conta.
+      // Se falhar, não impedimos a exclusão da conta — apenas logamos e continuamos.
+      if (user?.uid) {
+        const publicId = `la-tazza/profile-photos/user-${user.uid}`;
+        try {
+          const resp = await fetch('/api/cloudinary/delete', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ publicId }),
+          });
+
+          if (!resp.ok) {
+            // Tentar ler erro para debug, mas não interromper o fluxo
+            const errData = await resp.json().catch(() => null);
+            console.warn('Falha ao deletar imagem do Cloudinary:', errData || resp.statusText);
+          } else {
+            console.log('Foto de perfil deletada no Cloudinary —', publicId);
+          }
+        } catch (err) {
+          console.warn('Erro ao chamar API de delete do Cloudinary:', err);
+        }
+      }
+
       await deleteUserAccount(isGoogleUser ? undefined : deleteModal.password);
       showToast('Conta excluída com sucesso', 'success');
       return Promise.resolve();

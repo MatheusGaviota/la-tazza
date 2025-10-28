@@ -171,7 +171,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative w-screen h-screen flex items-center justify-center md:justify-end overflow-hidden">
+    <div className="relative w-screen h-screen flex items-center justify-center overflow-hidden">
       {/* Background */}
       <Image
         src={ASSETS.background}
@@ -184,8 +184,8 @@ export default function LoginPage() {
       />
 
       {/* Login Card */}
-      <div className="relative z-10 w-full max-w-md max-sm:max-w-none mx-4 md:mr-12 py-12 h-full max-sm:flex max-sm:justify-center sm:items-center">
-        <div className="relative overflow-auto flex flex-col bg-background rounded-md p-6 sm:p-8 max-h-[90vh] min-h-[480px] sm:min-h-full max-sm:w-full justify-between">
+  <div className="relative z-10 w-full max-w-lg max-sm:max-w-none mx-4 py-8 h-auto max-sm:flex max-sm:justify-center sm:items-center">
+  <div className="relative overflow-auto flex flex-col bg-background rounded-md p-6 sm:p-8 max-h-[90vh] min-h-[360px] max-sm:w-full justify-between">
           {/* Back button */}
           <button
             type="button"
