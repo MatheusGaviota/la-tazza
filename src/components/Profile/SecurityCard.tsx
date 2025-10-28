@@ -104,7 +104,7 @@ export default function SecurityCard({ onChangePassword }: SecurityCardProps) {
                 })
               }
               variant="accent"
-              helpText="Mínimo de 8 caracteres"
+              helpText="Mínimo de 6 caracteres"
               required
               minLength={8}
             />

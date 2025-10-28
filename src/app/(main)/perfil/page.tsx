@@ -69,9 +69,9 @@ export default function ProfilePage() {
   };
 
   const onChangePassword = async (data: { currentPassword: string; newPassword: string; confirmPassword: string }) => {
+    // Apenas tenta alterar a senha e deixa o hook/feedback cuidar do resto.
+    // Não redirecionamos nem desconectamos o usuário automaticamente.
     await handleChangePassword(data);
-    // Redireciona para login após logout bem-sucedido
-    router.push('/login');
   };
 
   const onConfirmDelete = async () => {

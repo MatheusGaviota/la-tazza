@@ -49,7 +49,7 @@ const AUTH_ERROR_MESSAGES: Readonly<Record<string, string>> = {
   'auth/email-already-in-use': 'Email já está em uso',
   'auth/weak-password': `Senha muito fraca (mínimo ${MIN_PASSWORD_LENGTH} caracteres)`,
   'auth/operation-not-allowed': 'Operação não permitida',
-  'auth/invalid-credential': 'Email ou senha inválidos',
+  'auth/invalid-credential': 'Senha atual incorreta',
   'auth/too-many-requests': 'Muitas tentativas. Tente novamente mais tarde',
   'auth/popup-closed-by-user': 'Login cancelado',
   'auth/configuration-not-found': 'Erro de configuração. Contate o suporte.',

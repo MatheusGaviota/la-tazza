@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { updateProfile, User } from 'firebase/auth';
-import { deleteUserAccount, changePassword, logout } from '@/lib/auth.service';
+import { deleteUserAccount, changePassword } from '@/lib/auth.service';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   validatePhone,
@@ -42,7 +42,7 @@ interface UseProfileReturn {
   toast: ToastState;
   deleteModal: DeleteAccountModal;
   handleSavePersonalInfo: (data: PersonalInfo) => Promise<void>;
-  handleChangePassword: (data: PasswordData) => Promise<void>;
+  handleChangePassword: (data: PasswordData) => Promise<boolean>;
   handlePhotoChange: (file: File) => Promise<void>;
   handleRemovePhoto: () => Promise<void>;
   showToast: (message: string, type?: 'success' | 'error') => void;
@@ -127,44 +127,44 @@ export const useProfile = (user: User | null): UseProfileReturn => {
     }
   };
 
-  const handleChangePassword = async (data: PasswordData) => {
+  const handleChangePassword = async (data: PasswordData): Promise<boolean> => {
     const currentValidation = validatePassword(data.currentPassword);
     if (!currentValidation.valid) {
       showToast(currentValidation.error || 'Senha atual inválida', 'error');
-      return;
+      return false;
     }
 
     const newValidation = validatePassword(data.newPassword);
     if (!newValidation.valid) {
       showToast(newValidation.error || 'Nova senha inválida', 'error');
-      return;
+      return false;
     }
 
     if (!validatePasswordMatch(data.newPassword, data.confirmPassword)) {
       showToast('As senhas não correspondem', 'error');
-      return;
+      return false;
     }
 
     if (data.currentPassword === data.newPassword) {
       showToast('A nova senha deve ser diferente da atual', 'error');
-      return;
+      return false;
     }
 
     setIsSaving(true);
 
     try {
-      await changePassword(data.currentPassword, data.newPassword);
-      showToast('Senha alterada com sucesso! Você será desconectado.', 'success');
-      
-      // Aguarda 1.5s para exibir a mensagem antes de fazer logout
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      await logout();
+  await changePassword(data.currentPassword, data.newPassword);
+  // Não desconectar o usuário automaticamente após alteração de senha.
+  // Apenas informar sucesso e retornar true para o componente decidir o que fazer.
+  showToast('Senha alterada com sucesso!', 'success');
+  return true;
     } catch (error) {
       const message =
         error instanceof Error
           ? error.message
           : 'Erro ao alterar senha. Tente novamente.';
       showToast(message, 'error');
+      return false;
     } finally {
       setIsSaving(false);
     }
