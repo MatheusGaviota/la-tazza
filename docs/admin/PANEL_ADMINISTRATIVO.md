@@ -46,7 +46,7 @@ Painel administrativo completo e profissional para gerenciamento de conteúdo do
 O acesso ao painel administrativo é protegido e requer:
 - ✅ Autenticação via Firebase Auth
 - ✅ Verificação de usuário logado
-- 🔄 TODO: Implementar sistema de roles (admin/editor)
+- ✅ Verificação de custom claim `admin: true` no token JWT
 
 **URL de Acesso:** `/admin`
 
@@ -122,25 +122,36 @@ src/
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Função auxiliar para verificar se usuário é admin via custom claims
+    function isAdmin() {
+      return request.auth != null &&
+             request.auth.token.admin == true;
+    }
+
     // Apenas leitura pública para produtos, cursos e posts publicados
     match /products/{productId} {
       allow read: if true;
-      allow write: if request.auth != null; // TODO: Add admin role check
+      allow write: if isAdmin();
     }
     
     match /courses/{courseId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
     
     match /workshops/{workshopId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
     
     match /blog-posts/{postId} {
       allow read: if resource.data.published == true || request.auth != null;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
+    // Coleção de usuários - apenas o próprio usuário pode ler/escrever seus dados
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
   }
 }
@@ -171,13 +182,26 @@ http://localhost:3000/admin
 - Clique no botão "Excluir" no card do item
 - Confirme a exclusão no modal
 
-### 6. Buscar Items
-- Use a barra de busca no topo
-- A busca filtra por título, categoria, autor, etc.
+### 6. Gerenciar Administradores
+- Para promover um usuário a administrador, use o CLI admin:
+  ```bash
+  npm run admin promote-admin <USER_UID>
+  ```
+- Para verificar se um usuário é admin:
+  ```bash
+  npm run admin get-user <USER_UID>
+  ```
+- Para remover privilégios de admin:
+  ```bash
+  npm run admin demote-admin <USER_UID>
+  ```
+- Para verificar seu próprio status de admin no console do navegador:
+  ```javascript
+  import('./lib/admin-utils').then(m => m.checkAdminStatus())
+  ```
 
 ## ⚠️ TODOs e Melhorias Futuras
 
-- [ ] Implementar sistema de roles (admin/editor/viewer)
 - [ ] Adicionar paginação para listas grandes
 - [ ] Editor de markdown para posts do blog
 - [ ] Preview de posts antes de publicar
@@ -194,7 +218,7 @@ http://localhost:3000/admin
 - ✅ Validação de dados no Firestore
 - ✅ Upload seguro de imagens via Cloudinary
 - ✅ Autenticação obrigatória
-- 🔄 TODO: Autorização baseada em roles
+- ✅ Autorização baseada em custom claims JWT (`admin: true`)
 - 🔄 TODO: Rate limiting
 - 🔄 TODO: Logs de auditoria
 
