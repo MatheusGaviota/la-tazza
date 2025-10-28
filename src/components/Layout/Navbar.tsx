@@ -317,7 +317,7 @@ export default function Navbar() {
                 {isAuthenticated ? (
                   <div className="space-y-2">
                     {/* Profile Card */}
-                    <div className="bg-accent/10 rounded-lg p-3 border border-accent/20">
+                    <div className="bg-accent/10 rounded-lg p-3 border-2 border-accent/20">
                       <Link
                         href="/perfil"
                         onClick={() => setOpen(false)}
@@ -361,7 +361,7 @@ export default function Navbar() {
                     {/* Logout Button */}
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-background/10 hover:bg-red-500/20 text-background hover:text-red-300 transition-colors border border-background/20 hover:border-red-500/30 focus:outline-none focus:ring-2 focus:ring-accent"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-background/10 hover:bg-red-500/20 text-background hover:text-red-300 transition-colors border-2 border-background/20 hover:border-red-500/30 focus:outline-none focus:ring-2 focus:ring-accent"
                     >
                       <LogOut size={18} />
                       <span className="text-sm font-medium">Sair da conta</span>
