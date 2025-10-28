@@ -43,7 +43,7 @@ export default function CourseDetailCard({
 }: CourseDetailCardProps) {
   return (
     <Link href={`/cursos/${id}`} className="block h-full">
-      <article className="group bg-background border-2 border-accent/20 rounded-xl overflow-hidden hover:border-accent/40 transition-all duration-300 flex flex-col h-full hover:shadow-lg">
+  <article className="group bg-background border-2 border-accent/20 rounded-xl overflow-hidden hover:border-accent/40 transition-all duration-300 flex flex-col h-full">
         {/* Image */}
         <div className="relative aspect-video overflow-hidden bg-accent/10">
           <Image

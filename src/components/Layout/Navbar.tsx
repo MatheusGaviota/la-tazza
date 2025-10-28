@@ -199,7 +199,7 @@ export default function Navbar() {
                   {/* Dropdown Menu */}
                   {dropdownOpen && (
                     <div
-                      className="absolute right-0 mt-2 w-56 bg-background rounded-lg shadow-lg border border-accent/20 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+                      className="absolute right-0 mt-2 w-56 bg-background rounded-lg border border-accent/20 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200"
                       role="menu"
                       aria-orientation="vertical"
                       aria-labelledby="user-menu"
@@ -315,36 +315,58 @@ export default function Navbar() {
               </li>
               <li className="pt-2">
                 {isAuthenticated ? (
-                  <Link
-                    href="/perfil"
-                    onClick={() => setOpen(false)}
-                    className="flex items-center gap-3 px-2 py-2 rounded hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent"
-                  >
-                    {isLoadingPhoto ? (
-                      <Skeleton
-                        variant="circular"
-                        width={24}
-                        height={24}
-                        animation="pulse"
-                      />
-                    ) : hasPhoto && !imageError ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        key={user?.photoURL}
-                        src={user?.photoURL || ''}
-                        alt={user?.displayName || 'Foto de perfil'}
-                        className="w-6 h-6 rounded-full object-cover border-2 border-accent"
-                        onError={handleImageError}
-                      />
-                    ) : (
-                      <div className="w-6 h-6 rounded-full bg-background border-2 border-accent flex items-center justify-center flex-shrink-0">
-                        <span className="text-xs font-bold text-accent">
-                          {user?.displayName ? getInitials(user.displayName) : <User size={14} className="text-accent" />}
-                        </span>
-                      </div>
-                    )}
-                    <span>Perfil</span>
-                  </Link>
+                  <div className="space-y-2">
+                    {/* Profile Card */}
+                    <div className="bg-accent/10 rounded-lg p-3 border border-accent/20">
+                      <Link
+                        href="/perfil"
+                        onClick={() => setOpen(false)}
+                        className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-accent rounded"
+                      >
+                        {isLoadingPhoto ? (
+                          <Skeleton
+                            variant="circular"
+                            width={40}
+                            height={40}
+                            animation="pulse"
+                          />
+                        ) : hasPhoto && !imageError ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            key={user?.photoURL}
+                            src={user?.photoURL || ''}
+                            alt={user?.displayName || 'Foto de perfil'}
+                            className="w-10 h-10 rounded-full object-cover border-2 border-accent group-hover:border-accent/80 transition-colors flex-shrink-0"
+                            onError={handleImageError}
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-background border-2 border-accent group-hover:border-accent/80 transition-colors flex items-center justify-center flex-shrink-0">
+                            <span className="text-sm font-bold text-accent">
+                              {user?.displayName ? getInitials(user.displayName) : <User size={20} className="text-accent" />}
+                            </span>
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-background truncate group-hover:underline">
+                            {user?.displayName || 'Usuário'}
+                          </p>
+                          <p className="text-xs text-background/70 truncate">
+                            Ver perfil
+                          </p>
+                        </div>
+                        <UserCircle size={18} className="text-accent flex-shrink-0" />
+                      </Link>
+                    </div>
+                    
+                    {/* Logout Button */}
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-background/10 hover:bg-red-500/20 text-background hover:text-red-300 transition-colors border border-background/20 hover:border-red-500/30 focus:outline-none focus:ring-2 focus:ring-accent"
+                    >
+                      <LogOut size={18} />
+                      <span className="text-sm font-medium">Sair da conta</span>
+                    </button>
+                  </div>
                 ) : (
                   <Button
                     text="Login"

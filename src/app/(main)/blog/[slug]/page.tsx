@@ -522,7 +522,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 p-3 bg-accent text-background rounded-full shadow-lg hover:bg-accent/90 transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0 z-50 animate-fade-in"
+          className="fixed bottom-6 right-6 p-3 bg-accent text-background rounded-full hover:bg-accent/90 transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0 z-50 animate-fade-in"
           aria-label="Voltar ao topo"
         >
           <ChevronUp size={24} />

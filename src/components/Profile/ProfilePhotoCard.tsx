@@ -162,7 +162,7 @@ export default function ProfilePhoto({
           {/* Badge com ícone de câmera */}
           <label
             htmlFor="photo-upload"
-            className={`absolute bottom-0 right-0 bg-accent text-background rounded-full p-3 cursor-pointer hover:bg-accent/90 transition-all shadow-md border-2 border-background ${
+            className={`absolute bottom-0 right-0 bg-accent text-background rounded-full p-3 cursor-pointer hover:bg-accent/90 transition-all border-2 border-background ${
               isUploading ? 'opacity-50 pointer-events-none' : ''
             }`}
             title="Clique para alterar foto"

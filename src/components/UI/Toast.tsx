@@ -32,7 +32,7 @@ export default function Toast({ message, show, onClose }: ToastProps) {
         isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
       }`}
     >
-      <div className="flex items-center gap-3 bg-foreground text-background px-6 py-4 rounded-lg shadow-2xl border-2 border-accent">
+      <div className="flex items-center gap-3 bg-foreground text-background px-6 py-4 rounded-lg border-2 border-accent">
         <ShoppingCart size={24} className="text-accent flex-shrink-0" />
         <p className="font-medium">{message}</p>
         <button
