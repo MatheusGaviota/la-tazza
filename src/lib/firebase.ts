@@ -2,6 +2,7 @@
 
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 import type { FirebaseApp } from 'firebase/app';
 
 /**
@@ -58,4 +59,5 @@ function initializeFirebase(): FirebaseApp {
 
 const firebaseApp = initializeFirebase();
 export const auth = getAuth(firebaseApp);
+export const db = getFirestore(firebaseApp);
 export default firebaseApp;
