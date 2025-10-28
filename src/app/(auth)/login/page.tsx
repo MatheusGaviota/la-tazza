@@ -6,6 +6,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import SocialIcon from '@/components/UI/SocialIcon';
 import LoadingSpinner from '@/components/UI/LoadingSpinner';
+import Button from '@/components/UI/Button';
 import Input from '@/components/UI/Input';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -253,14 +254,15 @@ export default function LoginPage() {
                     disabled={isLoading}
                   />
 
-                  <button
+                  <Button
                     type="submit"
-                    className="w-full bg-foreground text-background py-3 rounded-md font-semibold hover:bg-foreground transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    variant="fore"
+                    className="w-full flex items-center justify-center py-3"
                     disabled={isLoading}
                   >
                     {isLoading && <LoadingSpinner size="sm" />}
                     {isLoading ? 'Enviando...' : 'Enviar Email'}
-                  </button>
+                  </Button>
                 </form>
               </div>
 
@@ -369,9 +371,10 @@ export default function LoginPage() {
                 )}
 
                 {/* Submit button */}
-                <button
+                <Button
                   type="submit"
-                  className="w-full bg-foreground text-background py-3 rounded-md font-semibold hover:bg-foreground transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  variant="fore"
+                  className="w-full flex items-center justify-center py-3"
                   disabled={isLoading}
                 >
                   {isLoading && <LoadingSpinner size="sm" />}
@@ -386,7 +389,7 @@ export default function LoginPage() {
                   ) : (
                     'Entrar'
                   )}
-                </button>
+                </Button>
 
                 {/* Divider */}
                 <div className="flex items-center gap-4">
