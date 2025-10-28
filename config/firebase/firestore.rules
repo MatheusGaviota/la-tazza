@@ -1,25 +1,36 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Função auxiliar para verificar se usuário é admin via custom claims
+    function isAdmin() {
+      return request.auth != null &&
+             request.auth.token.admin == true;
+    }
+
     // Apenas leitura pública para produtos, cursos e posts publicados
     match /products/{productId} {
       allow read: if true;
-      allow write: if request.auth != null; // TODO: Add admin role check
+      allow write: if isAdmin();
     }
 
     match /courses/{courseId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
 
     match /workshops/{workshopId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
 
     match /blog-posts/{postId} {
       allow read: if resource.data.published == true || request.auth != null;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
+    // Coleção de usuários - apenas o próprio usuário pode ler/escrever seus dados
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
   }
 }
