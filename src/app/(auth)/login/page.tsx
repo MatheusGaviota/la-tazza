@@ -19,7 +19,7 @@ import {
 
 const ASSETS = {
   background:
-    'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761103591/background-login_k6m6ai.png',
+    'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761620692/background-login_k6m6ai.png',
 } as const;
 
 interface FormState {
@@ -179,7 +179,7 @@ export default function LoginPage() {
         fill
         priority
         quality={90}
-        className="object-cover object-center"
+        className="object-cover object-center opacity-50"
         role="presentation"
       />
 
@@ -198,10 +198,16 @@ export default function LoginPage() {
           </button>
 
           {/* Logo/Brand */}
-          <div className="text-center mb-6 md:mb-8">
-            <h1 className="text-3xl md:text-4xl font-semibold mb-1">
-              La Tazza
-            </h1>
+          <div className="flex justify-center items-center mb-6 md:mb-8">
+            <Image
+              src="https://res.cloudinary.com/dyenpzpcr/image/upload/v1761530835/Logo_hhbwde.png"
+              alt="La Tazza"
+              width={1000}
+              height={450}
+              className="w-30 sm:w-40 h-auto"
+              priority
+            />
+
           </div>
 
           {/* Reset Password Form */}
