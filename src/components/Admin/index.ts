@@ -1,0 +1,9 @@
+export { default as ProductsManager } from './ProductsManager';
+export { default as ProductFormModal } from './ProductFormModal';
+export { default as CoursesManager } from './CoursesManager';
+export { default as CourseFormModal } from './CourseFormModal';
+export { default as WorkshopsManager } from './WorkshopsManager';
+export { default as WorkshopFormModal } from './WorkshopFormModal';
+export { default as BlogManager } from './BlogManager';
+export { default as BlogFormModal } from './BlogFormModal';
+export { default as DeleteConfirmModal } from './DeleteConfirmModal';
