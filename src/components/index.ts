@@ -27,3 +27,6 @@ export {
   ProfilePhotoCard,
   SecurityCard,
 } from './Profile';
+
+// Auth components
+export { AuthForm, ResetPasswordForm, LoginCard } from './Auth';
