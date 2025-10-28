@@ -1,0 +1,68 @@
+// ============================================================================
+// Admin Types - Tipos para o painel administrativo
+// ============================================================================
+
+export interface Product {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  category: string;
+  imageUrl: string;
+  stock?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface Course {
+  id: string;
+  title: string;
+  description: string;
+  duration: string;
+  level: string;
+  price: string;
+  imageUrl: string;
+  modules?: CourseModule[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface CourseModule {
+  id: string;
+  title: string;
+  description: string;
+  order: number;
+}
+
+export interface Workshop {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  duration: string;
+  instructor: string;
+  price: string;
+  imageUrl: string;
+  maxParticipants?: number;
+  currentParticipants?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface BlogPost {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  author: string;
+  date: string;
+  readTime: string;
+  category: string;
+  imageUrl: string;
+  published: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export type ContentType = 'product' | 'course' | 'workshop' | 'blog';
