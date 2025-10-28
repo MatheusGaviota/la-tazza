@@ -6,8 +6,10 @@ import {
   Instagram,
   Facebook,
   Twitter,
-  Coffee,
 } from 'lucide-react';
+import Logo from './Logo';
+import Input from '../UI/Input';
+import Button from '../UI/Button';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -50,10 +52,9 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <Coffee size={32} className="text-accent" />
-              <h3 className="font-alumni text-3xl font-bold text-background">
-                La Tazza
-              </h3>
+              <Link href="/" aria-label="La Tazza - Início" className="block">
+                <Logo className="h-8 text-background" />
+              </Link>
             </div>
             <p className="text-background/80 text-sm leading-relaxed mb-6 max-w-sm">
               Sua conexão com o mundo do café especial. Oferecemos os melhores
@@ -154,19 +155,20 @@ export default function Footer() {
             </div>
 
             <form className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-              <input
+              <Input
                 type="email"
                 placeholder="Seu e-mail"
                 required
-                className="px-4 py-2.5 rounded-lg bg-background/10 border-2 border-background/20 text-background placeholder:text-background/50 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all sm:min-w-[280px]"
-                aria-label="Digite seu e-mail"
+                fullWidth={false}
+                className="max-sm:w-full sm:min-w-[280px]"
+                variant="accent"
               />
-              <button
+              <Button
                 type="submit"
-                className="px-6 py-2.5 bg-accent text-foreground rounded-lg font-medium hover:bg-accent/90 transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0 whitespace-nowrap"
-              >
-                Inscrever-se
-              </button>
+                text="Inscrever-se"
+                variant="accent"
+                className="whitespace-nowrap"
+              />
             </form>
           </div>
         </div>
@@ -177,13 +179,6 @@ export default function Footer() {
             <p className="text-center sm:text-left">
               © {currentYear} La Tazza. Todos os direitos reservados.
             </p>
-
-            <div className="flex items-center gap-4">
-              <span className="flex items-center gap-1.5">
-                Feito com <span className="text-accent">♥</span> para amantes
-                de café
-              </span>
-            </div>
           </div>
         </div>
       </div>
