@@ -1,13 +1,33 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CourseDetailCard from '@/components/Cards/CourseDetailCard';
 import Button from '@/components/UI/Button';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/config/firebase/client';
+
+interface Course {
+  id: string;
+  type: 'curso' | 'workshop';
+  imageUrl: string;
+  title: string;
+  description: string;
+  duration: string;
+  level: string;
+  category: string;
+  price: string;
+  instructor: string;
+  students?: number;
+  rating?: number;
+  topics: string[];
+}
 
 export default function CursosPage() {
   const [selectedCategory, setSelectedCategory] = useState('todos');
   const [selectedLevel, setSelectedLevel] = useState('todos');
   const [selectedType, setSelectedType] = useState('todos');
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const categories = [
     { id: 'todos', label: 'Todos' },
@@ -31,215 +51,26 @@ export default function CursosPage() {
     { id: 'workshop', label: 'Workshops' },
   ];
 
-  const courses = [
-    {
-      id: 1,
-      type: 'curso',
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png',
-      title: 'Barista Profissional Completo',
-      description:
-        'Aprenda desde os fundamentos até técnicas avançadas de preparo de café. Curso ideal para quem deseja se tornar um barista profissional.',
-      duration: '40 horas',
-      level: 'intermediario',
-      category: 'barista',
-      price: 'R$ 1.200,00',
-      instructor: 'Chef Matteo Rossi',
-      students: 234,
-      rating: 4.9,
-      topics: [
-        'História e cultura do café',
-        'Tipos de grãos e torrefação',
-        'Uso e manutenção de equipamentos',
-        'Técnicas de extração profissionais',
-        'Atendimento ao cliente',
-      ],
-    },
-    {
-      id: 2,
-      type: 'curso',
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png',
-      title: 'Arte em Latte - Criatividade na Xícara',
-      description:
-        'Domine a arte de criar designs incríveis em suas bebidas. Do coração clássico a desenhos complexos.',
-      duration: '20 horas',
-      level: 'iniciante',
-      category: 'arte-latte',
-      price: 'R$ 680,00',
-      instructor: 'Sofia Martins',
-      students: 189,
-      rating: 4.8,
-      topics: [
-        'Fundamentos do latte art',
-        'Vaporização perfeita do leite',
-        'Desenhos básicos e intermediários',
-        'Técnicas de etching',
-        'Criação de designs próprios',
-      ],
-    },
-    {
-      id: 3,
-      type: 'curso',
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png',
-      title: 'Métodos Alternativos de Extração',
-      description:
-        'Explore métodos como Aeropress, Chemex, V60, French Press e Sifão. Descubra o potencial único de cada método.',
-      duration: '16 horas',
-      level: 'intermediario',
-      category: 'extracao',
-      price: 'R$ 560,00',
-      instructor: 'Ricardo Santos',
-      students: 156,
-      rating: 4.7,
-      topics: [
-        'Química da extração',
-        'Moagem e proporções',
-        'Aeropress e suas variações',
-        'Pour over: V60 e Chemex',
-        'Métodos de imersão',
-      ],
-    },
-    {
-      id: 4,
-      type: 'curso',
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png',
-      title: 'Introdução ao Café Especial',
-      description:
-        'Perfeito para iniciantes que querem entender o universo do café especial, desde a origem até a xícara.',
-      duration: '12 horas',
-      level: 'iniciante',
-      category: 'degustacao',
-      price: 'R$ 420,00',
-      instructor: 'Ana Paula Costa',
-      students: 312,
-      rating: 4.9,
-      topics: [
-        'O que é café especial',
-        'Origem e processamento',
-        'Degustação básica',
-        'Identificação de sabores',
-        'Preparo em casa',
-      ],
-    },
-    {
-      id: 5,
-      type: 'curso',
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png',
-      title: 'Cupping e Análise Sensorial',
-      description:
-        'Aprenda a realizar sessões de cupping profissionais e desenvolva seu paladar para avaliar cafés especiais.',
-      duration: '24 horas',
-      level: 'avancado',
-      category: 'degustacao',
-      price: 'R$ 890,00',
-      instructor: 'Dr. Fernando Oliveira',
-      students: 98,
-      rating: 5.0,
-      topics: [
-        'Protocolos SCA de cupping',
-        'Análise sensorial avançada',
-        'Identificação de defeitos',
-        'Pontuação de cafés',
-        'Elaboração de laudos',
-      ],
-    },
-    {
-      id: 6,
-      type: 'curso',
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png',
-      title: 'Gestão de Cafeteria de Sucesso',
-      description:
-        'Aprenda a gerenciar sua própria cafeteria, desde o planejamento até operações do dia a dia.',
-      duration: '32 horas',
-      level: 'intermediario',
-      category: 'gestao',
-      price: 'R$ 1.450,00',
-      instructor: 'Paulo Mendes',
-      students: 145,
-      rating: 4.8,
-      topics: [
-        'Planejamento de negócios',
-        'Gestão financeira',
-        'Controle de estoque',
-        'Marketing para cafeterias',
-        'Gestão de equipe',
-      ],
-    },
-    {
-      id: 7,
-      type: 'workshop',
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png',
-      title: 'Workshop: Expresso Perfeito',
-      description:
-        'Workshop intensivo de um dia focado em dominar a arte do expresso perfeito.',
-      duration: '8 horas',
-      level: 'iniciante',
-      category: 'barista',
-      price: 'R$ 320,00',
-      instructor: 'Chef Matteo Rossi',
-      students: 267,
-      rating: 4.9,
-      topics: [
-        'Calibração da máquina',
-        'Moagem e dosagem',
-        'Tempo de extração',
-        'Análise visual',
-        'Prática intensiva',
-      ],
-    },
-    {
-      id: 8,
-      type: 'curso',
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png',
-      title: 'Cold Brew e Bebidas Geladas',
-      description:
-        'Domine técnicas de extração a frio e crie bebidas refrescantes e inovadoras para seu cardápio.',
-      duration: '16 horas',
-      level: 'intermediario',
-      category: 'extracao',
-      price: 'R$ 580,00',
-      instructor: 'Juliana Ferreira',
-      students: 178,
-      rating: 4.7,
-      topics: [
-        'Cold brew tradicional',
-        'Iced coffee vs cold brew',
-        'Nitro cold brew',
-        'Bebidas autorais geladas',
-        'Conservação e shelf life',
-      ],
-    },
-    {
-      id: 9,
-      type: 'curso',
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png',
-      title: 'Torra Artesanal de Café',
-      description:
-        'Aprenda a arte da torrefação artesanal e desenvolva perfis de torra únicos para seus cafés.',
-      duration: '28 horas',
-      level: 'avancado',
-      category: 'barista',
-      price: 'R$ 1.350,00',
-      instructor: 'Marcos Torreador',
-      students: 87,
-      rating: 4.9,
-      topics: [
-        'Fundamentos da torrefação',
-        'Química da torra',
-        'Desenvolvimento de perfis',
-        'Controle de qualidade',
-        'Torras para diferentes métodos',
-      ],
-    },
-  ];
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        setLoading(true);
+        const coursesRef = collection(db, 'courses');
+        const coursesSnapshot = await getDocs(coursesRef);
+        const coursesData = coursesSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Course[];
+        setCourses(coursesData);
+      } catch (error) {
+        console.error('Erro ao buscar cursos:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   const filteredCourses = courses.filter((course) => {
     const categoryMatch =
@@ -424,31 +255,49 @@ export default function CursosPage() {
         </div>
 
         {/* Courses Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
-          {filteredCourses.map((course) => (
-            <CourseDetailCard key={course.id} {...course} />
-          ))}
-        </div>
-
-        {filteredCourses.length === 0 && (
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">☕</div>
-            <h3 className="font-alumni text-2xl font-semibold text-foreground mb-2">
-              Nenhum curso encontrado
-            </h3>
-            <p className="text-foreground/70 mb-6">
-              Tente ajustar os filtros para ver mais opções
-            </p>
-            <Button
-              text="Ver todos os cursos"
-              variant="accent"
-              onClick={() => {
-                setSelectedCategory('todos');
-                setSelectedLevel('todos');
-                setSelectedType('todos');
-              }}
-            />
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div
+                key={i}
+                className="bg-accent/5 border border-accent/20 rounded-lg p-6 animate-pulse"
+              >
+                <div className="aspect-video bg-accent/20 rounded-lg mb-4"></div>
+                <div className="h-6 bg-accent/20 rounded mb-2"></div>
+                <div className="h-4 bg-accent/20 rounded mb-4"></div>
+                <div className="h-4 bg-accent/20 rounded w-2/3"></div>
+              </div>
+            ))}
           </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
+              {filteredCourses.map((course) => (
+                <CourseDetailCard key={course.id} {...course} />
+              ))}
+            </div>
+
+            {filteredCourses.length === 0 && (
+              <div className="text-center py-16">
+                <div className="text-6xl mb-4">☕</div>
+                <h3 className="font-alumni text-2xl font-semibold text-foreground mb-2">
+                  Nenhum curso encontrado
+                </h3>
+                <p className="text-foreground/70 mb-6">
+                  Tente ajustar os filtros para ver mais opções
+                </p>
+                <Button
+                  text="Ver todos os cursos"
+                  variant="accent"
+                  onClick={() => {
+                    setSelectedCategory('todos');
+                    setSelectedLevel('todos');
+                    setSelectedType('todos');
+                  }}
+                />
+              </div>
+            )}
+          </>
         )}
       </section>
 
