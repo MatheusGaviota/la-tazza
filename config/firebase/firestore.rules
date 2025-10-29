@@ -28,6 +28,23 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Comentários - autenticados podem criar, deletar próprios comentários
+    // Autor do post e admins podem deletar qualquer comentário
+    match /comments/{commentId} {
+      allow read: if true;
+      allow create: if request.auth != null &&
+                      request.resource.data.userId == request.auth.uid &&
+                      request.resource.data.content is string &&
+                      request.resource.data.content.size() >= 3 &&
+                      request.resource.data.content.size() <= 1000;
+      allow delete: if request.auth != null && (
+                      resource.data.userId == request.auth.uid ||
+                      isAdmin() ||
+                      // Verificar se é o autor do post
+                      get(/databases/$(database)/documents/blog-posts/$(resource.data.postId)).data.authorUid == request.auth.uid
+                    );
+    }
+
     // Coleção de usuários - apenas o próprio usuário pode ler/escrever seus dados
     // Admins podem ler todos os usuários (mas operações de delete/update de usuários são via Admin SDK)
     match /users/{userId} {
