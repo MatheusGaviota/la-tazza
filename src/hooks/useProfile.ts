@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { updateProfile, User } from 'firebase/auth';
-import { deleteUserAccount, changePassword } from '@/lib/auth.service';
+import { deleteUserAccount, changePassword, sendVerificationEmail } from '@/lib/auth.service';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   validatePhone,
@@ -45,6 +45,7 @@ interface UseProfileReturn {
   handleChangePassword: (data: PasswordData) => Promise<boolean>;
   handlePhotoChange: (file: File) => Promise<void>;
   handleRemovePhoto: () => Promise<void>;
+  handleSendVerificationEmail: () => Promise<void>;
   showToast: (message: string, type?: 'success' | 'error') => void;
   closeToast: () => void;
   openDeleteModal: () => void;
@@ -369,6 +370,33 @@ export const useProfile = (user: User | null): UseProfileReturn => {
     }
   };
 
+  const handleSendVerificationEmail = async () => {
+    if (!user) {
+      showToast('Usuário não autenticado', 'error');
+      return;
+    }
+
+    if (user.emailVerified) {
+      showToast('Email já está verificado', 'success');
+      return;
+    }
+
+    setIsSaving(true);
+
+    try {
+      await sendVerificationEmail();
+      showToast('Email de verificação enviado! Verifique sua caixa de entrada.', 'success');
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Erro ao enviar email de verificação. Tente novamente.';
+      showToast(message, 'error');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return {
     userData,
     isSaving,
@@ -379,6 +407,7 @@ export const useProfile = (user: User | null): UseProfileReturn => {
     handleChangePassword,
     handlePhotoChange,
     handleRemovePhoto,
+    handleSendVerificationEmail,
     showToast,
     closeToast,
     openDeleteModal,
