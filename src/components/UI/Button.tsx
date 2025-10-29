@@ -8,6 +8,7 @@ type ButtonProps = {
   variant?:
     | 'accent'
     | 'fore'
+    | 'secondary'
     | 'ghost-accent'
     | 'ghost-fore'
     | 'ghost'
@@ -37,13 +38,15 @@ export default function Button({
       ? 'bg-accent text-background border-2 border-accent focus:ring-accent'
       : variant === 'fore'
         ? 'bg-foreground text-background border-2 border-foreground focus:ring-foreground'
-        : variant === 'ghost-accent'
-          ? 'bg-transparent text-accent border-2 border-accent focus:ring-accent'
-          : variant === 'ghost-fore'
-            ? 'bg-transparent text-foreground border-2 border-foreground focus:ring-foreground'
-            : variant === 'danger'
-              ? 'bg-red-600 text-background border-2 border-red-600 hover:bg-red-700 hover:border-red-700 focus:ring-red-600'
-              : '';
+        : variant === 'secondary'
+          ? 'bg-foreground text-background border-2 border-foreground focus:ring-foreground'
+          : variant === 'ghost-accent'
+            ? 'bg-transparent text-accent border-2 border-accent focus:ring-accent'
+            : variant === 'ghost-fore'
+              ? 'bg-transparent text-foreground border-2 border-foreground focus:ring-foreground'
+              : variant === 'danger'
+                ? 'bg-red-600 text-background border-2 border-red-600 hover:bg-red-700 hover:border-red-700 focus:ring-red-600'
+                : '';
   const combinedClasses =
     `${baseClasses} ${variantClasses} ${disabledClasses} ${className}`.trim();
 

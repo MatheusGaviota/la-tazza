@@ -2,6 +2,7 @@ export const navItems = [
   { label: 'Início', href: '/' },
   { label: 'Produtos', href: '/produtos' },
   { label: 'Cursos', href: '/cursos' },
+  { label: 'Planos', href: '/planos' },
   { label: 'Blog', href: '/blog' },
   { label: 'Contato', href: '/contato' },
 ];
