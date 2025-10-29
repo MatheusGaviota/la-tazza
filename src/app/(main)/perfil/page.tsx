@@ -29,6 +29,7 @@ export default function ProfilePage() {
     handleChangePassword,
     handlePhotoChange,
     handleRemovePhoto,
+    handleSendVerificationEmail,
     showToast,
     closeToast,
     openDeleteModal,
@@ -113,7 +114,13 @@ export default function ProfilePage() {
             userData={userData}
             onSave={handleSavePersonalInfo}
           />
-          <SecurityCard onChangePassword={onChangePassword} />
+          {user?.providerData[0]?.providerId !== 'google.com' && (
+            <SecurityCard 
+              isEmailVerified={user?.emailVerified ?? false}
+              onChangePassword={onChangePassword}
+              onSendVerificationEmail={handleSendVerificationEmail}
+            />
+          )}
           <PreferencesCard />
           <AccountActionsCard
             onLogout={handleLogout}
