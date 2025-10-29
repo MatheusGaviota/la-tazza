@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 interface CourseDetailCardProps {
-  id: number;
+  id: number | string;
   imageUrl: string;
   title: string;
   description: string;
@@ -11,8 +11,8 @@ interface CourseDetailCardProps {
   category: string;
   price: string;
   instructor: string;
-  students: number;
-  rating: number;
+  students?: number;
+  rating?: number;
   topics: string[];
 }
 
@@ -72,10 +72,12 @@ export default function CourseDetailCard({
               <span className="text-yellow-500 text-base" aria-hidden="true">
                 ★
               </span>
-              <span className="font-semibold text-foreground">{rating}</span>
+              <span className="font-semibold text-foreground">
+                {rating?.toFixed(1) || '0.0'}
+              </span>
             </div>
             <div className="text-foreground/60">
-              {students} {students === 1 ? 'aluno' : 'alunos'}
+              {students || 0} {(students || 0) === 1 ? 'aluno' : 'alunos'}
             </div>
           </div>
 
