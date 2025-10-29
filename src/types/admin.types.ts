@@ -6,10 +6,25 @@ export interface Product {
   id: string;
   title: string;
   description: string;
+  fullDescription?: string;
   price: number;
   category: string;
   imageUrl: string;
+  images?: string[];
+  origin?: string;
+  roast?: string;
+  weight?: string;
   stock?: number;
+  inStock?: boolean;
+  rating?: number;
+  reviews?: number;
+  highlights?: string[];
+  preparation?: string[];
+  nutrients?: {
+    cafeína?: string;
+    calorias?: string;
+    acidez?: string;
+  };
   createdAt?: Date;
   updatedAt?: Date;
 }
