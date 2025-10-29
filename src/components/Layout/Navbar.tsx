@@ -190,7 +190,11 @@ export default function Navbar() {
                     ) : (
                       <div className="w-10 h-10 rounded-full bg-background border-2 border-accent flex items-center justify-center">
                         <span className="text-sm font-bold text-accent">
-                          {user?.displayName ? getInitials(user.displayName) : <User size={20} className="text-accent" />}
+                          {user?.displayName ? (
+                            getInitials(user.displayName)
+                          ) : (
+                            <User size={20} className="text-accent" />
+                          )}
                         </span>
                       </div>
                     )}
@@ -342,7 +346,11 @@ export default function Navbar() {
                         ) : (
                           <div className="w-10 h-10 rounded-full bg-background border-2 border-accent group-hover:border-accent/80 transition-colors flex items-center justify-center flex-shrink-0">
                             <span className="text-sm font-bold text-accent">
-                              {user?.displayName ? getInitials(user.displayName) : <User size={20} className="text-accent" />}
+                              {user?.displayName ? (
+                                getInitials(user.displayName)
+                              ) : (
+                                <User size={20} className="text-accent" />
+                              )}
                             </span>
                           </div>
                         )}
@@ -354,10 +362,13 @@ export default function Navbar() {
                             Ver perfil
                           </p>
                         </div>
-                        <UserCircle size={18} className="text-accent flex-shrink-0" />
+                        <UserCircle
+                          size={18}
+                          className="text-accent flex-shrink-0"
+                        />
                       </Link>
                     </div>
-                    
+
                     {/* Logout Button */}
                     <button
                       onClick={handleLogout}
