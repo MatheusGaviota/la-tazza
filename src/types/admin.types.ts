@@ -33,10 +33,22 @@ export interface Course {
   id: string;
   title: string;
   description: string;
+  fullDescription?: string;
   duration: string;
   level: string;
+  category?: string;
   price: string;
   imageUrl: string;
+  instructor?: string;
+  instructorBio?: string;
+  topics?: string[];
+  whatYouWillLearn?: string[];
+  requirements?: string[];
+  schedule?: CourseSchedule[];
+  nextDates?: string[];
+  certificate?: boolean;
+  materials?: boolean;
+  support?: boolean;
   modules?: CourseModule[];
   createdAt?: Date;
   updatedAt?: Date;
@@ -49,15 +61,31 @@ export interface CourseModule {
   order: number;
 }
 
+export interface CourseSchedule {
+  week: string;
+  content: string;
+}
+
 export interface Workshop {
   id: string;
   title: string;
   description: string;
+  fullDescription?: string;
   date: string;
   duration: string;
+  level?: string;
+  category?: string;
   instructor: string;
+  instructorBio?: string;
   price: string;
   imageUrl: string;
+  topics?: string[];
+  whatYouWillLearn?: string[];
+  requirements?: string[];
+  schedule?: CourseSchedule[];
+  nextDates?: string[];
+  certificate?: boolean;
+  materials?: boolean;
   maxParticipants?: number;
   currentParticipants?: number;
   createdAt?: Date;
