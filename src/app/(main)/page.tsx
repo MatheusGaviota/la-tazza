@@ -1,3 +1,6 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Hero from '@/components/Products/Hero';
 import Carousel from '@/components/UI/Carousel';
@@ -6,82 +9,142 @@ import CourseCard from '@/components/Cards/CourseCard';
 import BlogCard from '@/components/Cards/BlogCard';
 import ReviewCard from '@/components/Cards/ReviewCard';
 import { ArrowRight } from 'lucide-react';
+import { collection, getDocs, query, limit } from 'firebase/firestore';
+import { db } from '@/config/firebase/client';
+
+interface Product {
+  id: string;
+  imageUrl: string;
+  title: string;
+  description: string;
+  price: number;
+  category: string;
+}
+
+interface Course {
+  id: string;
+  imageUrl: string;
+  title: string;
+  description: string;
+  duration: string;
+  level: string;
+  price: string;
+}
+
+interface BlogPost {
+  id: string;
+  slug: string;
+  imageUrl: string;
+  title: string;
+  excerpt: string;
+  author: string;
+  publishedAt: string;
+  readTime: string;
+  category: string;
+}
+
+interface Review {
+  id: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
 
 export default function Home() {
-  // TODO: Remover dados mocados dos produtos e buscar de uma API/banco de dados
-  const products = [
-    {
-      id: '1',
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-      title: 'Expresso Masterpiece',
-      description:
-        'Blend exclusivo de grãos arábica para um café intenso e encorpado.',
-      price: 45.9,
-      category: 'Café Especial',
-    },
-    {
-      id: '2',
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-      title: 'Blend Suave',
-      description: 'Combinação equilibrada para um café suave e aromático.',
-      price: 39.9,
-      category: 'Café Especial',
-    },
-    {
-      id: '3',
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-      title: 'Origens Premium',
-      description: 'Seleção de grãos de origem única para paladares exigentes.',
-      price: 59.9,
-      category: 'Café Premium',
-    },
-    {
-      id: '4',
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-      title: 'Café Orgânico',
-      description: 'Café cultivado de forma sustentável, sem agrotóxicos.',
-      price: 52.9,
-      category: 'Café Orgânico',
-    },
-  ];
+  const [products, setProducts] = useState<Product[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // TODO: Remover dados mocados dos cursos e buscar de uma API/banco de dados
-  const courses = [
-    {
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png',
-      title: 'Curso de Barista Profissional',
-      description:
-        'Domine as técnicas essenciais para se tornar um barista profissional, desde a moagem até o serviço perfeito.',
-      duration: '12 semanas',
-      level: 'Intermediário',
-      price: 'R$ 1.200',
-    },
-    {
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png',
-      title: 'Arte em Latte',
-      description:
-        'Aprenda a criar designs incríveis no café com técnicas avançadas de latte art e apresentação.',
-      duration: '6 semanas',
-      level: 'Iniciante',
-      price: 'R$ 800',
-    },
-    {
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png',
-      title: 'Métodos de Extração',
-      description:
-        'Explore diferentes métodos de preparo de café e descubra os segredos de cada técnica de extração.',
-      duration: '8 semanas',
-      level: 'Avançado',
-      price: 'R$ 950',
-    },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+
+        // Buscar produtos
+        try {
+          const productsRef = collection(db, 'products');
+          const productsQuery = query(productsRef, limit(4));
+          const productsSnapshot = await getDocs(productsQuery);
+          const productsData = productsSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          })) as Product[];
+          setProducts(productsData);
+        } catch (error) {
+          console.error('Erro ao buscar produtos:', error);
+          setProducts([]);
+        }
+
+        // Buscar cursos
+        try {
+          const coursesRef = collection(db, 'courses');
+          const coursesQuery = query(coursesRef, limit(3));
+          const coursesSnapshot = await getDocs(coursesQuery);
+          const coursesData = coursesSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          })) as Course[];
+          setCourses(coursesData);
+        } catch (error) {
+          console.error('Erro ao buscar cursos:', error);
+          setCourses([]);
+        }
+
+        // Buscar posts do blog
+        try {
+          const blogRef = collection(db, 'blog-posts');
+          // Tentar sem orderBy primeiro
+          const blogQuery = query(blogRef, limit(3));
+          const blogSnapshot = await getDocs(blogQuery);
+          const blogData = blogSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          })) as BlogPost[];
+          // Ordenar no cliente se necessário
+          blogData.sort((a, b) => {
+            const dateA = new Date(a.publishedAt || 0).getTime();
+            const dateB = new Date(b.publishedAt || 0).getTime();
+            return dateB - dateA;
+          });
+          setBlogPosts(blogData);
+        } catch (error) {
+          console.error('Erro ao buscar posts do blog:', error);
+          setBlogPosts([]);
+        }
+
+        // Buscar avaliações
+        try {
+          const reviewsRef = collection(db, 'reviews');
+          // Tentar sem orderBy primeiro
+          const reviewsQuery = query(reviewsRef, limit(3));
+          const reviewsSnapshot = await getDocs(reviewsQuery);
+          const reviewsData = reviewsSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          })) as Review[];
+          // Ordenar no cliente se necessário
+          reviewsData.sort((a, b) => {
+            const dateA = new Date(a.createdAt || 0).getTime();
+            const dateB = new Date(b.createdAt || 0).getTime();
+            return dateB - dateA;
+          });
+          setReviews(reviewsData);
+        } catch (error) {
+          console.error('Erro ao buscar avaliações:', error);
+          setReviews([]);
+        }
+      } catch (error) {
+        console.error('Erro geral ao buscar dados:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <main>
@@ -103,20 +166,40 @@ export default function Home() {
           </Link>
         </div>
         <div className="mt-6 sm:mt-8 w-full">
-          <Carousel
-            items={products.map((product) => (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                imageUrl={product.imageUrl}
-                title={product.title}
-                description={product.description}
-                price={product.price}
-                category={product.category}
-              />
-            ))}
-            desktopColumns={4}
-          />
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  className="bg-accent/5 border border-accent/20 rounded-lg p-6 animate-pulse"
+                >
+                  <div className="aspect-square bg-accent/20 rounded-lg mb-4"></div>
+                  <div className="h-6 bg-accent/20 rounded mb-2"></div>
+                  <div className="h-4 bg-accent/20 rounded mb-4"></div>
+                  <div className="h-8 bg-accent/20 rounded"></div>
+                </div>
+              ))}
+            </div>
+          ) : products.length > 0 ? (
+            <Carousel
+              items={products.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  imageUrl={product.imageUrl}
+                  title={product.title}
+                  description={product.description}
+                  price={product.price}
+                  category={product.category}
+                />
+              ))}
+              desktopColumns={4}
+            />
+          ) : (
+            <div className="text-center py-12 text-foreground/70">
+              <p>Nenhum produto disponível no momento.</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -129,29 +212,49 @@ export default function Home() {
           aprimorar suas habilidades no mundo do café.
         </p>
         <div className="w-full text-left sm:text-right mt-4 sm:order-last sm:mb-0 sm:mt-4">
-          {/* TODO: Trocar href para página de cursos após criação */}
           <Link
-            href="/"
+            href="/cursos"
             className="inline-flex items-center gap-2 text-foreground hover:text-accent transition-colors text-base sm:text-base font-medium"
           >
             Ver todos os cursos <ArrowRight size={18} />
           </Link>
         </div>
         <div className="mt-6 sm:mt-8 w-full">
-          <Carousel
-            items={courses.map((course, index) => (
-              <CourseCard
-                key={index}
-                imageUrl={course.imageUrl}
-                title={course.title}
-                description={course.description}
-                duration={course.duration}
-                level={course.level}
-                price={course.price}
-              />
-            ))}
-            desktopColumns={3}
-          />
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="bg-accent/5 border border-accent/20 rounded-lg p-6 animate-pulse"
+                >
+                  <div className="aspect-video bg-accent/20 rounded-lg mb-4"></div>
+                  <div className="h-6 bg-accent/20 rounded mb-2"></div>
+                  <div className="h-4 bg-accent/20 rounded mb-4"></div>
+                  <div className="h-4 bg-accent/20 rounded w-2/3"></div>
+                </div>
+              ))}
+            </div>
+          ) : courses.length > 0 ? (
+            <Carousel
+              items={courses.map((course) => (
+                <CourseCard
+                  key={course.id}
+                  id={course.id}
+                  imageUrl={course.imageUrl}
+                  title={course.title}
+                  description={course.description}
+                  duration={course.duration}
+                  level={course.level}
+                  price={course.price}
+                />
+              ))}
+              desktopColumns={3}
+            />
+          ) : (
+            <div className="text-center py-12 text-foreground/70">
+              <p>Nenhum curso disponível no momento.</p>
+            </div>
+          )}
         </div>
       </section>
       {/* Seção de Depoimentos de Clientes */}
@@ -164,24 +267,39 @@ export default function Home() {
           dos nossos cursos.
         </p>
         <div className="mt-8 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <ReviewCard
-            name="Ana Paula Silva"
-            rating={5}
-            comment="O Expresso Masterpiece é simplesmente excepcional! A qualidade dos grãos é notável, com um aroma intenso e sabor marcante. Compro mensalmente e nunca me decepcionei."
-            date="15 Out 2025"
-          />
-          <ReviewCard
-            name="Carlos Eduardo"
-            rating={5}
-            comment="O curso de Barista Profissional transformou minha carreira. Os instrutores são extremamente qualificados e o conteúdo é muito completo. Recomendo demais!"
-            date="10 Out 2025"
-          />
-          <ReviewCard
-            name="Marina Costa"
-            rating={4}
-            comment="Adorei o Café Orgânico! Além do sabor incrível, gosto de saber que estou consumindo um produto sustentável e de qualidade. Vale muito a pena!"
-            date="5 Out 2025"
-          />
+          {loading ? (
+            <>
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="bg-accent/5 border border-accent/20 rounded-lg p-6 animate-pulse"
+                >
+                  <div className="h-5 bg-accent/20 rounded mb-3 w-1/3"></div>
+                  <div className="h-4 bg-accent/20 rounded mb-2"></div>
+                  <div className="h-4 bg-accent/20 rounded mb-2"></div>
+                  <div className="h-4 bg-accent/20 rounded w-2/3"></div>
+                </div>
+              ))}
+            </>
+          ) : reviews.length > 0 ? (
+            reviews.map((review) => (
+              <ReviewCard
+                key={review.id}
+                name={review.userName}
+                rating={review.rating}
+                comment={review.comment}
+                date={new Date(review.createdAt).toLocaleDateString('pt-BR', {
+                  day: 'numeric',
+                  month: 'short',
+                  year: 'numeric',
+                })}
+              />
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12 text-foreground/70">
+              <p>Nenhuma avaliação disponível no momento.</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -286,36 +404,43 @@ export default function Home() {
           </Link>
         </div>
         <div className="mt-6 sm:mt-8 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <BlogCard
-            slug="arte-latte-para-iniciantes"
-            imageUrl="https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png"
-            title="Arte em Latte: Guia Completo para Iniciantes"
-            excerpt="Descubra os segredos por trás das belas criações de latte art e aprenda as técnicas fundamentais."
-            author="Maria Santos"
-            date="15 Out 2025"
-            readTime="8 min"
-            category="Técnicas"
-          />
-          <BlogCard
-            slug="historia-do-cafe-brasileiro"
-            imageUrl="https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png"
-            title="A História do Café Brasileiro"
-            excerpt="Uma viagem pela rica história do café no Brasil, desde sua chegada até se tornar um dos maiores produtores."
-            author="João Silva"
-            date="12 Out 2025"
-            readTime="12 min"
-            category="História"
-          />
-          <BlogCard
-            slug="receitas-de-cafe-gelado"
-            imageUrl="https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png"
-            title="5 Receitas Refrescantes de Café Gelado"
-            excerpt="Receitas práticas e deliciosas para os dias quentes, do clássico cold brew às criações mais modernas."
-            author="Pedro Oliveira"
-            date="8 Out 2025"
-            readTime="10 min"
-            category="Receitas"
-          />
+          {loading ? (
+            <>
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="bg-accent/5 border border-accent/20 rounded-lg p-6 animate-pulse"
+                >
+                  <div className="aspect-video bg-accent/20 rounded-lg mb-4"></div>
+                  <div className="h-6 bg-accent/20 rounded mb-2"></div>
+                  <div className="h-4 bg-accent/20 rounded mb-2"></div>
+                  <div className="h-4 bg-accent/20 rounded w-2/3"></div>
+                </div>
+              ))}
+            </>
+          ) : blogPosts.length > 0 ? (
+            blogPosts.map((post) => (
+              <BlogCard
+                key={post.id}
+                slug={post.slug}
+                imageUrl={post.imageUrl}
+                title={post.title}
+                excerpt={post.excerpt}
+                author={post.author}
+                date={new Date(post.publishedAt).toLocaleDateString('pt-BR', {
+                  day: 'numeric',
+                  month: 'short',
+                  year: 'numeric',
+                })}
+                readTime={post.readTime}
+                category={post.category}
+              />
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12 text-foreground/70">
+              <p>Nenhum post disponível no momento.</p>
+            </div>
+          )}
         </div>
       </section>
     </main>

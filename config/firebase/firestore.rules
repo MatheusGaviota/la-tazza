@@ -63,6 +63,20 @@ service cloud.firestore {
                     );
     }
 
+    // Avaliações gerais (para home page)
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if request.auth != null &&
+                      request.resource.data.userName is string &&
+                      request.resource.data.comment is string &&
+                      request.resource.data.comment.size() >= 3 &&
+                      request.resource.data.comment.size() <= 1000 &&
+                      request.resource.data.rating is int &&
+                      request.resource.data.rating >= 1 &&
+                      request.resource.data.rating <= 5;
+      allow update, delete: if isAdmin();
+    }
+
     // Coleção de usuários - apenas o próprio usuário pode ler/escrever seus dados
     // Admins podem ler todos os usuários (mas operações de delete/update de usuários são via Admin SDK)
     match /users/{userId} {

@@ -1,7 +1,9 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { Clock } from 'lucide-react';
 
 interface CourseCardProps {
+  id?: string;
   imageUrl: string;
   title: string;
   description?: string;
@@ -11,6 +13,7 @@ interface CourseCardProps {
 }
 
 export default function CourseCard({
+  id,
   imageUrl,
   title,
   description = 'Aprenda técnicas profissionais com nossos especialistas',
@@ -18,13 +21,8 @@ export default function CourseCard({
   level = 'Iniciante',
   price = 'Consultar',
 }: CourseCardProps) {
-  return (
-    <article
-      className="group cursor-pointer relative overflow-hidden rounded-lg bg-background transition-all duration-300 sm:hover:-translate-y-1 border-2 border-border"
-      tabIndex={0}
-      role="button"
-      aria-label={`Ver detalhes do curso: ${title}`}
-    >
+  const content = (
+    <>
       <div className="relative w-full aspect-video overflow-hidden bg-accent">
         <Image
           src={imageUrl}
@@ -70,6 +68,30 @@ export default function CourseCard({
         className="absolute inset-0 rounded-lg ring-2 ring-accent ring-offset-2 ring-offset-background opacity-0 transition-opacity duration-300 group-focus-within:opacity-100 pointer-events-none"
         aria-hidden="true"
       />
+    </>
+  );
+
+  if (id) {
+    return (
+      <Link href={`/cursos/${id}`} className="block">
+        <article
+          className="group cursor-pointer relative overflow-hidden rounded-lg bg-background transition-all duration-300 sm:hover:-translate-y-1 border-2 border-border h-full"
+          aria-label={`Ver detalhes do curso: ${title}`}
+        >
+          {content}
+        </article>
+      </Link>
+    );
+  }
+
+  return (
+    <article
+      className="group cursor-pointer relative overflow-hidden rounded-lg bg-background transition-all duration-300 sm:hover:-translate-y-1 border-2 border-border"
+      tabIndex={0}
+      role="button"
+      aria-label={`Ver detalhes do curso: ${title}`}
+    >
+      {content}
     </article>
   );
 }
