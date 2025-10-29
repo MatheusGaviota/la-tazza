@@ -346,10 +346,25 @@ export async function sendVerificationEmail(): Promise<void> {
       throw new Error('Email já está verificado');
     }
 
-    // Importar dinamicamente para evitar erros de bundling
-    const { sendEmailVerification } = await import('firebase/auth');
-    
-    await sendEmailVerification(currentUser);
+    // Em vez de usar o fluxo do cliente do Firebase, chamamos a API server-side
+    // que usa Resend + Firebase Admin para enviar o e-mail e gerenciar tokens.
+    const idToken = await currentUser.getIdToken();
+
+    const resp = await fetch('/api/auth/send-verification', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    });
+
+    if (!resp.ok) {
+      const data = await resp.json().catch(() => null);
+      throw new Error(
+        data?.error || 'Falha ao solicitar envio do e‑mail de verificação'
+      );
+    }
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }
