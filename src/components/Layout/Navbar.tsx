@@ -8,7 +8,7 @@ import Logo from './Logo';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useState, useEffect, useRef } from 'react';
-import { ShoppingCart, User, LogOut, UserCircle } from 'lucide-react';
+import { ShoppingCart, User, LogOut, UserCircle, Instagram, Facebook, Twitter } from 'lucide-react';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -20,6 +20,9 @@ export default function Navbar() {
   const [isLoadingPhoto, setIsLoadingPhoto] = useState(true);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [compactSocial, setCompactSocial] = useState(false);
+  const lastScrollY = useRef(0);
+  const ticking = useRef(false);
 
   useEffect(() => {
     if (user) {
@@ -63,6 +66,40 @@ export default function Navbar() {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
+    };
+  }, []);
+
+  // Compactar a barra social ao rolar: descer -> compacta; subir -> descompacta
+  useEffect(() => {
+    // inicializa posição
+    if (typeof window !== 'undefined') lastScrollY.current = window.scrollY;
+
+    const onScroll = () => {
+      const current = window.scrollY;
+      // evita excesso de updates, usa RAF
+      if (!ticking.current) {
+        ticking.current = true;
+        requestAnimationFrame(() => {
+          const delta = current - lastScrollY.current;
+          // só reage a movimentos maiores que 10px para evitar flicker
+          if (Math.abs(delta) > 10) {
+            if (delta > 0) {
+              // rolando pra baixo
+              setCompactSocial(true);
+            } else {
+              // rolando pra cima
+              setCompactSocial(false);
+            }
+            lastScrollY.current = current;
+          }
+          ticking.current = false;
+        });
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
     };
   }, []);
 
@@ -112,13 +149,64 @@ export default function Navbar() {
     { label: 'Contato', href: '/contato' },
   ];
 
-  return (
-    <header className="fixed top-0 left-0 right-0 w-full border-b bg-foreground z-50">
-      {/* barra superior pequena */}
-      {/* TODO: Adicionar links das redes sociais nesta barra superior */}
-      {/* TODO: Fazer barra superior diminuir de tamanho quando scroll ir para baixo */}
-      <div className="bg-accent h-7" aria-hidden />
+  // Redes sociais reutilizáveis (ícone + username)
+  const socials = [
+    {
+      label: 'Instagram',
+      href: 'https://instagram.com/latazza.cafe',
+      username: '@latazza.cafe',
+      icon: Instagram,
+    },
+    {
+      label: 'Facebook',
+      href: 'https://facebook.com/latazza.cafe',
+      username: 'La Tazza Café',
+      icon: Facebook,
+    },
+    {
+      label: 'X',
+      href: 'https://twitter.com/latazza_cafe',
+      username: '@latazza_cafe',
+      icon: Twitter,
+    },
+  ];
 
+  return (
+    <header className="fixed top-0 left-0 right-0 w-full bg-foreground z-50 border-b-2 border-accent">
+      {/* Social Bar - Barra Superior */}
+      <div className="bg-accent border-b border-accent/20">
+      <div className={`max-w-[1400px] mx-auto px-4 flex items-center justify-center lg:justify-between transition-all duration-300 ${compactSocial ? 'h-2' : 'h-10'}`}>
+          {/* Social Links */}
+          <div className={`flex items-center gap-4 transform transition-all duration-300 ${compactSocial ? 'opacity-0 pointer-events-none -translate-y-1' : 'opacity-100 translate-y-0'}`}>
+            <span className="text-xs font-semibold text-background/80 uppercase tracking-wide">
+              Conecte-se
+            </span>
+            <nav className="flex items-center gap-3" aria-label="Redes sociais">
+              {socials.map(({ label, href, username, icon: Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Seguir ${username} no ${label}`}
+                  className="flex items-center gap-1.5 px-1 py-1 text-background/70 hover:text-background hover:bg-background/10 rounded transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-background/50"
+                >
+                  <Icon size={18} aria-hidden />
+                  {/* esconder username em telas menores para evitar overflow; mostrar a partir de lg */}
+                  <span className="hidden lg:inline text-xs font-medium">{username}</span>
+                </a>
+              ))}
+            </nav>
+          </div>
+
+          {/* Info Text */}
+          <div className={`hidden lg:flex items-center text-xs text-background/70 transition-opacity duration-300 ${compactSocial ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+            <span>Frete grátis acima de R$ 100</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Navbar */}
       <nav
         className="max-w-[1400px] mx-auto px-4"
         aria-label="Navegação principal"
@@ -183,6 +271,7 @@ export default function Navbar() {
                       <img
                         key={user?.photoURL}
                         src={user?.photoURL || ''}
+                        loading="lazy"
                         alt={user?.displayName || 'Foto de perfil'}
                         className="w-10 h-10 rounded-full object-cover border-2 border-accent"
                         onError={handleImageError}
@@ -338,7 +427,8 @@ export default function Navbar() {
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
                             key={user?.photoURL}
-                            src={user?.photoURL || ''}
+                              src={user?.photoURL || ''}
+                              loading="lazy"
                             alt={user?.displayName || 'Foto de perfil'}
                             className="w-10 h-10 rounded-full object-cover border-2 border-accent group-hover:border-accent/80 transition-colors flex-shrink-0"
                             onError={handleImageError}
@@ -386,6 +476,24 @@ export default function Navbar() {
                     className="w-full text-center"
                   />
                 )}
+              </li>
+              {/* Social icons (mobile) */}
+              <li className="pt-3 border-t border-accent/10">
+                <div className="flex items-center gap-3 px-2">
+                  {socials.map(({ label, href, username, icon: Icon }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Seguir ${username} no ${label}`}
+                      className="flex items-center gap-2 p-2 rounded hover:bg-accent/10 transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
+                    >
+                      <Icon size={18} aria-hidden />
+                      <span className="hidden lg:inline text-xs font-medium">{username}</span>
+                    </a>
+                  ))}
+                </div>
               </li>
             </ul>
           </div>
