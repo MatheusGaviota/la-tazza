@@ -73,7 +73,12 @@ export default function MobileMenu({
       <ul className="flex flex-col space-y-2 text-background">
         {/* Search Bar */}
         <li className="pb-2">
-          <form onSubmit={handleSearch} className="relative">
+          <form
+            onSubmit={handleSearch}
+            role="search"
+            aria-label="Pesquisar produtos"
+            className="relative"
+          >
             <input
               type="text"
               value={searchQuery}

@@ -64,7 +64,11 @@ export default function SearchButton() {
           <Search size={24} className="text-background" />
         </button>
       ) : (
-        <div className="flex items-center gap-2 bg-background/10 rounded-full px-4 py-2 backdrop-blur-sm border-2 border-background/30">
+        <div
+          role="search"
+          aria-label="Formulário de pesquisa"
+          className="flex items-center gap-2 bg-background/10 rounded-full px-4 py-2 backdrop-blur-sm border-2 border-background/30"
+        >
           <Search size={20} className="text-background/70" />
           <input
             ref={inputRef}

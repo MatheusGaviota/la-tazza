@@ -245,7 +245,10 @@ export default function ProductsPage() {
                       : 'produtos encontrados'}
                   </p>
                   {searchQuery && (
-                    <p className="text-xs text-foreground/60">
+                    <p
+                      className="text-xs text-foreground/60"
+                      aria-live="polite"
+                    >
                       Buscando por: &quot;{searchQuery}&quot;
                     </p>
                   )}
