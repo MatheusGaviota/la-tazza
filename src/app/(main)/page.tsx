@@ -8,6 +8,8 @@ import ProductCard from '@/components/Cards/ProductCard';
 import CourseCard from '@/components/Cards/CourseCard';
 import BlogCard from '@/components/Cards/BlogCard';
 import ReviewCard from '@/components/Cards/ReviewCard';
+import Input from '@/components/UI/Input';
+import Button from '@/components/UI/Button';
 import { ArrowRight } from 'lucide-react';
 import { collection, getDocs, query, limit } from 'firebase/firestore';
 import { db } from '@/config/firebase/client';
@@ -66,13 +68,33 @@ export default function Home() {
         // Buscar produtos
         try {
           const productsRef = collection(db, 'products');
-          const productsQuery = query(productsRef, limit(4));
+          const productsQuery = query(productsRef, limit(10));
           const productsSnapshot = await getDocs(productsQuery);
-          const productsData = productsSnapshot.docs.map((doc) => ({
+          let productsData = productsSnapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
           })) as Product[];
-          setProducts(productsData);
+
+          // Se tiver produtos mas menos que 4, repetir até completar 4
+          if (productsData.length > 0 && productsData.length < 4) {
+            const originalProducts = [...productsData];
+            let copyIndex = 0;
+            while (productsData.length < 4) {
+              const itemsToCopy = originalProducts.slice(
+                0,
+                Math.min(originalProducts.length, 4 - productsData.length)
+              );
+              productsData = [
+                ...productsData,
+                ...itemsToCopy.map((item) => ({
+                  ...item,
+                  id: `${item.id}-copy-${copyIndex++}`,
+                })),
+              ];
+            }
+          }
+
+          setProducts(productsData.slice(0, 4));
         } catch (error) {
           console.error('Erro ao buscar produtos:', error);
           setProducts([]);
@@ -81,13 +103,33 @@ export default function Home() {
         // Buscar cursos
         try {
           const coursesRef = collection(db, 'courses');
-          const coursesQuery = query(coursesRef, limit(3));
+          const coursesQuery = query(coursesRef, limit(10));
           const coursesSnapshot = await getDocs(coursesQuery);
-          const coursesData = coursesSnapshot.docs.map((doc) => ({
+          let coursesData = coursesSnapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
           })) as Course[];
-          setCourses(coursesData);
+
+          // Se tiver cursos mas menos que 3, repetir até completar 3
+          if (coursesData.length > 0 && coursesData.length < 3) {
+            const originalCourses = [...coursesData];
+            let copyIndex = 0;
+            while (coursesData.length < 3) {
+              const itemsToCopy = originalCourses.slice(
+                0,
+                Math.min(originalCourses.length, 3 - coursesData.length)
+              );
+              coursesData = [
+                ...coursesData,
+                ...itemsToCopy.map((item) => ({
+                  ...item,
+                  id: `${item.id}-copy-${copyIndex++}`,
+                })),
+              ];
+            }
+          }
+
+          setCourses(coursesData.slice(0, 3));
         } catch (error) {
           console.error('Erro ao buscar cursos:', error);
           setCourses([]);
@@ -97,19 +139,40 @@ export default function Home() {
         try {
           const blogRef = collection(db, 'blog-posts');
           // Tentar sem orderBy primeiro
-          const blogQuery = query(blogRef, limit(3));
+          const blogQuery = query(blogRef, limit(10));
           const blogSnapshot = await getDocs(blogQuery);
-          const blogData = blogSnapshot.docs.map((doc) => ({
+          let blogData = blogSnapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
           })) as BlogPost[];
+
           // Ordenar no cliente se necessário
           blogData.sort((a, b) => {
             const dateA = new Date(a.publishedAt || 0).getTime();
             const dateB = new Date(b.publishedAt || 0).getTime();
             return dateB - dateA;
           });
-          setBlogPosts(blogData);
+
+          // Se tiver posts mas menos que 3, repetir até completar 3
+          if (blogData.length > 0 && blogData.length < 3) {
+            const originalPosts = [...blogData];
+            let copyIndex = 0;
+            while (blogData.length < 3) {
+              const itemsToCopy = originalPosts.slice(
+                0,
+                Math.min(originalPosts.length, 3 - blogData.length)
+              );
+              blogData = [
+                ...blogData,
+                ...itemsToCopy.map((item) => ({
+                  ...item,
+                  id: `${item.id}-copy-${copyIndex++}`,
+                })),
+              ];
+            }
+          }
+
+          setBlogPosts(blogData.slice(0, 3));
         } catch (error) {
           console.error('Erro ao buscar posts do blog:', error);
           setBlogPosts([]);
@@ -119,19 +182,40 @@ export default function Home() {
         try {
           const reviewsRef = collection(db, 'reviews');
           // Tentar sem orderBy primeiro
-          const reviewsQuery = query(reviewsRef, limit(3));
+          const reviewsQuery = query(reviewsRef, limit(10));
           const reviewsSnapshot = await getDocs(reviewsQuery);
-          const reviewsData = reviewsSnapshot.docs.map((doc) => ({
+          let reviewsData = reviewsSnapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
           })) as Review[];
+
           // Ordenar no cliente se necessário
           reviewsData.sort((a, b) => {
             const dateA = new Date(a.createdAt || 0).getTime();
             const dateB = new Date(b.createdAt || 0).getTime();
             return dateB - dateA;
           });
-          setReviews(reviewsData);
+
+          // Se tiver reviews mas menos que 3, repetir até completar 3
+          if (reviewsData.length > 0 && reviewsData.length < 3) {
+            const originalReviews = [...reviewsData];
+            let copyIndex = 0;
+            while (reviewsData.length < 3) {
+              const itemsToCopy = originalReviews.slice(
+                0,
+                Math.min(originalReviews.length, 3 - reviewsData.length)
+              );
+              reviewsData = [
+                ...reviewsData,
+                ...itemsToCopy.map((item) => ({
+                  ...item,
+                  id: `${item.id}-copy-${copyIndex++}`,
+                })),
+              ];
+            }
+          }
+
+          setReviews(reviewsData.slice(0, 3));
         } catch (error) {
           console.error('Erro ao buscar avaliações:', error);
           setReviews([]);
@@ -304,7 +388,11 @@ export default function Home() {
       </section>
 
       {/* Seção Sobre a Empresa */}
-      <section className="w-full relative overflow-hidden">
+      <section
+        className="w-full relative overflow-hidden"
+        aria-label="Sobre La Tazza"
+        data-section="sobre-la-tazza"
+      >
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
           style={{
@@ -366,19 +454,22 @@ export default function Home() {
             ofertas especiais.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Seu melhor e-mail"
-              className="flex-1 px-4 py-3 rounded-lg border-2 border-background/20 bg-background/10 text-background placeholder:text-background/60 focus:outline-none focus:ring-2 focus:ring-background focus:border-background transition-all"
-              aria-label="Digite seu e-mail para receber novidades"
-            />
-            <button
+            <div className="flex-1">
+              <Input
+                type="email"
+                placeholder="Seu melhor e-mail"
+                variant="foreground"
+                className="!bg-background/10 !text-background placeholder:!text-background/60 !border-background/20 focus:!ring-background focus:!border-background"
+                aria-label="Digite seu e-mail para receber novidades"
+              />
+            </div>
+            <Button
               type="button"
-              className="px-6 py-3 bg-background text-accent rounded-lg font-medium hover:bg-background/90 transition-all focus:outline-none focus:ring-2 focus:ring-background focus:ring-offset-2 focus:ring-offset-accent"
-              aria-label="Inscrever na newsletter"
+              variant="fore"
+              className="!bg-background !text-accent hover:!bg-background/90 !border-background px-6 py-3"
             >
               Inscrever
-            </button>
+            </Button>
           </div>
           <p className="text-xs text-background/70 mt-4">
             Respeitamos sua privacidade. Cancele a inscrição a qualquer momento.

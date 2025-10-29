@@ -35,31 +35,33 @@ export default function ProductCard({
       </Link>
       <div className="p-3 space-y-2 sm:space-y-3 flex-1 flex flex-col">
         <Link href={`/produtos/${id}`} className="block group/title">
-          <h3 className="font-alumni font-semibold text-2xl text-foreground text-center group-hover/title:text-accent transition-colors">
+          <h3 className="font-alumni font-semibold text-2xl text-foreground text-center group-hover/title:text-accent transition-colors line-clamp-1">
             {title}
           </h3>
         </Link>
-        <Link href={`/produtos/${id}`}>
-          <p className="text-center text-sm text-foreground/70 flex-1 group-hover:text-accent/80 transition-colors">
+        <Link href={`/produtos/${id}`} className="flex-1">
+          <p className="text-center text-sm text-foreground/70 group-hover:text-accent/80 transition-colors line-clamp-3">
             {description}
           </p>
         </Link>
-        <div className="text-center mb-2">
-          <span className="font-alumni text-3xl font-bold text-accent">
-            R$ {price.toFixed(2)}
-          </span>
+        <div className="mt-auto space-y-3 pt-2">
+          <div className="text-center">
+            <span className="font-alumni text-3xl font-bold text-accent">
+              R$ {price.toFixed(2)}
+            </span>
+          </div>
+          <AddToCartButton
+            product={{
+              id,
+              name: title,
+              price,
+              image: imageUrl,
+              category,
+            }}
+            variant="compact"
+            className="w-full"
+          />
         </div>
-        <AddToCartButton
-          product={{
-            id,
-            name: title,
-            price,
-            image: imageUrl,
-            category,
-          }}
-          variant="compact"
-          className="w-full"
-        />
       </div>
     </article>
   );

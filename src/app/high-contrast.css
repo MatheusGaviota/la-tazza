@@ -155,3 +155,44 @@ body.high-contrast .page-hero h1,
 body.high-contrast .page-hero p {
   color: var(--background) !important;
 }
+
+/* Seção Sobre La Tazza - High Contrast */
+body.high-contrast section[aria-label='Sobre La Tazza'],
+body.high-contrast section[data-section='sobre-la-tazza'] {
+  background-color: var(--foreground) !important;
+}
+
+/* Título e subtítulo principais em branco */
+body.high-contrast section[aria-label='Sobre La Tazza'] > div > h2,
+body.high-contrast section[data-section='sobre-la-tazza'] > div > h2,
+body.high-contrast section[aria-label='Sobre La Tazza'] > div > p:first-of-type,
+body.high-contrast section[data-section='sobre-la-tazza'] > div > p:first-of-type {
+  color: var(--background) !important;
+}
+
+/* Títulos e textos dos cards em preto */
+body.high-contrast section[aria-label='Sobre La Tazza'] h3,
+body.high-contrast section[data-section='sobre-la-tazza'] h3 {
+  color: var(--foreground) !important;
+}
+
+body.high-contrast section[aria-label='Sobre La Tazza'] .bg-background\/90 p,
+body.high-contrast section[data-section='sobre-la-tazza'] .bg-background\/90 p {
+  color: var(--foreground) !important;
+}
+
+body.high-contrast section[aria-label='Sobre La Tazza'] .bg-background\/90,
+body.high-contrast section[data-section='sobre-la-tazza'] .bg-background\/90 {
+  background-color: var(--background) !important;
+  border-color: var(--foreground) !important;
+  border-width: 2px !important;
+}
+
+body.high-contrast
+  section[aria-label='Sobre La Tazza']
+  .backdrop-blur-sm,
+body.high-contrast
+  section[data-section='sobre-la-tazza']
+  .backdrop-blur-sm {
+  backdrop-filter: none !important;
+}
