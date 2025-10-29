@@ -40,18 +40,17 @@ export default function Navbar() {
     setImageError(false);
   }, [user?.photoURL]);
 
-  // Fechar dropdown ao clicar fora
+  // Fechar dropdown ao clicar fora (mas não ao passar o mouse)
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        !event.target ||
-        !(event.target as Element).closest('[data-dropdown]')
-      ) {
+      const target = event.target as Element;
+      if (!target || !target.closest('[data-dropdown]')) {
         setDropdownOpen(false);
       }
     };
 
     if (dropdownOpen) {
+      // Usar 'mousedown' apenas, remover outros eventos que possam interferir
       document.addEventListener('mousedown', handleClickOutside);
     }
 
