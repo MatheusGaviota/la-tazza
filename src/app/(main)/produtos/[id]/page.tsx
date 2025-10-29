@@ -53,6 +53,14 @@ export default function ProductDetailPage({
             )
             .slice(0, 4);
           setRelatedProducts(related);
+
+          // Buscar avaliações para calcular média
+          const reviews = await getProductReviews(id);
+          setReviewCount(reviews.length);
+          if (reviews.length > 0) {
+            const avg = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+            setAverageRating(avg);
+          }
         }
       } catch (error) {
         console.error('Erro ao carregar produto:', error);
