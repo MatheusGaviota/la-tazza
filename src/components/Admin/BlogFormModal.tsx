@@ -1,14 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Upload, Loader2 } from 'lucide-react';
-import Button from '@/components/UI/Button';
 import Input from '@/components/UI/Input';
 import { BlogPost } from '@/types/admin.types';
 import { createBlogPost, updateBlogPost } from '@/lib/admin.service';
 import { uploadToCloudinary } from '@/lib/cloudinary-client';
-import Image from 'next/image';
-import { useScrollLock } from '@/hooks';
+import BaseFormModal from './BaseFormModal';
+import ImageUploadField from './ImageUploadField';
+import TextareaField from './TextareaField';
 
 interface BlogFormModalProps {
   isOpen: boolean;
@@ -21,7 +20,6 @@ export default function BlogFormModal({
   onClose,
   post,
 }: BlogFormModalProps) {
-  const [mounted, setMounted] = useState(false);
   const [formData, setFormData] = useState({
     slug: '',
     title: '',
@@ -39,40 +37,78 @@ export default function BlogFormModal({
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  useScrollLock(isOpen);
+  // Obtém a data de hoje no formato ISO
+  const getTodayDate = (): string => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  };
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // Verifica se a data é anterior a hoje
+  const isDateBeforeToday = (dateStr: string): boolean => {
+    if (!dateStr) return false;
+    const selectedDate = new Date(dateStr + 'T00:00:00');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return selectedDate < today;
+  };
 
-  useEffect(() => {
-    if (post) {
-      setFormData({
-        slug: post.slug,
-        title: post.title,
-        excerpt: post.excerpt,
-        content: post.content,
-        author: post.author,
-        date: post.date,
-        readTime: post.readTime,
-        category: post.category,
-        published: post.published,
-        imageUrl: post.imageUrl,
-      });
-      setImagePreview(post.imageUrl);
-    } else {
-      resetForm();
+  // Determina se o post deve ser publicado automaticamente
+  const shouldAutoPublish = (): boolean => {
+    return formData.published || isDateBeforeToday(formData.date);
+  };
+
+  // Handler para mudança no checkbox de publicação
+  const handlePublishedChange = (checked: boolean) => {
+    setFormData((prev) => ({
+      ...prev,
+      published: checked,
+      // Se marcar para publicar, define data como hoje
+      date: checked ? getTodayDate() : prev.date || '',
+    }));
+  };
+
+  // Função para converter data de exibição (ex: "15 Out 2025") para formato ISO (YYYY-MM-DD)
+  const parseDisplayDate = (dateStr: string): string => {
+    // Se já está no formato ISO, retorna
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+    // Se está vazio, retorna vazio
+    if (!dateStr) return '';
+    // Tenta criar uma data válida ou retorna string vazia
+    try {
+      const date = new Date(dateStr);
+      if (!isNaN(date.getTime())) {
+        return date.toISOString().split('T')[0];
+      }
+    } catch {
+      // Se falhar, retorna a string original
     }
-  }, [post, isOpen]);
+    return '';
+  };
+
+  // Função para formatar data ISO para exibição amigável
+  const formatDateForDisplay = (isoDate: string): string => {
+    if (!isoDate || !/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) return isoDate;
+    try {
+      const date = new Date(isoDate + 'T00:00:00');
+      return date.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      });
+    } catch {
+      return isoDate;
+    }
+  };
 
   const resetForm = () => {
+    const today = getTodayDate();
     setFormData({
       slug: '',
       title: '',
       excerpt: '',
       content: '',
       author: '',
-      date: '',
+      date: today,
       readTime: '',
       category: '',
       published: false,
@@ -83,16 +119,34 @@ export default function BlogFormModal({
     setErrors({});
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+  useEffect(() => {
+    if (post) {
+      setFormData({
+        slug: post.slug,
+        title: post.title,
+        excerpt: post.excerpt,
+        content: post.content,
+        author: post.author,
+        date: parseDisplayDate(post.date),
+        readTime: post.readTime,
+        category: post.category,
+        published: post.published,
+        imageUrl: post.imageUrl,
+      });
+      setImagePreview(post.imageUrl);
+    } else {
+      resetForm();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [post, isOpen]);
+
+  const handleImageChange = (file: File) => {
+    setImageFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
   };
 
   const generateSlug = (title: string): string => {
@@ -154,10 +208,10 @@ export default function BlogFormModal({
         excerpt: formData.excerpt.trim(),
         content: formData.content.trim(),
         author: formData.author.trim(),
-        date: formData.date.trim(),
+        date: formatDateForDisplay(formData.date.trim()),
         readTime: formData.readTime.trim(),
         category: formData.category.trim(),
-        published: formData.published,
+        published: shouldAutoPublish(),
         imageUrl,
       };
 
@@ -177,246 +231,158 @@ export default function BlogFormModal({
     }
   };
 
-  if (!mounted || !isOpen) return null;
-
   return (
-    <div
-      className="fixed inset-0 bg-foreground/50 flex items-center justify-center z-50 p-4"
-      onClick={onClose}
+    <BaseFormModal
+      isOpen={isOpen}
+      onClose={onClose}
+      onSubmit={handleSubmit}
+      title={post ? 'Editar Post' : 'Adicionar Post'}
+      loading={loading}
+      submitText={post ? 'Atualizar' : 'Adicionar'}
+      maxWidth="4xl"
     >
-      <div
-        className="bg-background rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="sticky top-0 z-10 bg-background border-b-2 border-foreground/10 px-6 py-4 flex items-center justify-between">
-          <h2 className="font-alumni text-2xl font-bold text-foreground">
-            {post ? 'Editar Post' : 'Adicionar Post'}
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-foreground/5 rounded-lg transition-colors"
-            aria-label="Fechar"
-          >
-            <X size={24} />
-          </button>
-        </div>
+      <ImageUploadField
+        label="Imagem de Capa"
+        imagePreview={imagePreview}
+        onImageChange={handleImageChange}
+        error={errors.image}
+        required
+        aspectRatio="wide"
+      />
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-foreground/70 mb-2">
-              Imagem de Capa <span className="text-red-500">*</span>
-            </label>
-            <div className="border-2 border-dashed border-foreground/20 rounded-lg p-4 text-center hover:border-accent transition-colors">
-              {imagePreview ? (
-                <div className="relative w-full h-64 mb-3">
-                  <Image
-                    src={imagePreview}
-                    alt="Preview"
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-              ) : (
-                <div className="py-8">
-                  <Upload
-                    className="mx-auto mb-2 text-foreground/40"
-                    size={48}
-                  />
-                  <p className="text-sm text-foreground/60">
-                    Clique para selecionar uma imagem
-                  </p>
-                </div>
-              )}
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-                id="blog-image-upload"
-              />
-              <label htmlFor="blog-image-upload">
-                <Button
-                  type="button"
-                  variant="ghost-accent"
-                  className="cursor-pointer"
-                >
-                  {imagePreview ? 'Trocar Imagem' : 'Selecionar Imagem'}
-                </Button>
-              </label>
-            </div>
-            {errors.image && (
-              <p className="text-xs text-red-500 mt-1">{errors.image}</p>
-            )}
-          </div>
+      <Input
+        label="Título"
+        value={formData.title}
+        onChange={handleTitleChange}
+        error={errors.title}
+        required
+        placeholder="Ex: A Arte da Extração Perfeita"
+      />
 
-          <Input
-            label="Título"
-            value={formData.title}
-            onChange={handleTitleChange}
-            error={errors.title}
-            required
-          />
+      <Input
+        label="Slug (URL)"
+        value={formData.slug}
+        onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+        error={errors.slug}
+        helpText="URL amigável para o post (gerada automaticamente)"
+        required
+        placeholder="a-arte-da-extracao-perfeita"
+      />
 
-          <Input
-            label="Slug (URL)"
-            value={formData.slug}
-            onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-            error={errors.slug}
-            helpText="URL amigável para o post (gerada automaticamente)"
-            required
-          />
+      <TextareaField
+        id="blog-excerpt"
+        label="Resumo"
+        value={formData.excerpt}
+        onChange={(value) => setFormData({ ...formData, excerpt: value })}
+        error={errors.excerpt}
+        required
+        rows={2}
+        placeholder="Breve descrição do post..."
+        maxLength={200}
+      />
 
-          <div>
-            <label
-              htmlFor="blog-excerpt"
-              className="block text-sm font-medium text-foreground/70 mb-2"
-            >
-              Resumo <span className="text-red-500">*</span>
-            </label>
-            <textarea
-              id="blog-excerpt"
-              value={formData.excerpt}
-              onChange={(e) =>
-                setFormData({ ...formData, excerpt: e.target.value })
-              }
-              rows={2}
-              className={`
-                w-full px-4 py-3 border-2 rounded-md
-                focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent
-                transition-all text-foreground bg-background
-                ${errors.excerpt ? 'border-red-500' : 'border-accent/20'}
-              `}
-              required
-            />
-            {errors.excerpt && (
-              <p className="text-xs text-red-500 mt-1">{errors.excerpt}</p>
-            )}
-          </div>
+      <TextareaField
+        id="blog-content"
+        label="Conteúdo"
+        value={formData.content}
+        onChange={(value) => setFormData({ ...formData, content: value })}
+        error={errors.content}
+        required
+        rows={10}
+        placeholder="Escreva o conteúdo completo do post..."
+        monospace
+      />
 
-          <div>
-            <label
-              htmlFor="blog-content"
-              className="block text-sm font-medium text-foreground/70 mb-2"
-            >
-              Conteúdo <span className="text-red-500">*</span>
-            </label>
-            <textarea
-              id="blog-content"
-              value={formData.content}
-              onChange={(e) =>
-                setFormData({ ...formData, content: e.target.value })
-              }
-              rows={10}
-              className={`
-                w-full px-4 py-3 border-2 rounded-md font-mono text-sm
-                focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent
-                transition-all text-foreground bg-background
-                ${errors.content ? 'border-red-500' : 'border-accent/20'}
-              `}
-              required
-            />
-            {errors.content && (
-              <p className="text-xs text-red-500 mt-1">{errors.content}</p>
-            )}
-          </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Input
+          label="Autor"
+          value={formData.author}
+          onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+          error={errors.author}
+          required
+          placeholder="Nome do autor"
+        />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input
-              label="Autor"
-              value={formData.author}
-              onChange={(e) =>
-                setFormData({ ...formData, author: e.target.value })
-              }
-              error={errors.author}
-              required
-            />
-
-            <Input
-              label="Categoria"
-              value={formData.category}
-              onChange={(e) =>
-                setFormData({ ...formData, category: e.target.value })
-              }
-              error={errors.category}
-              helpText="Ex: Técnicas, Receitas, História"
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input
-              label="Data"
-              value={formData.date}
-              onChange={(e) =>
-                setFormData({ ...formData, date: e.target.value })
-              }
-              error={errors.date}
-              helpText="Ex: 15 Out 2025"
-              required
-            />
-
-            <Input
-              label="Tempo de Leitura"
-              value={formData.readTime}
-              onChange={(e) =>
-                setFormData({ ...formData, readTime: e.target.value })
-              }
-              error={errors.readTime}
-              helpText="Ex: 8 min"
-              required
-            />
-          </div>
-
-          <div className="flex items-center gap-3 p-4 bg-foreground/5 rounded-lg">
-            <input
-              type="checkbox"
-              id="published"
-              checked={formData.published}
-              onChange={(e) =>
-                setFormData({ ...formData, published: e.target.checked })
-              }
-              className="w-5 h-5 rounded border-2 border-accent text-accent focus:ring-accent cursor-pointer"
-            />
-            <label
-              htmlFor="published"
-              className="text-sm font-medium text-foreground cursor-pointer"
-            >
-              Publicar post imediatamente
-            </label>
-          </div>
-
-          {errors.submit && (
-            <p className="text-sm text-red-500 text-center">{errors.submit}</p>
-          )}
-
-          <div className="flex gap-3 pt-4">
-            <Button
-              type="button"
-              onClick={onClose}
-              variant="ghost-fore"
-              className="flex-1"
-              disabled={loading}
-            >
-              Cancelar
-            </Button>
-            <Button
-              type="submit"
-              variant="accent"
-              className="flex-1"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <Loader2 size={20} className="animate-spin" />
-                  <span>Salvando...</span>
-                </>
-              ) : (
-                <span>{post ? 'Atualizar' : 'Adicionar'}</span>
-              )}
-            </Button>
-          </div>
-        </form>
+        <Input
+          label="Categoria"
+          value={formData.category}
+          onChange={(e) =>
+            setFormData({ ...formData, category: e.target.value })
+          }
+          error={errors.category}
+          helpText="Ex: Técnicas, Receitas, História"
+          required
+          placeholder="Técnicas"
+        />
       </div>
-    </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Input
+          label="Data de Publicação"
+          type="date"
+          value={formData.date}
+          onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+          error={errors.date}
+          required
+          disabled={formData.published}
+          helpText={
+            formData.published
+              ? 'Data automática (hoje)'
+              : isDateBeforeToday(formData.date)
+                ? 'Data passada - será publicado imediatamente'
+                : undefined
+          }
+        />
+
+        <Input
+          label="Tempo de Leitura"
+          value={formData.readTime}
+          onChange={(e) =>
+            setFormData({ ...formData, readTime: e.target.value })
+          }
+          error={errors.readTime}
+          helpText="Ex: 8 min"
+          required
+          placeholder="8 min"
+        />
+      </div>
+
+      <div className="flex items-center gap-3 p-4 bg-foreground/5 rounded-lg border-2 border-foreground/10">
+        <input
+          type="checkbox"
+          id="published"
+          checked={formData.published}
+          onChange={(e) => handlePublishedChange(e.target.checked)}
+          className="w-5 h-5 rounded border-2 border-accent text-accent focus:ring-accent cursor-pointer"
+        />
+        <div className="flex-1">
+          <label
+            htmlFor="published"
+            className="text-sm font-medium text-foreground cursor-pointer block"
+          >
+            Publicar post imediatamente
+          </label>
+          {formData.published && (
+            <p className="text-xs text-foreground/60 mt-1">
+              A data será definida automaticamente como hoje
+            </p>
+          )}
+          {!formData.published && isDateBeforeToday(formData.date) && (
+            <p className="text-xs text-accent mt-1 font-medium">
+              ⚠️ Post será publicado com a data selecionada ({formatDateForDisplay(formData.date)})
+            </p>
+          )}
+        </div>
+      </div>
+
+      {errors.submit && (
+        <div
+          className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm"
+          role="alert"
+        >
+          {errors.submit}
+        </div>
+      )}
+    </BaseFormModal>
   );
 }
