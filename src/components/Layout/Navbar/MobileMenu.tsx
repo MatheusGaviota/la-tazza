@@ -5,11 +5,8 @@ import {
   UserCircle,
   LogOut,
   User,
-  Instagram,
-  Facebook,
-  Twitter,
 } from 'lucide-react';
-import { navItems, socials } from './constants';
+import { navItems } from './constants';
 
 interface User {
   displayName: string | null;
@@ -29,6 +26,7 @@ interface MobileMenuProps {
   imageError: boolean;
   handleImageError: () => void;
   handleLogout: () => void;
+  isAdmin: boolean;
 }
 
 export default function MobileMenu({
@@ -43,7 +41,9 @@ export default function MobileMenu({
   imageError,
   handleImageError,
   handleLogout,
+  isAdmin,
 }: MobileMenuProps) {
+  const menuItems = isAdmin ? [...navItems, { label: 'Admin', href: '/admin' }] : navItems;
   const getInitials = (name: string) => {
     return name
       .split(' ')
@@ -56,9 +56,9 @@ export default function MobileMenu({
   if (!open) return null;
 
   return (
-    <div id="mobile-menu" className="md:hidden mt-2 pb-4">
+    <div id="mobile-menu" className="md:hidden mt-2 pb-4 px-4">
       <ul className="flex flex-col space-y-2 text-background">
-        {navItems.map((item) => (
+        {menuItems.map((item) => (
           <li key={item.href}>
             <Link
               href={item.href}
@@ -149,42 +149,6 @@ export default function MobileMenu({
               className="w-full text-center"
             />
           )}
-        </li>
-        {/* Social icons (mobile) */}
-        <li className="pt-3 border-t border-accent/10">
-          <div className="flex items-center gap-3 px-2">
-            {socials.map(({ label, href, username, icon }) => {
-              let Icon;
-              switch (icon) {
-                case 'Instagram':
-                  Icon = Instagram;
-                  break;
-                case 'Facebook':
-                  Icon = Facebook;
-                  break;
-                case 'Twitter':
-                  Icon = Twitter;
-                  break;
-                default:
-                  Icon = Instagram;
-              }
-              return (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Seguir ${username} no ${label}`}
-                  className="flex items-center gap-2 p-2 rounded hover:bg-accent/10 transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
-                >
-                  <Icon size={18} aria-hidden />
-                  <span className="hidden lg:inline text-xs font-medium">
-                    {username}
-                  </span>
-                </a>
-              );
-            })}
-          </div>
         </li>
       </ul>
     </div>

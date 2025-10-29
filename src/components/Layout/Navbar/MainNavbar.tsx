@@ -25,6 +25,7 @@ interface MainNavbarProps {
   handleLogout: () => void;
   open: boolean;
   setOpen: (open: boolean) => void;
+  isAdmin: boolean;
 }
 
 export default function MainNavbar({
@@ -41,7 +42,9 @@ export default function MainNavbar({
   handleLogout,
   open,
   setOpen,
+  isAdmin,
 }: MainNavbarProps) {
+  const menuItems = isAdmin ? [...navItems, { label: 'Admin', href: '/admin' }] : navItems;
   return (
     <nav
       className="max-w-[1400px] mx-auto px-4"
@@ -57,7 +60,7 @@ export default function MainNavbar({
         <div className="flex items-center gap-6">
           {/* desktop menu */}
           <ul className="hidden md:flex items-center space-x-6 text-background">
-            {navItems.map((item) => (
+            {menuItems.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}

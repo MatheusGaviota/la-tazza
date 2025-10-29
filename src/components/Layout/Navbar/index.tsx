@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 import SocialBar from './SocialBar';
 import MainNavbar from './MainNavbar';
 import MobileMenu from './MobileMenu';
+import { useAdmin } from '@/hooks/useAdmin';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -15,6 +16,7 @@ export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { totalItems } = useCart();
   const { isAuthenticated, user, signOut } = useAuth();
+  const { isAdmin } = useAdmin();
   const [imageError, setImageError] = useState(false);
   const [isLoadingPhoto, setIsLoadingPhoto] = useState(true);
   const [compactSocial, setCompactSocial] = useState(false);
@@ -139,6 +141,7 @@ export default function Navbar() {
         handleLogout={handleLogout}
         open={open}
         setOpen={setOpen}
+        isAdmin={isAdmin}
       />
       <MobileMenu
         open={open}
@@ -152,6 +155,7 @@ export default function Navbar() {
         imageError={imageError}
         handleImageError={handleImageError}
         handleLogout={handleLogout}
+        isAdmin={isAdmin}
       />
       <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
     </header>
