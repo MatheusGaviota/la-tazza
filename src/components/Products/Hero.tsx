@@ -29,7 +29,7 @@ export default function Hero() {
       <style>{ARROW_ANIMATION}</style>
       <section
         aria-labelledby="hero-title"
-        className="relative flex h-[calc(100vh-92px)] w-full items-center justify-center overflow-hidden text-background"
+        className="relative flex h-[calc(100vh-104px)] w-full items-center justify-center overflow-hidden text-background"
       >
         {/* Background layers */}
         <Image

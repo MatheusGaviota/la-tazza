@@ -60,7 +60,7 @@ export default function BlogPage() {
   }, [blogPosts, selectedCategory, searchTerm]);
 
   return (
-    <main className="min-h-[calc(100vh-92px)]">
+    <main className="min-h-[calc(100vh-104px)]">
       {/* Hero Section */}
       <section className="w-full bg-foreground text-background py-16 sm:py-20 md:py-24">
         <div className="max-w-[1400px] mx-auto px-4">
