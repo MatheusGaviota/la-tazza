@@ -196,8 +196,6 @@ export default function ProductDetailPage({
   }
 
   // Array de imagens vazio - fallback já está acima
-  const rating = product?.rating || 0;
-  const reviews = product?.reviews || 0;
   const highlights = product?.highlights || [];
   const preparation = product?.preparation || [];
   const nutrients = product?.nutrients || {};
