@@ -9,3 +9,6 @@ export { default as BlogFormModal } from './BlogFormModal';
 export { default as DeleteConfirmModal } from './DeleteConfirmModal';
 export { default as UsersManager } from './UsersManager';
 export { default as UserActionModal } from './UserActionModal';
+export { default as BaseFormModal } from './BaseFormModal';
+export { default as ImageUploadField } from './ImageUploadField';
+export { default as TextareaField } from './TextareaField';
