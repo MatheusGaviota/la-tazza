@@ -56,6 +56,8 @@ export interface BlogPost {
   excerpt: string;
   content: string;
   author: string;
+  authorPhoto?: string;
+  authorUid?: string;
   date: string;
   readTime: string;
   category: string;
@@ -63,6 +65,17 @@ export interface BlogPost {
   published: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface Comment {
+  id: string;
+  postId: string;
+  userId: string;
+  userName: string;
+  userPhoto?: string;
+  content: string;
+  createdAt: Date;
+  authorUid?: string;
 }
 
 export interface AdminUser {
