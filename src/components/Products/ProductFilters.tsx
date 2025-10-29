@@ -261,16 +261,43 @@ export default function ProductFilters({
                 </div>
               </div>
             </div>
-            <div className="px-2">
-              <input
-                type="range"
-                min="0"
-                max={maxPrice}
-                value={filters.priceRange[1]}
-                onChange={(e) => handlePriceChange(1, Number(e.target.value))}
-                className="w-full h-2 bg-background/20 rounded-lg appearance-none cursor-pointer accent-background"
-                aria-label="Ajustar preço máximo"
-              />
+            <div className="space-y-3 px-2">
+              <div>
+                <label
+                  htmlFor="slider-min"
+                  className="text-xs text-background/70 block mb-2"
+                >
+                  Preço mínimo: R$ {filters.priceRange[0]}
+                </label>
+                <input
+                  id="slider-min"
+                  type="range"
+                  min="0"
+                  max={filters.priceRange[1]}
+                  value={filters.priceRange[0]}
+                  onChange={(e) => handlePriceChange(0, Number(e.target.value))}
+                  className="w-full h-2 bg-background/20 rounded-lg appearance-none cursor-pointer accent-background"
+                  aria-label="Ajustar preço mínimo"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="slider-max"
+                  className="text-xs text-background/70 block mb-2"
+                >
+                  Preço máximo: R$ {filters.priceRange[1]}
+                </label>
+                <input
+                  id="slider-max"
+                  type="range"
+                  min={filters.priceRange[0]}
+                  max={maxPrice}
+                  value={filters.priceRange[1]}
+                  onChange={(e) => handlePriceChange(1, Number(e.target.value))}
+                  className="w-full h-2 bg-background/20 rounded-lg appearance-none cursor-pointer accent-background"
+                  aria-label="Ajustar preço máximo"
+                />
+              </div>
             </div>
           </div>
         )}
