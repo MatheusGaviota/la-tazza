@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import BlogCard from '@/components/Cards/BlogCard';
 import { Search } from 'lucide-react';
-import { getBlogPosts } from '@/lib/admin.service';
+import { getPublishedBlogPosts } from '@/lib/admin.service';
 import type { BlogPost } from '@/types/admin.types';
 
 export default function BlogPage() {
@@ -18,14 +18,13 @@ export default function BlogPage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const posts = await getBlogPosts();
-        const publishedPosts = posts.filter((post) => post.published);
-        setBlogPosts(publishedPosts);
+        const posts = await getPublishedBlogPosts();
+        setBlogPosts(posts);
 
         // Extrair categorias únicas
         const uniqueCategories = [
           'Todos',
-          ...new Set(publishedPosts.map((post) => post.category)),
+          ...new Set(posts.map((post) => post.category)),
         ];
         setCategories(uniqueCategories);
       } catch (error) {
