@@ -1,6 +1,6 @@
 export const validateCPF = (cpf: string): boolean => {
   const cleaned = cpf.replace(/\D/g, '');
-  
+
   if (cleaned.length !== 11) return false;
   if (/^(\d)\1{10}$/.test(cleaned)) return false;
 
@@ -18,7 +18,7 @@ export const validateCPF = (cpf: string): boolean => {
   }
   digit = 11 - (sum % 11);
   if (digit >= 10) digit = 0;
-  
+
   return digit === parseInt(cleaned.charAt(10));
 };
 
@@ -34,7 +34,9 @@ export const validateBirthDate = (dateString: string): boolean => {
   return birthDate <= today;
 };
 
-export const validatePassword = (password: string): { valid: boolean; error?: string } => {
+export const validatePassword = (
+  password: string
+): { valid: boolean; error?: string } => {
   if (!password.trim()) {
     return { valid: false, error: 'Digite a senha' };
   }
@@ -44,6 +46,9 @@ export const validatePassword = (password: string): { valid: boolean; error?: st
   return { valid: true };
 };
 
-export const validatePasswordMatch = (password: string, confirmPassword: string): boolean => {
+export const validatePasswordMatch = (
+  password: string,
+  confirmPassword: string
+): boolean => {
   return password === confirmPassword;
 };
