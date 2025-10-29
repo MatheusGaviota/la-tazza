@@ -228,7 +228,7 @@ async function reauthenticateUser(
   try {
     // Se o usuário logou com Google, reautentica com popup
     const providerId = user.providerData[0]?.providerId;
-    
+
     if (providerId === 'google.com') {
       const provider = new GoogleAuthProvider();
       await reauthenticateWithPopup(user, provider);
@@ -254,7 +254,7 @@ async function reauthenticateUser(
 /**
  * Deleta permanentemente a conta do usuário
  * Requer reautenticação recente por segurança
- * 
+ *
  * @param password - Senha atual (necessária para contas com email/senha)
  * @throws {Error} Se a reautenticação falhar ou a exclusão não for permitida
  */
@@ -285,7 +285,7 @@ export async function deleteUserAccount(password?: string): Promise<void> {
 /**
  * Altera a senha do usuário
  * Requer reautenticação e validações de segurança
- * 
+ *
  * @param currentPassword - Senha atual para reautenticação
  * @param newPassword - Nova senha a ser definida
  * @throws {Error} Se a reautenticação falhar ou a nova senha for inválida
@@ -333,7 +333,7 @@ export async function changePassword(
 /**
  * Realiza logout do usuário
  * Limpa sessão e dados locais
- * 
+ *
  * @throws {Error} Se o logout falhar
  */
 export async function logout(): Promise<void> {
