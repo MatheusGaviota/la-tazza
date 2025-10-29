@@ -2,9 +2,9 @@
 
 /**
  * CLI para gerenciamento de contas
- * 
+ *
  * Uso: npx ts-node scripts/admin/cli.ts <comando> [args]
- * 
+ *
  * Comandos disponíveis:
  *   create-user <email> <password> [--name "Name"] [--admin]
  *   get-user <uid>
@@ -21,7 +21,10 @@
 import * as commands from './commands';
 import type { CommandContext, CliResponse } from './types';
 
-const commandMap: Record<string, (context: CommandContext) => Promise<CliResponse>> = {
+const commandMap: Record<
+  string,
+  (context: CommandContext) => Promise<CliResponse>
+> = {
   'create-user': commands.createUserCommand,
   'get-user': commands.getUserCommand,
   'list-users': commands.listUsersCommand,
@@ -37,7 +40,11 @@ const commandMap: Record<string, (context: CommandContext) => Promise<CliRespons
 // HELPER FUNCTIONS
 // ============================================================================
 
-function parseArguments(rawArgs: string[]): { command: string; args: string[]; options: Record<string, string | boolean> } {
+function parseArguments(rawArgs: string[]): {
+  command: string;
+  args: string[];
+  options: Record<string, string | boolean>;
+} {
   const [command, ...rest] = rawArgs.slice(2);
 
   const args: string[] = [command];
@@ -173,7 +180,9 @@ async function main(): Promise<void> {
       process.exit(1);
     }
   } catch (error) {
-    console.error(`\n❌ Erro fatal: ${error instanceof Error ? error.message : String(error)}\n`);
+    console.error(
+      `\n❌ Erro fatal: ${error instanceof Error ? error.message : String(error)}\n`
+    );
     process.exit(1);
   }
 }

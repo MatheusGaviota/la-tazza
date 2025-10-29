@@ -14,7 +14,9 @@ let adminApp: admin.app.App | null = null;
 export function getAdminApp(): admin.app.App {
   if (!adminApp) {
     adminApp = admin.initializeApp({
-      credential: admin.credential.cert(serviceAccountConfig as admin.ServiceAccount),
+      credential: admin.credential.cert(
+        serviceAccountConfig as admin.ServiceAccount
+      ),
     });
   }
   return adminApp;

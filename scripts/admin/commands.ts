@@ -9,7 +9,9 @@ import type { CliResponse, CommandContext } from './types';
 // CRIAR USUÁRIO
 // ============================================================================
 
-export async function createUserCommand(context: CommandContext): Promise<CliResponse> {
+export async function createUserCommand(
+  context: CommandContext
+): Promise<CliResponse> {
   const { args, options } = context;
 
   if (args.length < 3) {
@@ -20,7 +22,8 @@ export async function createUserCommand(context: CommandContext): Promise<CliRes
   }
 
   const [email, password] = args;
-  const displayName = typeof options.name === 'string' ? options.name : undefined;
+  const displayName =
+    typeof options.name === 'string' ? options.name : undefined;
   const isAdmin = options.admin === true;
 
   try {
@@ -53,7 +56,9 @@ export async function createUserCommand(context: CommandContext): Promise<CliRes
 // OBTER INFORMAÇÕES DO USUÁRIO
 // ============================================================================
 
-export async function getUserCommand(context: CommandContext): Promise<CliResponse> {
+export async function getUserCommand(
+  context: CommandContext
+): Promise<CliResponse> {
   const { args } = context;
 
   if (args.length < 2) {
@@ -92,9 +97,12 @@ export async function getUserCommand(context: CommandContext): Promise<CliRespon
 // LISTAR TODOS OS USUÁRIOS
 // ============================================================================
 
-export async function listUsersCommand(context: CommandContext): Promise<CliResponse> {
+export async function listUsersCommand(
+  context: CommandContext
+): Promise<CliResponse> {
   const { options } = context;
-  const limit = typeof options.limit === 'string' ? parseInt(options.limit, 10) : 100;
+  const limit =
+    typeof options.limit === 'string' ? parseInt(options.limit, 10) : 100;
 
   try {
     const users = await userManager.listAllUsers(limit);
@@ -131,7 +139,9 @@ export async function listUsersCommand(context: CommandContext): Promise<CliResp
 // PROMOVER A ADMIN
 // ============================================================================
 
-export async function promoteCommand(context: CommandContext): Promise<CliResponse> {
+export async function promoteCommand(
+  context: CommandContext
+): Promise<CliResponse> {
   const { args } = context;
 
   if (args.length < 2) {
@@ -163,7 +173,9 @@ export async function promoteCommand(context: CommandContext): Promise<CliRespon
 // REMOVER PRIVILÉGIOS DE ADMIN
 // ============================================================================
 
-export async function demoteCommand(context: CommandContext): Promise<CliResponse> {
+export async function demoteCommand(
+  context: CommandContext
+): Promise<CliResponse> {
   const { args } = context;
 
   if (args.length < 2) {
@@ -195,7 +207,9 @@ export async function demoteCommand(context: CommandContext): Promise<CliRespons
 // DELETAR USUÁRIO
 // ============================================================================
 
-export async function deleteUserCommand(context: CommandContext): Promise<CliResponse> {
+export async function deleteUserCommand(
+  context: CommandContext
+): Promise<CliResponse> {
   const { args, options } = context;
 
   if (args.length < 2) {
@@ -211,7 +225,8 @@ export async function deleteUserCommand(context: CommandContext): Promise<CliRes
   if (!force) {
     return {
       success: false,
-      message: '⚠️ Use --force para confirmar a deleção: delete-user <uid> --force',
+      message:
+        '⚠️ Use --force para confirmar a deleção: delete-user <uid> --force',
     };
   }
 
@@ -235,7 +250,9 @@ export async function deleteUserCommand(context: CommandContext): Promise<CliRes
 // RESETAR SENHA
 // ============================================================================
 
-export async function resetPasswordCommand(context: CommandContext): Promise<CliResponse> {
+export async function resetPasswordCommand(
+  context: CommandContext
+): Promise<CliResponse> {
   const { args } = context;
 
   if (args.length < 3) {
@@ -274,7 +291,9 @@ export async function resetPasswordCommand(context: CommandContext): Promise<Cli
 // DESABILITAR USUÁRIO
 // ============================================================================
 
-export async function disableUserCommand(context: CommandContext): Promise<CliResponse> {
+export async function disableUserCommand(
+  context: CommandContext
+): Promise<CliResponse> {
   const { args } = context;
 
   if (args.length < 2) {
@@ -306,7 +325,9 @@ export async function disableUserCommand(context: CommandContext): Promise<CliRe
 // HABILITAR USUÁRIO
 // ============================================================================
 
-export async function enableUserCommand(context: CommandContext): Promise<CliResponse> {
+export async function enableUserCommand(
+  context: CommandContext
+): Promise<CliResponse> {
   const { args } = context;
 
   if (args.length < 2) {
