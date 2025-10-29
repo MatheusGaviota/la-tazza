@@ -195,3 +195,47 @@ body.high-contrast section[aria-label='Sobre La Tazza'] .backdrop-blur-sm,
 body.high-contrast section[data-section='sobre-la-tazza'] .backdrop-blur-sm {
   backdrop-filter: none !important;
 }
+
+/* Courses Page CTA Section - "Não encontrou o curso ideal?" */
+body.high-contrast section.bg-accent\/10 h2,
+body.high-contrast section.bg-accent\/10 p,
+body.high-contrast section[class*='bg-accent/10'] h2,
+body.high-contrast section[class*='bg-accent/10'] p {
+  color: var(--foreground) !important;
+}
+
+/* Contact Page - FAQ Section */
+body.high-contrast .bg-accent\/5 h3,
+body.high-contrast .bg-accent\/5 p,
+body.high-contrast [class*='bg-accent/5'] h3,
+body.high-contrast [class*='bg-accent/5'] p,
+body.high-contrast .bg-accent\/5 a,
+body.high-contrast [class*='bg-accent/5'] a {
+  color: var(--foreground) !important;
+}
+
+/* Contact Page - Location Section */
+body.high-contrast section.bg-accent\/5 h2,
+body.high-contrast section[class*='bg-accent/5'] h2,
+body.high-contrast section.bg-accent\/5 .text-foreground\/70,
+body.high-contrast section[class*='bg-accent/5'] .text-foreground\/70,
+body.high-contrast section.bg-accent\/5 .text-foreground\/50,
+body.high-contrast section[class*='bg-accent/5'] .text-foreground\/50 {
+  color: var(--foreground) !important;
+}
+
+/* Contact Page - MapPin Icon and inner content in Location Section */
+body.high-contrast section.bg-accent\/5 svg,
+body.high-contrast section[class*='bg-accent/5'] svg,
+body.high-contrast section.bg-accent\/5 .bg-accent\/10 svg,
+body.high-contrast section[class*='bg-accent/5'] [class*='bg-accent/10'] svg {
+  color: var(--foreground) !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
+/* Contact Page - Location Section inner content */
+body.high-contrast section.bg-accent\/5 .bg-accent\/10 p,
+body.high-contrast section[class*='bg-accent/5'] [class*='bg-accent/10'] p {
+  color: var(--foreground) !important;
+}
