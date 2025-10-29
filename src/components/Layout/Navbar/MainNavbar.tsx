@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Button from '../../UI/Button';
 import Logo from '../Logo';
 import CartButton from './CartButton';
+import SearchButton from './SearchButton';
 import UserDropdown from './UserDropdown';
 import { navItems } from './constants';
 
@@ -74,6 +75,9 @@ export default function MainNavbar({
             ))}
           </ul>
           <div className="hidden md:flex items-center gap-3">
+            {/* Search Icon */}
+            <SearchButton />
+
             {/* Cart Icon */}
             <CartButton
               totalItems={totalItems}

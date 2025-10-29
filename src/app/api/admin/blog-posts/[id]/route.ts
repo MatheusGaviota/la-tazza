@@ -112,7 +112,10 @@ export async function DELETE(
     const docSnap = await getDoc(docRef);
 
     if (!docSnap.exists()) {
-      return NextResponse.json({ error: 'Post não encontrado' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Post não encontrado' },
+        { status: 404 }
+      );
     }
 
     const post = { id: docSnap.id, ...docSnap.data() } as BlogPost;
@@ -123,9 +126,13 @@ export async function DELETE(
         const publicId = extractPublicIdFromCloudinaryUrl(post.imageUrl);
         if (publicId) {
           await deleteImage(publicId);
-          console.log(`Imagem do post "${post.title}" deletada do Cloudinary: ${publicId}`);
+          console.log(
+            `Imagem do post "${post.title}" deletada do Cloudinary: ${publicId}`
+          );
         } else {
-          console.warn('Não foi possível extrair publicId da URL da imagem do post');
+          console.warn(
+            'Não foi possível extrair publicId da URL da imagem do post'
+          );
         }
       } catch (imageError) {
         console.error('Erro ao deletar imagem do Cloudinary:', imageError);
@@ -147,9 +154,6 @@ export async function DELETE(
       error instanceof Error
         ? error.message
         : 'Erro desconhecido ao deletar post';
-    return NextResponse.json(
-      { error: errorMessage },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

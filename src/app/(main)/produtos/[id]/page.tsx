@@ -15,7 +15,11 @@ import {
 } from 'lucide-react';
 import ProductCard from '@/components/Cards/ProductCard';
 import { ProductReviewSection } from '@/components/Products';
-import { getProduct, getProducts, getProductReviews } from '@/lib/admin.service';
+import {
+  getProduct,
+  getProducts,
+  getProductReviews,
+} from '@/lib/admin.service';
 import { Product } from '@/types/admin.types';
 import { useAdmin } from '@/hooks';
 import Skeleton from '@/components/UI/Skeleton';
@@ -58,7 +62,8 @@ export default function ProductDetailPage({
           const reviews = await getProductReviews(id);
           setReviewCount(reviews.length);
           if (reviews.length > 0) {
-            const avg = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+            const avg =
+              reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
             setAverageRating(avg);
           }
         }
@@ -73,11 +78,12 @@ export default function ProductDetailPage({
   }, [id]);
 
   // Array de imagens (usar as múltiplas imagens ou a principal)
-  const images = product?.images && product.images.length > 0 
-    ? product.images 
-    : product?.imageUrl 
-    ? [product.imageUrl] 
-    : [];
+  const images =
+    product?.images && product.images.length > 0
+      ? product.images
+      : product?.imageUrl
+        ? [product.imageUrl]
+        : [];
 
   // Loading state com Skeletons
   if (loading) {
@@ -340,7 +346,8 @@ export default function ProductDetailPage({
                     {averageRating.toFixed(1)}
                   </span>
                   <span className="text-foreground/70">
-                    ({reviewCount} {reviewCount === 1 ? 'avaliação' : 'avaliações'})
+                    ({reviewCount}{' '}
+                    {reviewCount === 1 ? 'avaliação' : 'avaliações'})
                   </span>
                 </>
               )}
@@ -434,138 +441,138 @@ export default function ProductDetailPage({
                   7 dias de garantia
                 </p>
               </div>
-            {/* Características do Produto */}
-            {highlights.length > 0 && (
-              <div className="space-y-3">
-                <h3 className="font-semibold text-foreground">
-                  Características:
-                </h3>
-                <ul className="space-y-2">
-                  {highlights.map((highlight, index) => (
-                    <li
-                      key={index}
-                      className="flex items-start gap-3 text-foreground/80"
-                    >
-                      <span className="text-accent font-bold mt-1">✓</span>
-                      <span>{highlight}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Abas de Informações */}
-      <div className="max-w-[1400px] mx-auto">
-        <div className="mt-16 border-t-2 border-foreground/10 pt-12">
-          <div className="space-y-8">
-            {/* Descrição Completa */}
-            <div>
-              <h2 className="font-alumni text-3xl font-bold text-foreground mb-4">
-                Sobre o Produto
-              </h2>
-              <p className="text-foreground/80 leading-relaxed mb-6">
-                {product.fullDescription || product.description}
-              </p>
-
-              {/* Métodos de Preparação */}
-              {preparation.length > 0 && (
-                <div className="mt-8">
-                  <h3 className="font-semibold text-lg text-foreground mb-3">
-                    Métodos de Preparação Recomendados:
+              {/* Características do Produto */}
+              {highlights.length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-foreground">
+                    Características:
                   </h3>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {preparation.map((method) => (
-                      <div
-                        key={method}
-                        className="px-4 py-2 bg-accent/10 border-2 border-accent rounded-lg text-center font-medium text-foreground"
+                  <ul className="space-y-2">
+                    {highlights.map((highlight, index) => (
+                      <li
+                        key={index}
+                        className="flex items-start gap-3 text-foreground/80"
                       >
-                        {method}
-                      </div>
+                        <span className="text-accent font-bold mt-1">✓</span>
+                        <span>{highlight}</span>
+                      </li>
                     ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Informações Nutricionais */}
-              {Object.keys(nutrients).length > 0 && (
-                <div className="mt-8">
-                  <h3 className="font-semibold text-lg text-foreground mb-3">
-                    Informações Nutricionais (por xícara 200ml):
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {nutrients.cafeína && (
-                      <div className="p-4 bg-accent/5 border-2 border-accent/20 rounded-lg">
-                        <p className="text-sm text-foreground/70 mb-1">
-                          ☕ Cafeína
-                        </p>
-                        <p className="font-semibold text-foreground">
-                          {nutrients.cafeína}
-                        </p>
-                      </div>
-                    )}
-                    {nutrients.calorias && (
-                      <div className="p-4 bg-accent/5 border-2 border-accent/20 rounded-lg">
-                        <p className="text-sm text-foreground/70 mb-1">
-                          ⚡ Calorias
-                        </p>
-                        <p className="font-semibold text-foreground">
-                          {nutrients.calorias}
-                        </p>
-                      </div>
-                    )}
-                    {nutrients.acidez && (
-                      <div className="p-4 bg-accent/5 border-2 border-accent/20 rounded-lg">
-                        <p className="text-sm text-foreground/70 mb-1">
-                          🌡️ Acidez
-                        </p>
-                        <p className="font-semibold text-foreground">
-                          {nutrients.acidez}
-                        </p>
-                      </div>
-                    )}
-                  </div>
+                  </ul>
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* Produtos Relacionados */}
-        {relatedProducts.length > 0 && (
-          <div className="mt-20 pt-12 border-t-2 border-foreground/10">
-            <h2 className="font-alumni text-3xl font-bold text-foreground mb-8">
-              Produtos Similares
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {relatedProducts.map((relatedProduct) => (
-                <ProductCard
-                  key={relatedProduct.id}
-                  id={relatedProduct.id}
-                  imageUrl={relatedProduct.imageUrl}
-                  title={relatedProduct.title}
-                  description={relatedProduct.description}
-                  price={relatedProduct.price}
-                  category={relatedProduct.category}
-                />
-              ))}
+        {/* Abas de Informações */}
+        <div className="max-w-[1400px] mx-auto">
+          <div className="mt-16 border-t-2 border-foreground/10 pt-12">
+            <div className="space-y-8">
+              {/* Descrição Completa */}
+              <div>
+                <h2 className="font-alumni text-3xl font-bold text-foreground mb-4">
+                  Sobre o Produto
+                </h2>
+                <p className="text-foreground/80 leading-relaxed mb-6">
+                  {product.fullDescription || product.description}
+                </p>
+
+                {/* Métodos de Preparação */}
+                {preparation.length > 0 && (
+                  <div className="mt-8">
+                    <h3 className="font-semibold text-lg text-foreground mb-3">
+                      Métodos de Preparação Recomendados:
+                    </h3>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      {preparation.map((method) => (
+                        <div
+                          key={method}
+                          className="px-4 py-2 bg-accent/10 border-2 border-accent rounded-lg text-center font-medium text-foreground"
+                        >
+                          {method}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Informações Nutricionais */}
+                {Object.keys(nutrients).length > 0 && (
+                  <div className="mt-8">
+                    <h3 className="font-semibold text-lg text-foreground mb-3">
+                      Informações Nutricionais (por xícara 200ml):
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {nutrients.cafeína && (
+                        <div className="p-4 bg-accent/5 border-2 border-accent/20 rounded-lg">
+                          <p className="text-sm text-foreground/70 mb-1">
+                            ☕ Cafeína
+                          </p>
+                          <p className="font-semibold text-foreground">
+                            {nutrients.cafeína}
+                          </p>
+                        </div>
+                      )}
+                      {nutrients.calorias && (
+                        <div className="p-4 bg-accent/5 border-2 border-accent/20 rounded-lg">
+                          <p className="text-sm text-foreground/70 mb-1">
+                            ⚡ Calorias
+                          </p>
+                          <p className="font-semibold text-foreground">
+                            {nutrients.calorias}
+                          </p>
+                        </div>
+                      )}
+                      {nutrients.acidez && (
+                        <div className="p-4 bg-accent/5 border-2 border-accent/20 rounded-lg">
+                          <p className="text-sm text-foreground/70 mb-1">
+                            🌡️ Acidez
+                          </p>
+                          <p className="font-semibold text-foreground">
+                            {nutrients.acidez}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        )}
 
-        {/* Seção de Avaliações */}
-        <ProductReviewSection 
-          productId={id} 
-          isAdmin={isAdmin}
-          onReviewsUpdate={(count, avg) => {
-            setReviewCount(count);
-            setAverageRating(avg);
-          }}
-        />
+          {/* Produtos Relacionados */}
+          {relatedProducts.length > 0 && (
+            <div className="mt-20 pt-12 border-t-2 border-foreground/10">
+              <h2 className="font-alumni text-3xl font-bold text-foreground mb-8">
+                Produtos Similares
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {relatedProducts.map((relatedProduct) => (
+                  <ProductCard
+                    key={relatedProduct.id}
+                    id={relatedProduct.id}
+                    imageUrl={relatedProduct.imageUrl}
+                    title={relatedProduct.title}
+                    description={relatedProduct.description}
+                    price={relatedProduct.price}
+                    category={relatedProduct.category}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Seção de Avaliações */}
+          <ProductReviewSection
+            productId={id}
+            isAdmin={isAdmin}
+            onReviewsUpdate={(count, avg) => {
+              setReviewCount(count);
+              setAverageRating(avg);
+            }}
+          />
+        </div>
       </div>
-    </div>
     </div>
   );
 }

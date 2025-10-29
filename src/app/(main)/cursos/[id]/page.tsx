@@ -287,7 +287,9 @@ export default function CoursePage() {
   >('sobre');
   const router = useRouter();
   const params = useParams() as { id?: string } | undefined;
-  const course = coursesData.find((c) => c.id === parseInt(params?.id ?? '', 10));
+  const course = coursesData.find(
+    (c) => c.id === parseInt(params?.id ?? '', 10)
+  );
 
   if (!course) {
     return (

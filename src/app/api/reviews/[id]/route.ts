@@ -43,7 +43,10 @@ export async function DELETE(
 
     // Verifica se o usuário é o autor da avaliação ou admin
     const isReviewAuthor = reviewData.userId === decodedToken.uid;
-    const userDoc = await adminDb.collection('users').doc(decodedToken.uid).get();
+    const userDoc = await adminDb
+      .collection('users')
+      .doc(decodedToken.uid)
+      .get();
     const isAdmin = userDoc.exists && userDoc.data()?.isAdmin === true;
 
     if (!isReviewAuthor && !isAdmin) {

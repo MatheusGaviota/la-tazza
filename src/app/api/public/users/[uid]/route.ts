@@ -21,6 +21,9 @@ export async function GET(
     return NextResponse.json({ user: publicData }, { status: 200 });
   } catch (error) {
     console.error('Erro ao obter usuário público:', error);
-    return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
+    return NextResponse.json(
+      { error: 'Usuário não encontrado' },
+      { status: 404 }
+    );
   }
 }

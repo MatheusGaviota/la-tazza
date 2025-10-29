@@ -84,11 +84,11 @@ export default function CourseFormModal({
       setTopics(course.topics || []);
       setWhatYouWillLearn(course.whatYouWillLearn || []);
       setRequirements(course.requirements || []);
-      
+
       const schedule = course.schedule || [];
       setScheduleWeeks(schedule.map((s) => s.week || ''));
       setScheduleContents(schedule.map((s) => s.content || ''));
-      
+
       setNextDates(course.nextDates || []);
     } else {
       resetForm();
@@ -135,22 +135,30 @@ export default function CourseFormModal({
     const newErrors: Record<string, string> = {};
 
     if (!formData.title.trim()) newErrors.title = 'Título é obrigatório';
-    if (!formData.description.trim()) newErrors.description = 'Descrição curta é obrigatória';
-    if (!formData.fullDescription.trim()) newErrors.fullDescription = 'Descrição completa é obrigatória';
+    if (!formData.description.trim())
+      newErrors.description = 'Descrição curta é obrigatória';
+    if (!formData.fullDescription.trim())
+      newErrors.fullDescription = 'Descrição completa é obrigatória';
     if (!formData.duration.trim()) newErrors.duration = 'Duração é obrigatória';
     if (!formData.level.trim()) newErrors.level = 'Nível é obrigatório';
-    if (!formData.category.trim()) newErrors.category = 'Categoria é obrigatória';
+    if (!formData.category.trim())
+      newErrors.category = 'Categoria é obrigatória';
     if (!formData.price.trim()) newErrors.price = 'Preço é obrigatório';
-    if (!formData.instructor.trim()) newErrors.instructor = 'Instrutor é obrigatório';
-    if (!formData.instructorBio.trim()) newErrors.instructorBio = 'Biografia do instrutor é obrigatória';
+    if (!formData.instructor.trim())
+      newErrors.instructor = 'Instrutor é obrigatório';
+    if (!formData.instructorBio.trim())
+      newErrors.instructorBio = 'Biografia do instrutor é obrigatória';
     if (!imagePreview) newErrors.image = 'Imagem é obrigatória';
     if (topics.length === 0) newErrors.topics = 'Adicione pelo menos um tópico';
-    if (whatYouWillLearn.length === 0) newErrors.whatYouWillLearn = 'Adicione pelo menos um item de aprendizado';
-    if (requirements.length === 0) newErrors.requirements = 'Adicione pelo menos um requisito';
+    if (whatYouWillLearn.length === 0)
+      newErrors.whatYouWillLearn = 'Adicione pelo menos um item de aprendizado';
+    if (requirements.length === 0)
+      newErrors.requirements = 'Adicione pelo menos um requisito';
     if (scheduleWeeks.length === 0 || scheduleContents.length === 0) {
       newErrors.schedule = 'Adicione pelo menos uma semana no cronograma';
     }
-    if (nextDates.length === 0) newErrors.nextDates = 'Adicione pelo menos uma data de turma';
+    if (nextDates.length === 0)
+      newErrors.nextDates = 'Adicione pelo menos uma data de turma';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -252,12 +260,16 @@ export default function CourseFormModal({
 
         {/* Informações Básicas */}
         <div className="space-y-4 p-4 bg-accent/5 rounded-lg border-2 border-accent/20">
-          <h3 className="font-semibold text-lg text-foreground">Informações Básicas</h3>
+          <h3 className="font-semibold text-lg text-foreground">
+            Informações Básicas
+          </h3>
 
           <Input
             label="Título do Curso"
             value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
+            }
             error={errors.title}
             required
             placeholder="Ex: Barista Profissional Completo"
@@ -267,7 +279,9 @@ export default function CourseFormModal({
             id="course-description"
             label="Descrição Curta"
             value={formData.description}
-            onChange={(value) => setFormData({ ...formData, description: value })}
+            onChange={(value) =>
+              setFormData({ ...formData, description: value })
+            }
             error={errors.description}
             required
             rows={2}
@@ -279,7 +293,9 @@ export default function CourseFormModal({
             id="course-full-description"
             label="Descrição Completa"
             value={formData.fullDescription}
-            onChange={(value) => setFormData({ ...formData, fullDescription: value })}
+            onChange={(value) =>
+              setFormData({ ...formData, fullDescription: value })
+            }
             error={errors.fullDescription}
             required
             rows={4}
@@ -293,7 +309,9 @@ export default function CourseFormModal({
           <Input
             label="Duração"
             value={formData.duration}
-            onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, duration: e.target.value })
+            }
             error={errors.duration}
             required
             placeholder="Ex: 40 horas ou 10 semanas"
@@ -305,14 +323,18 @@ export default function CourseFormModal({
             </label>
             <select
               value={formData.level}
-              onChange={(e) => setFormData({ ...formData, level: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, level: e.target.value })
+              }
               className="w-full px-4 py-2 border-2 border-foreground/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
             >
               <option value="iniciante">Iniciante</option>
               <option value="intermediario">Intermediário</option>
               <option value="avancado">Avançado</option>
             </select>
-            {errors.level && <p className="text-red-500 text-sm mt-1">{errors.level}</p>}
+            {errors.level && (
+              <p className="text-red-500 text-sm mt-1">{errors.level}</p>
+            )}
           </div>
         </div>
 
@@ -320,7 +342,9 @@ export default function CourseFormModal({
           <Input
             label="Categoria"
             value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, category: e.target.value })
+            }
             error={errors.category}
             required
             placeholder="Ex: barista, arte-latte, extracao"
@@ -329,7 +353,9 @@ export default function CourseFormModal({
           <Input
             label="Preço"
             value={formData.price}
-            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, price: e.target.value })
+            }
             error={errors.price}
             required
             placeholder="Ex: R$ 1.200,00"
@@ -338,12 +364,16 @@ export default function CourseFormModal({
 
         {/* Instrutor */}
         <div className="space-y-4 p-4 bg-accent/5 rounded-lg border-2 border-accent/20">
-          <h3 className="font-semibold text-lg text-foreground">Informações do Instrutor</h3>
+          <h3 className="font-semibold text-lg text-foreground">
+            Informações do Instrutor
+          </h3>
 
           <Input
             label="Nome do Instrutor"
             value={formData.instructor}
-            onChange={(e) => setFormData({ ...formData, instructor: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, instructor: e.target.value })
+            }
             error={errors.instructor}
             required
             placeholder="Ex: Chef Matteo Rossi"
@@ -353,7 +383,9 @@ export default function CourseFormModal({
             id="instructor-bio"
             label="Biografia do Instrutor"
             value={formData.instructorBio}
-            onChange={(value) => setFormData({ ...formData, instructorBio: value })}
+            onChange={(value) =>
+              setFormData({ ...formData, instructorBio: value })
+            }
             error={errors.instructorBio}
             required
             rows={3}
@@ -364,7 +396,9 @@ export default function CourseFormModal({
 
         {/* Tópicos */}
         <div className="space-y-4 p-4 bg-accent/5 rounded-lg border-2 border-accent/20">
-          <h3 className="font-semibold text-lg text-foreground">Tópicos do Curso</h3>
+          <h3 className="font-semibold text-lg text-foreground">
+            Tópicos do Curso
+          </h3>
           <DynamicListField
             label="Tópicos Principais"
             items={topics}
@@ -379,7 +413,9 @@ export default function CourseFormModal({
 
         {/* O que você vai aprender */}
         <div className="space-y-4 p-4 bg-accent/5 rounded-lg border-2 border-accent/20">
-          <h3 className="font-semibold text-lg text-foreground">O Que Você Vai Aprender</h3>
+          <h3 className="font-semibold text-lg text-foreground">
+            O Que Você Vai Aprender
+          </h3>
           <DynamicListField
             label="Aprendizados"
             items={whatYouWillLearn}
@@ -410,7 +446,7 @@ export default function CourseFormModal({
         {/* Cronograma */}
         <div className="space-y-4 p-4 bg-accent/5 rounded-lg border-2 border-accent/20">
           <h3 className="font-semibold text-lg text-foreground">Cronograma</h3>
-          
+
           <DynamicListField
             label="Períodos (Semanas)"
             items={scheduleWeeks}
@@ -432,7 +468,9 @@ export default function CourseFormModal({
                   <label className="text-sm text-foreground/70">{week}</label>
                   <textarea
                     value={scheduleContents[index] || ''}
-                    onChange={(e) => handleScheduleContentChange(index, e.target.value)}
+                    onChange={(e) =>
+                      handleScheduleContentChange(index, e.target.value)
+                    }
                     placeholder="Descreva o conteúdo deste período..."
                     rows={2}
                     className="w-full px-4 py-2 border-2 border-foreground/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none"
@@ -445,7 +483,9 @@ export default function CourseFormModal({
 
         {/* Próximas Turmas */}
         <div className="space-y-4 p-4 bg-accent/5 rounded-lg border-2 border-accent/20">
-          <h3 className="font-semibold text-lg text-foreground">Próximas Turmas</h3>
+          <h3 className="font-semibold text-lg text-foreground">
+            Próximas Turmas
+          </h3>
           <DynamicListField
             label="Datas das Turmas"
             items={nextDates}
@@ -461,36 +501,48 @@ export default function CourseFormModal({
         {/* Features */}
         <div className="space-y-4 p-4 bg-accent/5 rounded-lg border-2 border-accent/20">
           <h3 className="font-semibold text-lg text-foreground">Inclusos</h3>
-          
+
           <div className="space-y-3">
             <label className="flex items-center gap-3 cursor-pointer">
               <input
                 type="checkbox"
                 checked={formData.certificate}
-                onChange={(e) => setFormData({ ...formData, certificate: e.target.checked })}
+                onChange={(e) =>
+                  setFormData({ ...formData, certificate: e.target.checked })
+                }
                 className="w-5 h-5 rounded border-2 border-accent text-accent focus:ring-accent"
               />
-              <span className="text-sm font-medium text-foreground">Certificado de conclusão</span>
+              <span className="text-sm font-medium text-foreground">
+                Certificado de conclusão
+              </span>
             </label>
 
             <label className="flex items-center gap-3 cursor-pointer">
               <input
                 type="checkbox"
                 checked={formData.materials}
-                onChange={(e) => setFormData({ ...formData, materials: e.target.checked })}
+                onChange={(e) =>
+                  setFormData({ ...formData, materials: e.target.checked })
+                }
                 className="w-5 h-5 rounded border-2 border-accent text-accent focus:ring-accent"
               />
-              <span className="text-sm font-medium text-foreground">Material didático incluso</span>
+              <span className="text-sm font-medium text-foreground">
+                Material didático incluso
+              </span>
             </label>
 
             <label className="flex items-center gap-3 cursor-pointer">
               <input
                 type="checkbox"
                 checked={formData.support}
-                onChange={(e) => setFormData({ ...formData, support: e.target.checked })}
+                onChange={(e) =>
+                  setFormData({ ...formData, support: e.target.checked })
+                }
                 className="w-5 h-5 rounded border-2 border-accent text-accent focus:ring-accent"
               />
-              <span className="text-sm font-medium text-foreground">Suporte pós-curso</span>
+              <span className="text-sm font-medium text-foreground">
+                Suporte pós-curso
+              </span>
             </label>
           </div>
         </div>

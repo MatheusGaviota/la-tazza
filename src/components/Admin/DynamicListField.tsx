@@ -53,9 +53,7 @@ export default function DynamicListField({
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
 
-      {helpText && (
-        <p className="text-xs text-foreground/60">{helpText}</p>
-      )}
+      {helpText && <p className="text-xs text-foreground/60">{helpText}</p>}
 
       {/* Lista de itens */}
       {items.length > 0 && (

@@ -60,9 +60,7 @@ export default function ProductReviewSection({
       }
 
       // Buscar dados atualizados dos usuários únicos
-      const uniqueUserIds = [
-        ...new Set(fetchedReviews.map((r) => r.userId)),
-      ];
+      const uniqueUserIds = [...new Set(fetchedReviews.map((r) => r.userId))];
       const userProfiles = new Map<string, AdminUser>();
 
       await Promise.all(
@@ -92,7 +90,9 @@ export default function ProductReviewSection({
 
       // Calcular e notificar média para o componente pai
       if (onReviewsUpdate && reviewsWithUpdatedUsers.length > 0) {
-        const avg = reviewsWithUpdatedUsers.reduce((sum, r) => sum + r.rating, 0) / reviewsWithUpdatedUsers.length;
+        const avg =
+          reviewsWithUpdatedUsers.reduce((sum, r) => sum + r.rating, 0) /
+          reviewsWithUpdatedUsers.length;
         onReviewsUpdate(reviewsWithUpdatedUsers.length, avg);
       } else if (onReviewsUpdate) {
         onReviewsUpdate(0, 0);
@@ -198,12 +198,12 @@ export default function ProductReviewSection({
       setError(null);
       setDeletingId(deleteModal.reviewId);
       await deleteProductReview(deleteModal.reviewId);
-      
+
       // Se o usuário deletou sua própria avaliação
       if (user && deleteModal.reviewUserId === user.uid) {
         setHasUserReviewed(false);
       }
-      
+
       setDeleteModal({ isOpen: false });
       await loadReviews();
     } catch (err) {

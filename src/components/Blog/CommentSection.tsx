@@ -51,9 +51,7 @@ export default function CommentSection({
       const fetchedComments = await getComments(postId);
 
       // Buscar dados atualizados dos usuários únicos
-      const uniqueUserIds = [
-        ...new Set(fetchedComments.map((c) => c.userId)),
-      ];
+      const uniqueUserIds = [...new Set(fetchedComments.map((c) => c.userId))];
       const userProfiles = new Map<string, AdminUser>();
 
       await Promise.all(
@@ -204,11 +202,7 @@ export default function CommentSection({
 
   const canDeleteComment = (commentUserId: string) => {
     if (!user) return false;
-    return (
-      commentUserId === user.uid ||
-      postAuthorUid === user.uid ||
-      isAdmin
-    );
+    return commentUserId === user.uid || postAuthorUid === user.uid || isAdmin;
   };
 
   return (
@@ -258,10 +252,7 @@ export default function CommentSection({
             aria-describedby="comment-count"
           />
           <div className="flex flex-col-reverse sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 mt-3">
-            <span
-              id="comment-count"
-              className="text-xs text-foreground/60"
-            >
+            <span id="comment-count" className="text-xs text-foreground/60">
               {newComment.length}/1000 caracteres
             </span>
             <button
@@ -385,7 +376,11 @@ export default function CommentSection({
                           aria-hidden="true"
                         />
                       ) : (
-                        <Trash2 size={14} className="sm:w-4 sm:h-4" aria-hidden="true" />
+                        <Trash2
+                          size={14}
+                          className="sm:w-4 sm:h-4"
+                          aria-hidden="true"
+                        />
                       )}
                     </button>
                   )}
