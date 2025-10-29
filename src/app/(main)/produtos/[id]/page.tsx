@@ -327,20 +327,20 @@ export default function ProductDetailPage({
                     key={i}
                     size={20}
                     className={
-                      i < Math.round(rating)
+                      i < Math.round(averageRating)
                         ? 'fill-yellow-500 text-yellow-500'
                         : 'text-foreground/20'
                     }
                   />
                 ))}
               </div>
-              {rating > 0 && (
+              {reviewCount > 0 && (
                 <>
                   <span className="font-semibold text-foreground">
-                    {rating}
+                    {averageRating.toFixed(1)}
                   </span>
                   <span className="text-foreground/70">
-                    ({reviews} {reviews === 1 ? 'avaliação' : 'avaliações'})
+                    ({reviewCount} {reviewCount === 1 ? 'avaliação' : 'avaliações'})
                   </span>
                 </>
               )}
