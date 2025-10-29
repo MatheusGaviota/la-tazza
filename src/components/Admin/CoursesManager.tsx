@@ -99,7 +99,7 @@ export default function CoursesManager() {
         <div className="flex-1">
           <div className="relative">
             <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40 z-[2]"
               size={20}
             />
             <Input
@@ -130,7 +130,7 @@ export default function CoursesManager() {
           {filteredCourses.map((course) => (
             <article
               key={course.id}
-              className="border-2 border-foreground rounded-lg overflow-hidden bg-background hover:shadow-lg transition-shadow"
+              className="border-2 border-foreground rounded-lg overflow-hidden bg-background"
             >
               <div className="relative w-full h-48">
                 <Image
@@ -165,7 +165,6 @@ export default function CoursesManager() {
                   <Button
                     onClick={() => handleEdit(course)}
                     variant="ghost-accent"
-                    className="flex-1"
                   >
                     <Pencil size={18} />
                     <span>Editar</span>
@@ -173,7 +172,6 @@ export default function CoursesManager() {
                   <Button
                     onClick={() => handleDeleteClick(course)}
                     variant="danger"
-                    className="flex-1"
                   >
                     <Trash2 size={18} />
                     <span>Excluir</span>

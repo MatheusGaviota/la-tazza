@@ -100,7 +100,7 @@ export default function BlogManager() {
         <div className="flex-1">
           <div className="relative">
             <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40 z-[2]"
               size={20}
             />
             <Input
@@ -131,7 +131,7 @@ export default function BlogManager() {
           {filteredPosts.map((post) => (
             <article
               key={post.id}
-              className="border-2 border-foreground rounded-lg overflow-hidden bg-background hover:shadow-lg transition-shadow"
+              className="border-2 border-foreground rounded-lg overflow-hidden bg-background"
             >
               <div className="flex flex-col sm:flex-row">
                 <div className="relative w-full sm:w-48 h-48 sm:h-auto flex-shrink-0">
@@ -183,7 +183,6 @@ export default function BlogManager() {
                     <Button
                       onClick={() => handleEdit(post)}
                       variant="ghost-accent"
-                      className="flex-1"
                     >
                       <Pencil size={18} />
                       <span>Editar</span>
@@ -191,7 +190,6 @@ export default function BlogManager() {
                     <Button
                       onClick={() => handleDeleteClick(post)}
                       variant="danger"
-                      className="flex-1"
                     >
                       <Trash2 size={18} />
                       <span>Excluir</span>

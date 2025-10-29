@@ -84,7 +84,8 @@ export default function CourseFormModal({
     const newErrors: Record<string, string> = {};
 
     if (!formData.title.trim()) newErrors.title = 'Título é obrigatório';
-    if (!formData.description.trim()) newErrors.description = 'Descrição é obrigatória';
+    if (!formData.description.trim())
+      newErrors.description = 'Descrição é obrigatória';
     if (!formData.duration.trim()) newErrors.duration = 'Duração é obrigatória';
     if (!formData.level.trim()) newErrors.level = 'Nível é obrigatório';
     if (!formData.price.trim()) newErrors.price = 'Preço é obrigatório';
@@ -172,7 +173,10 @@ export default function CourseFormModal({
                 </div>
               ) : (
                 <div className="py-8">
-                  <Upload className="mx-auto mb-2 text-foreground/40" size={48} />
+                  <Upload
+                    className="mx-auto mb-2 text-foreground/40"
+                    size={48}
+                  />
                   <p className="text-sm text-foreground/60">
                     Clique para selecionar uma imagem
                   </p>
@@ -186,7 +190,11 @@ export default function CourseFormModal({
                 id="course-image-upload"
               />
               <label htmlFor="course-image-upload">
-                <Button type="button" variant="ghost-accent" className="cursor-pointer">
+                <Button
+                  type="button"
+                  variant="ghost-accent"
+                  className="cursor-pointer"
+                >
                   {imagePreview ? 'Trocar Imagem' : 'Selecionar Imagem'}
                 </Button>
               </label>
@@ -199,7 +207,9 @@ export default function CourseFormModal({
           <Input
             label="Título"
             value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
+            }
             error={errors.title}
             required
           />
@@ -235,7 +245,9 @@ export default function CourseFormModal({
             <Input
               label="Duração"
               value={formData.duration}
-              onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, duration: e.target.value })
+              }
               error={errors.duration}
               helpText="Ex: 12 semanas"
               required
@@ -244,7 +256,9 @@ export default function CourseFormModal({
             <Input
               label="Nível"
               value={formData.level}
-              onChange={(e) => setFormData({ ...formData, level: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, level: e.target.value })
+              }
               error={errors.level}
               helpText="Ex: Iniciante"
               required
@@ -253,7 +267,9 @@ export default function CourseFormModal({
             <Input
               label="Preço"
               value={formData.price}
-              onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, price: e.target.value })
+              }
               error={errors.price}
               helpText="Ex: R$ 1.200"
               required

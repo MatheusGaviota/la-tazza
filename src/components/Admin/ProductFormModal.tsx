@@ -192,7 +192,10 @@ export default function ProductFormModal({
                 </div>
               ) : (
                 <div className="py-8">
-                  <Upload className="mx-auto mb-2 text-foreground/40" size={48} />
+                  <Upload
+                    className="mx-auto mb-2 text-foreground/40"
+                    size={48}
+                  />
                   <p className="text-sm text-foreground/60">
                     Clique para selecionar uma imagem
                   </p>
@@ -206,7 +209,11 @@ export default function ProductFormModal({
                 id="image-upload"
               />
               <label htmlFor="image-upload">
-                <Button type="button" variant="ghost-accent" className="cursor-pointer">
+                <Button
+                  type="button"
+                  variant="ghost-accent"
+                  className="cursor-pointer"
+                >
                   {imagePreview ? 'Trocar Imagem' : 'Selecionar Imagem'}
                 </Button>
               </label>
@@ -219,7 +226,9 @@ export default function ProductFormModal({
           <Input
             label="Título"
             value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
+            }
             error={errors.title}
             required
           />
@@ -257,7 +266,9 @@ export default function ProductFormModal({
               type="number"
               step="0.01"
               value={formData.price}
-              onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, price: e.target.value })
+              }
               error={errors.price}
               required
             />
@@ -266,7 +277,9 @@ export default function ProductFormModal({
               label="Estoque"
               type="number"
               value={formData.stock}
-              onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, stock: e.target.value })
+              }
               helpText="Deixe vazio se não controlar estoque"
             />
           </div>

@@ -90,10 +90,12 @@ export default function WorkshopFormModal({
     const newErrors: Record<string, string> = {};
 
     if (!formData.title.trim()) newErrors.title = 'Título é obrigatório';
-    if (!formData.description.trim()) newErrors.description = 'Descrição é obrigatória';
+    if (!formData.description.trim())
+      newErrors.description = 'Descrição é obrigatória';
     if (!formData.date.trim()) newErrors.date = 'Data é obrigatória';
     if (!formData.duration.trim()) newErrors.duration = 'Duração é obrigatória';
-    if (!formData.instructor.trim()) newErrors.instructor = 'Instrutor é obrigatório';
+    if (!formData.instructor.trim())
+      newErrors.instructor = 'Instrutor é obrigatório';
     if (!formData.price.trim()) newErrors.price = 'Preço é obrigatório';
     if (!imagePreview) newErrors.image = 'Imagem é obrigatória';
 
@@ -183,7 +185,10 @@ export default function WorkshopFormModal({
                 </div>
               ) : (
                 <div className="py-8">
-                  <Upload className="mx-auto mb-2 text-foreground/40" size={48} />
+                  <Upload
+                    className="mx-auto mb-2 text-foreground/40"
+                    size={48}
+                  />
                   <p className="text-sm text-foreground/60">
                     Clique para selecionar uma imagem
                   </p>
@@ -197,7 +202,11 @@ export default function WorkshopFormModal({
                 id="workshop-image-upload"
               />
               <label htmlFor="workshop-image-upload">
-                <Button type="button" variant="ghost-accent" className="cursor-pointer">
+                <Button
+                  type="button"
+                  variant="ghost-accent"
+                  className="cursor-pointer"
+                >
                   {imagePreview ? 'Trocar Imagem' : 'Selecionar Imagem'}
                 </Button>
               </label>
@@ -210,7 +219,9 @@ export default function WorkshopFormModal({
           <Input
             label="Título"
             value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
+            }
             error={errors.title}
             required
           />
@@ -246,7 +257,9 @@ export default function WorkshopFormModal({
             <Input
               label="Data"
               value={formData.date}
-              onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, date: e.target.value })
+              }
               error={errors.date}
               helpText="Ex: 15 de Novembro"
               required
@@ -255,7 +268,9 @@ export default function WorkshopFormModal({
             <Input
               label="Duração"
               value={formData.duration}
-              onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, duration: e.target.value })
+              }
               error={errors.duration}
               helpText="Ex: 4 horas"
               required
@@ -266,7 +281,9 @@ export default function WorkshopFormModal({
             <Input
               label="Instrutor"
               value={formData.instructor}
-              onChange={(e) => setFormData({ ...formData, instructor: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, instructor: e.target.value })
+              }
               error={errors.instructor}
               required
             />
@@ -285,7 +302,9 @@ export default function WorkshopFormModal({
           <Input
             label="Preço"
             value={formData.price}
-            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, price: e.target.value })
+            }
             error={errors.price}
             helpText="Ex: R$ 250"
             required

@@ -106,7 +106,7 @@ export default function BlogFormModal({
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
     setFormData({ ...formData, title: newTitle });
-    
+
     // Gera slug automaticamente apenas para novos posts
     if (!post) {
       const newSlug = generateSlug(newTitle);
@@ -123,8 +123,10 @@ export default function BlogFormModal({
     if (!formData.content.trim()) newErrors.content = 'Conteúdo é obrigatório';
     if (!formData.author.trim()) newErrors.author = 'Autor é obrigatório';
     if (!formData.date.trim()) newErrors.date = 'Data é obrigatória';
-    if (!formData.readTime.trim()) newErrors.readTime = 'Tempo de leitura é obrigatório';
-    if (!formData.category.trim()) newErrors.category = 'Categoria é obrigatória';
+    if (!formData.readTime.trim())
+      newErrors.readTime = 'Tempo de leitura é obrigatório';
+    if (!formData.category.trim())
+      newErrors.category = 'Categoria é obrigatória';
     if (!imagePreview) newErrors.image = 'Imagem é obrigatória';
 
     setErrors(newErrors);
@@ -213,7 +215,10 @@ export default function BlogFormModal({
                 </div>
               ) : (
                 <div className="py-8">
-                  <Upload className="mx-auto mb-2 text-foreground/40" size={48} />
+                  <Upload
+                    className="mx-auto mb-2 text-foreground/40"
+                    size={48}
+                  />
                   <p className="text-sm text-foreground/60">
                     Clique para selecionar uma imagem
                   </p>
@@ -227,7 +232,11 @@ export default function BlogFormModal({
                 id="blog-image-upload"
               />
               <label htmlFor="blog-image-upload">
-                <Button type="button" variant="ghost-accent" className="cursor-pointer">
+                <Button
+                  type="button"
+                  variant="ghost-accent"
+                  className="cursor-pointer"
+                >
                   {imagePreview ? 'Trocar Imagem' : 'Selecionar Imagem'}
                 </Button>
               </label>
@@ -312,7 +321,9 @@ export default function BlogFormModal({
             <Input
               label="Autor"
               value={formData.author}
-              onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, author: e.target.value })
+              }
               error={errors.author}
               required
             />
@@ -333,7 +344,9 @@ export default function BlogFormModal({
             <Input
               label="Data"
               value={formData.date}
-              onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, date: e.target.value })
+              }
               error={errors.date}
               helpText="Ex: 15 Out 2025"
               required
