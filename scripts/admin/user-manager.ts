@@ -34,7 +34,9 @@ export async function createUser(data: UserCreationData): Promise<UserInfo> {
       lastSignInTime: null,
     };
   } catch (error) {
-    throw new Error(`Erro ao criar usuário: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Erro ao criar usuário: ${error instanceof Error ? error.message : String(error)}`
+    );
   }
 }
 
@@ -54,7 +56,9 @@ export async function getUserInfo(uid: string): Promise<UserInfo> {
       displayName: userRecord.displayName || null,
       isAdmin: customClaims.admin === true,
       createdAt: new Date(userRecord.metadata.creationTime || 0),
-      lastSignInTime: userRecord.metadata.lastSignInTime ? new Date(userRecord.metadata.lastSignInTime) : null,
+      lastSignInTime: userRecord.metadata.lastSignInTime
+        ? new Date(userRecord.metadata.lastSignInTime)
+        : null,
     };
   } catch (error) {
     throw new Error(
@@ -66,12 +70,19 @@ export async function getUserInfo(uid: string): Promise<UserInfo> {
 /**
  * Atualiza informações de um usuário
  */
-export async function updateUser(uid: string, data: UserUpdateData): Promise<void> {
+export async function updateUser(
+  uid: string,
+  data: UserUpdateData
+): Promise<void> {
   const auth = getAuth();
 
   try {
     // Atualizar no Auth
-    const updateData: { displayName?: string; email?: string; password?: string } = {};
+    const updateData: {
+      displayName?: string;
+      email?: string;
+      password?: string;
+    } = {};
     if (data.displayName) updateData.displayName = data.displayName;
     if (data.email) updateData.email = data.email;
     if (data.password) updateData.password = data.password;
@@ -127,7 +138,9 @@ export async function demoteFromAdmin(uid: string): Promise<void> {
 /**
  * Lista todos os usuários
  */
-export async function listAllUsers(maxResults: number = 100): Promise<UserInfo[]> {
+export async function listAllUsers(
+  maxResults: number = 100
+): Promise<UserInfo[]> {
   const auth = getAuth();
   const users: UserInfo[] = [];
 
@@ -166,7 +179,10 @@ export async function listAllUsers(maxResults: number = 100): Promise<UserInfo[]
 /**
  * Define token customizado (para dev)
  */
-export async function setCustomClaims(uid: string, claims: Record<string, unknown>): Promise<void> {
+export async function setCustomClaims(
+  uid: string,
+  claims: Record<string, unknown>
+): Promise<void> {
   const auth = getAuth();
 
   try {
@@ -181,7 +197,10 @@ export async function setCustomClaims(uid: string, claims: Record<string, unknow
 /**
  * Reseta a senha de um usuário
  */
-export async function resetUserPassword(uid: string, newPassword: string): Promise<void> {
+export async function resetUserPassword(
+  uid: string,
+  newPassword: string
+): Promise<void> {
   await updateUser(uid, { password: newPassword });
 }
 

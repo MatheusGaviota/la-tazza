@@ -28,7 +28,7 @@ export default function Button({
   type,
 }: ButtonProps) {
   const baseClasses =
-    'inline-block px-6 py-1 rounded-md transition-all hover:opacity-90 active:scale-95 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-0';
+    'inline-flex items-center justify-center px-6 py-2 rounded-md transition-all hover:opacity-90 active:scale-95 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-0';
   const disabledClasses = disabled
     ? 'opacity-50 cursor-not-allowed pointer-events-none'
     : '';
@@ -51,8 +51,13 @@ export default function Button({
   // Se onClick ou type for fornecido, renderiza um button (suporta submit/reset)
   if (onClick || type) {
     return (
-      <button type={type ?? 'button'} onClick={onClick} className={combinedClasses} disabled={disabled}>
-        <span className="inline-flex items-center gap-2">
+      <button
+        type={type ?? 'button'}
+        onClick={onClick}
+        className={combinedClasses}
+        disabled={disabled}
+      >
+        <span className="flex items-center justify-center gap-2">
           {children ?? text}
         </span>
       </button>
@@ -69,7 +74,9 @@ export default function Button({
         rel="noopener noreferrer"
         className={combinedClasses}
       >
-        {children ?? text}
+        <span className="flex items-center justify-center gap-2">
+          {children ?? text}
+        </span>
       </a>
     );
   }
@@ -77,7 +84,9 @@ export default function Button({
   // Caso contrário, renderiza um Link do Next.js
   return (
     <Link href={href || '/'} className={combinedClasses}>
-      {children ?? text}
+      <span className="flex items-center justify-center gap-2">
+        {children ?? text}
+      </span>
     </Link>
   );
 }

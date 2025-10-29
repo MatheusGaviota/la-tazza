@@ -57,14 +57,14 @@ body.high-contrast .backdrop-blur-sm {
 /* Buttons and elements that use the accent background should show white text
    in high-contrast mode so text remains legible against the accent color. */
 body.high-contrast .bg-accent,
-body.high-contrast [class*="bg-accent/"] {
+body.high-contrast [class*='bg-accent/'] {
   color: var(--background) !important; /* usually white */
 }
 
 /* Ensure any children (icons, spans, svgs) inside accent backgrounds also
    get the adjusted color for consistent contrast. */
 body.high-contrast .bg-accent *,
-body.high-contrast [class*="bg-accent/"] * {
+body.high-contrast [class*='bg-accent/'] * {
   color: inherit !important;
   fill: currentColor !important;
   stroke: currentColor !important;
@@ -74,6 +74,6 @@ body.high-contrast [class*="bg-accent/"] * {
    force them to inherit the background text color when inside an accent
    background. This helps login buttons and workshop CTAs remain white. */
 body.high-contrast .bg-accent .text-accent,
-body.high-contrast [class*="bg-accent/"] .text-accent {
+body.high-contrast [class*='bg-accent/'] .text-accent {
   color: inherit !important;
 }

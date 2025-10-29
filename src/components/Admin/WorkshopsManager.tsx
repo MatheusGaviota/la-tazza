@@ -18,8 +18,12 @@ export default function WorkshopsManager() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedWorkshop, setSelectedWorkshop] = useState<Workshop | null>(null);
-  const [workshopToDelete, setWorkshopToDelete] = useState<Workshop | null>(null);
+  const [selectedWorkshop, setSelectedWorkshop] = useState<Workshop | null>(
+    null
+  );
+  const [workshopToDelete, setWorkshopToDelete] = useState<Workshop | null>(
+    null
+  );
 
   useEffect(() => {
     loadWorkshops();
@@ -99,7 +103,7 @@ export default function WorkshopsManager() {
         <div className="flex-1">
           <div className="relative">
             <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40 z-[2]"
               size={20}
             />
             <Input
@@ -130,7 +134,7 @@ export default function WorkshopsManager() {
           {filteredWorkshops.map((workshop) => (
             <article
               key={workshop.id}
-              className="border-2 border-foreground rounded-lg overflow-hidden bg-background hover:shadow-lg transition-shadow"
+              className="border-2 border-foreground rounded-lg overflow-hidden bg-background"
             >
               <div className="relative w-full h-48">
                 <Image
@@ -163,7 +167,8 @@ export default function WorkshopsManager() {
                     <div className="flex items-center gap-2">
                       <Users size={16} className="text-accent" />
                       <span>
-                        Vagas: {workshop.currentParticipants || 0}/{workshop.maxParticipants}
+                        Vagas: {workshop.currentParticipants || 0}/
+                        {workshop.maxParticipants}
                       </span>
                     </div>
                   )}
@@ -177,7 +182,6 @@ export default function WorkshopsManager() {
                   <Button
                     onClick={() => handleEdit(workshop)}
                     variant="ghost-accent"
-                    className="flex-1"
                   >
                     <Pencil size={18} />
                     <span>Editar</span>
@@ -185,7 +189,6 @@ export default function WorkshopsManager() {
                   <Button
                     onClick={() => handleDeleteClick(workshop)}
                     variant="danger"
-                    className="flex-1"
                   >
                     <Trash2 size={18} />
                     <span>Excluir</span>

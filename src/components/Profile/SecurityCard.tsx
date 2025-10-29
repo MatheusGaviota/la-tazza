@@ -91,7 +91,7 @@ export default function SecurityCard({ onChangePassword }: SecurityCardProps) {
               variant="accent"
               required
             />
-            
+
             <Input
               type="password"
               id="newPassword"
@@ -108,7 +108,7 @@ export default function SecurityCard({ onChangePassword }: SecurityCardProps) {
               required
               minLength={8}
             />
-            
+
             <Input
               type="password"
               id="confirmPassword"

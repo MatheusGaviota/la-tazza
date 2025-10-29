@@ -138,7 +138,7 @@ export default function FAQPage() {
       </section>
 
       {/* Search and Filter */}
-      <section className="w-full bg-background border-b-2 border-accent/20 sticky top-[92px] z-40">
+      <section className="w-full bg-background border-b-2 border-accent/20 sticky top-[102px] z-40">
         <div className="max-w-[1400px] mx-auto px-4 py-6">
           <div className="flex flex-col gap-4">
             {/* Search Bar */}

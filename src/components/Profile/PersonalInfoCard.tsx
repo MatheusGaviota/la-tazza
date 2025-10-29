@@ -87,19 +87,25 @@ export default function PersonalInfoCard({
             <dt className="block text-sm font-medium text-foreground/70 mb-1">
               Nome Completo
             </dt>
-            <dd className="text-foreground font-medium">{userData.name || '-'}</dd>
+            <dd className="text-foreground font-medium">
+              {userData.name || '-'}
+            </dd>
           </div>
           <div>
             <dt className="block text-sm font-medium text-foreground/70 mb-1">
               Email
             </dt>
-            <dd className="text-foreground font-medium">{userData.email || '-'}</dd>
+            <dd className="text-foreground font-medium">
+              {userData.email || '-'}
+            </dd>
           </div>
           <div>
             <dt className="block text-sm font-medium text-foreground/70 mb-1">
               Telefone
             </dt>
-            <dd className="text-foreground font-medium">{userData.phone || '-'}</dd>
+            <dd className="text-foreground font-medium">
+              {userData.phone || '-'}
+            </dd>
           </div>
           <div>
             <dt className="block text-sm font-medium text-foreground/70 mb-1">

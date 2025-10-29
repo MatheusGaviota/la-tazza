@@ -4,7 +4,15 @@ import { useState, useMemo, use } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import AddToCartButton from '@/components/Cart/AddToCartButton';
-import { Star, Heart, Share2, Truck, Shield, RotateCcw, ChevronRight } from 'lucide-react';
+import {
+  Star,
+  Heart,
+  Share2,
+  Truck,
+  Shield,
+  RotateCcw,
+  ChevronRight,
+} from 'lucide-react';
 import ProductCard from '@/components/Cards/ProductCard';
 
 // TODO: Remover dados mocados e buscar de uma API/banco de dados
@@ -156,17 +164,18 @@ const mockProducts = [
   },
 ];
 
-export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default function ProductDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = use(params);
   const [liked, setLiked] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
 
   // Encontrar produto
-  const product = useMemo(
-    () => mockProducts.find((p) => p.id === id),
-    [id]
-  );
+  const product = useMemo(() => mockProducts.find((p) => p.id === id), [id]);
 
   // Produtos relacionados (mesma categoria, excluindo o atual)
   const relatedProducts = useMemo(
@@ -289,7 +298,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                       ? 'bg-red-500 border-red-500 text-background'
                       : 'border-foreground/20 hover:border-foreground/40'
                   }`}
-                  aria-label={liked ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+                  aria-label={
+                    liked ? 'Remover dos favoritos' : 'Adicionar aos favoritos'
+                  }
                 >
                   <Heart size={20} fill={liked ? 'currentColor' : 'none'} />
                 </button>
@@ -325,9 +336,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   />
                 ))}
               </div>
-              <span className="font-semibold text-foreground">{product.rating}</span>
+              <span className="font-semibold text-foreground">
+                {product.rating}
+              </span>
               <span className="text-foreground/70">
-                ({product.reviews} {product.reviews === 1 ? 'avaliação' : 'avaliações'})
+                ({product.reviews}{' '}
+                {product.reviews === 1 ? 'avaliação' : 'avaliações'})
               </span>
             </div>
 
@@ -337,7 +351,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 <span className="font-alumni text-5xl font-bold text-accent">
                   R$ {product.price.toFixed(2)}
                 </span>
-                <span className="text-lg text-foreground/60">por {product.weight}</span>
+                <span className="text-lg text-foreground/60">
+                  por {product.weight}
+                </span>
               </div>
 
               {/* Quantidade e Carrinho */}
@@ -354,7 +370,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   <input
                     type="number"
                     value={quantity}
-                    onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
+                    onChange={(e) =>
+                      setQuantity(Math.max(1, Number(e.target.value)))
+                    }
                     className="w-16 text-center border-x-2 border-foreground bg-background focus:outline-none font-medium"
                     min="1"
                     aria-label="Quantidade"
@@ -389,21 +407,27 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
               <div className="flex flex-col items-center text-center gap-2">
                 <Truck className="text-accent" size={24} />
                 <p className="text-sm text-foreground/70">
-                  <span className="font-semibold text-foreground block">Entrega Rápida</span>
+                  <span className="font-semibold text-foreground block">
+                    Entrega Rápida
+                  </span>
                   Em até 3 dias úteis
                 </p>
               </div>
               <div className="flex flex-col items-center text-center gap-2">
                 <Shield className="text-accent" size={24} />
                 <p className="text-sm text-foreground/70">
-                  <span className="font-semibold text-foreground block">Seguro</span>
+                  <span className="font-semibold text-foreground block">
+                    Seguro
+                  </span>
                   Compra protegida
                 </p>
               </div>
               <div className="flex flex-col items-center text-center gap-2">
                 <RotateCcw className="text-accent" size={24} />
                 <p className="text-sm text-foreground/70">
-                  <span className="font-semibold text-foreground block">Devolução</span>
+                  <span className="font-semibold text-foreground block">
+                    Devolução
+                  </span>
                   7 dias de garantia
                 </p>
               </div>
@@ -411,10 +435,15 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
             {/* Características do Produto */}
             <div className="space-y-3">
-              <h3 className="font-semibold text-foreground">Características:</h3>
+              <h3 className="font-semibold text-foreground">
+                Características:
+              </h3>
               <ul className="space-y-2">
                 {product.highlights.map((highlight, index) => (
-                  <li key={index} className="flex items-start gap-3 text-foreground/80">
+                  <li
+                    key={index}
+                    className="flex items-start gap-3 text-foreground/80"
+                  >
                     <span className="text-accent font-bold mt-1">✓</span>
                     <span>{highlight}</span>
                   </li>

@@ -2,7 +2,12 @@ import Skeleton from '../UI/Skeleton';
 
 export default function ProfileSkeleton() {
   return (
-    <div className="min-h-screen py-12 px-4" aria-busy="true" role="region" aria-label="Carregando perfil">
+    <div
+      className="min-h-screen py-12 px-4"
+      aria-busy="true"
+      role="region"
+      aria-label="Carregando perfil"
+    >
       <div className="max-w-4xl mx-auto">
         {/* Cabeçalho */}
         <div className="mb-8">

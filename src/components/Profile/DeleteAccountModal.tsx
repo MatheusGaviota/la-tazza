@@ -64,8 +64,8 @@ export const DeleteAccountModal = ({
 
         {/* Descrição */}
         <p className="text-center text-foreground/70 mb-6">
-          Esta ação é <strong className="text-destructive">irreversível</strong>.
-          Todos os seus dados serão permanentemente excluídos.
+          Esta ação é <strong className="text-destructive">irreversível</strong>
+          . Todos os seus dados serão permanentemente excluídos.
         </p>
 
         {/* Campo de senha (apenas para usuários de email/senha) */}

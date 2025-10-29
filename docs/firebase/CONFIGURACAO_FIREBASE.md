@@ -77,6 +77,7 @@ Os seguintes arquivos já estão organizados na pasta `config/firebase/`:
 ### `config/firebase/firebase.json`
 
 Configuração principal do Firebase CLI com:
+
 - Regras do Firestore
 - Índices do Firestore
 - Configuração de emuladores
@@ -85,6 +86,7 @@ Configuração principal do Firebase CLI com:
 ### `config/firebase/firestore.rules`
 
 Regras de segurança para o Firestore:
+
 - Leitura pública para produtos e cursos
 - Controle de escrita apenas para usuários autenticados
 - Posts do blog: publicados são públicos, rascunhos apenas para autenticados
@@ -92,6 +94,7 @@ Regras de segurança para o Firestore:
 ### `config/firebase/firestore.indexes.json`
 
 Índices compostos para consultas otimizadas:
+
 - Produtos por categoria e data
 - Cursos por nível e data
 - Workshops por data
@@ -100,6 +103,7 @@ Regras de segurança para o Firestore:
 ### `config/firebase/client.ts`
 
 Configuração TypeScript organizada do Firebase:
+
 - Inicialização do app
 - Configuração do Auth e Firestore
 - Validação de variáveis de ambiente
@@ -111,38 +115,39 @@ Regras de segurança para o Firebase Storage (backup para Cloudinary)
 
 ### 1. Login no Firebase CLI
 
-   ```bash
-   firebase login
-   ```
+```bash
+firebase login
+```
 
 ### 2. Conectar ao Projeto
 
-   ```bash
-   firebase use --add
-   # Selecione o projeto la-tazza
-   ```
+```bash
+firebase use --add
+# Selecione o projeto la-tazza
+```
 
 ### 3. Deploy das Regras
 
-   ```bash
-   npm run firebase:deploy-rules
-   ```
+```bash
+npm run firebase:deploy-rules
+```
 
 Ou diretamente:
 
-   ```bash
-   firebase deploy --only firestore:rules,storage
-   ```
+```bash
+firebase deploy --only firestore:rules,storage
+```
 
 ## 🧪 Usar Emuladores (Desenvolvimento)
 
 Para desenvolvimento local sem afetar produção:
 
-   ```bash
-   npm run firebase:emulators
-   ```
+```bash
+npm run firebase:emulators
+```
 
 Isso iniciará:
+
 - Firestore Emulator na porta 8080
 - Auth Emulator na porta 9099
 - UI do Emulator em http://localhost:4000
@@ -153,11 +158,12 @@ Isso iniciará:
 
 Execute o projeto:
 
-   ```bash
-   npm run dev
-   ```
+```bash
+npm run dev
+```
 
 Acesse `http://localhost:3000/admin` e verifique se:
+
 - ✅ Não há erros de configuração do Firebase
 - ✅ Pode fazer login
 - ✅ Pode visualizar dados (se houver)
@@ -165,6 +171,7 @@ Acesse `http://localhost:3000/admin` e verifique se:
 ### 2. Verificar Regras
 
 No Firebase Console:
+
 1. **Firestore** → **Regras**: Verifique se as regras estão ativas
 2. **Authentication** → **Usuários**: Verifique usuários criados
 3. **Storage** → **Regras**: Verifique regras de storage

@@ -29,7 +29,7 @@ export { useCart } from '@/contexts/CartContext';
  * @example
  * ```tsx
  * const { user, loading } = useProtectedRoute({ redirectTo: '/login' });
- * 
+ *
  * if (loading) return <LoadingSpinner />;
  * ```
  */
@@ -44,7 +44,12 @@ export { useProtectedRoute } from './useProtectedRoute';
  * ```
  */
 export { useProfile } from './useProfile';
-export type { PersonalInfo, PasswordData, ToastState, DeleteAccountModal } from './useProfile';
+export type {
+  PersonalInfo,
+  PasswordData,
+  ToastState,
+  DeleteAccountModal,
+} from './useProfile';
 
 /**
  * Hook para verificar se o usuário atual é administrador
@@ -52,7 +57,7 @@ export type { PersonalInfo, PasswordData, ToastState, DeleteAccountModal } from 
  * @example
  * ```tsx
  * const { isAdmin, loading } = useAdmin();
- * 
+ *
  * if (!isAdmin) return <div>Acesso negado</div>;
  * ```
  */
@@ -66,3 +71,13 @@ export { useAdmin } from './useAdmin';
  * ```
  */
 export { useStableId } from './useStableId';
+
+/**
+ * Hook para bloquear o scroll da página
+ * Útil para modais e overlays
+ * @example
+ * ```tsx
+ * useScrollLock(isModalOpen);
+ * ```
+ */
+export { useScrollLock } from './useScrollLock';

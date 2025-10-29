@@ -25,7 +25,8 @@ export default function ProfilePhoto({
   useEffect(() => {
     // Sincronizar preview com a foto atual do Firebase
     // Trata string vazia como null (indica remoção explícita)
-    const photoUrl = currentPhotoUrl && currentPhotoUrl.trim() !== '' ? currentPhotoUrl : null;
+    const photoUrl =
+      currentPhotoUrl && currentPhotoUrl.trim() !== '' ? currentPhotoUrl : null;
     setPreviewUrl(photoUrl);
     setImageError(false); // Reset error state ao mudar URL
   }, [currentPhotoUrl]);
@@ -104,7 +105,7 @@ export default function ProfilePhoto({
         await onPhotoRemove();
         setPreviewUrl(null);
         setImageError(false);
-        
+
         // Limpar possível cache do navegador para esta imagem
         if (currentPhotoUrl) {
           // Força o navegador a descartar o cache desta URL
@@ -201,10 +202,10 @@ export default function ProfilePhoto({
           <div className="flex flex-col sm:flex-row gap-3">
             <label htmlFor="upload-button">
               <Button
-                text={previewUrl && !imageError ? 'Alterar Foto' : 'Fazer Upload'}
-                onClick={() =>
-                  document.getElementById('photo-upload')?.click()
+                text={
+                  previewUrl && !imageError ? 'Alterar Foto' : 'Fazer Upload'
                 }
+                onClick={() => document.getElementById('photo-upload')?.click()}
                 variant="accent"
                 className="w-full sm:w-auto text-center"
                 disabled={isUploading}

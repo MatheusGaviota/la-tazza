@@ -1,6 +1,6 @@
 /**
  * ✅ Arquivo obsoleto - Use variáveis de ambiente em vez disso
- * 
+ *
  * As credenciais agora devem estar em .env.local:
  * - FIREBASE_ADMIN_PROJECT_ID
  * - FIREBASE_ADMIN_PRIVATE_KEY_ID

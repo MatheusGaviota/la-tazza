@@ -85,7 +85,10 @@ export const useProfile = (user: User | null): UseProfileReturn => {
     }
   }, [user]);
 
-  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+  const showToast = (
+    message: string,
+    type: 'success' | 'error' = 'success'
+  ) => {
     setToast({ show: true, message, type });
   };
 
@@ -120,7 +123,9 @@ export const useProfile = (user: User | null): UseProfileReturn => {
       showToast('Dados pessoais atualizados com sucesso!', 'success');
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : 'Erro ao salvar dados pessoais';
+        error instanceof Error
+          ? error.message
+          : 'Erro ao salvar dados pessoais';
       showToast(message, 'error');
     } finally {
       setIsSaving(false);
@@ -153,11 +158,11 @@ export const useProfile = (user: User | null): UseProfileReturn => {
     setIsSaving(true);
 
     try {
-  await changePassword(data.currentPassword, data.newPassword);
-  // Não desconectar o usuário automaticamente após alteração de senha.
-  // Apenas informar sucesso e retornar true para o componente decidir o que fazer.
-  showToast('Senha alterada com sucesso!', 'success');
-  return true;
+      await changePassword(data.currentPassword, data.newPassword);
+      // Não desconectar o usuário automaticamente após alteração de senha.
+      // Apenas informar sucesso e retornar true para o componente decidir o que fazer.
+      showToast('Senha alterada com sucesso!', 'success');
+      return true;
     } catch (error) {
       const message =
         error instanceof Error
@@ -210,7 +215,7 @@ export const useProfile = (user: User | null): UseProfileReturn => {
       // Forçar reload e refresh do contexto para propagar mudanças
       await user.reload();
       await refreshUser();
-      
+
       console.log('✅ Foto atualizada:', urlWithTimestamp);
       console.log('📸 URL do usuário após refresh:', user.photoURL);
 
@@ -249,7 +254,7 @@ export const useProfile = (user: User | null): UseProfileReturn => {
       await refreshUser();
 
       // 3. Aguardar um momento para garantir propagação
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await new Promise((resolve) => setTimeout(resolve, 200));
 
       // 4. Deletar foto do Cloudinary em segundo plano (não bloquear fluxo)
       fetch('/api/cloudinary/delete', {
@@ -278,11 +283,21 @@ export const useProfile = (user: User | null): UseProfileReturn => {
   };
 
   const openDeleteModal = () => {
-    setDeleteModal({ isOpen: true, password: '', isDeleting: false, error: '' });
+    setDeleteModal({
+      isOpen: true,
+      password: '',
+      isDeleting: false,
+      error: '',
+    });
   };
 
   const closeDeleteModal = () => {
-    setDeleteModal({ isOpen: false, password: '', isDeleting: false, error: '' });
+    setDeleteModal({
+      isOpen: false,
+      password: '',
+      isDeleting: false,
+      error: '',
+    });
   };
 
   const setDeletePassword = (password: string) => {
@@ -324,7 +339,10 @@ export const useProfile = (user: User | null): UseProfileReturn => {
           if (!resp.ok) {
             // Tentar ler erro para debug, mas não interromper o fluxo
             const errData = await resp.json().catch(() => null);
-            console.warn('Falha ao deletar imagem do Cloudinary:', errData || resp.statusText);
+            console.warn(
+              'Falha ao deletar imagem do Cloudinary:',
+              errData || resp.statusText
+            );
           } else {
             console.log('Foto de perfil deletada no Cloudinary —', publicId);
           }

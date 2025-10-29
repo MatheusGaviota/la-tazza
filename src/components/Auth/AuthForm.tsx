@@ -120,17 +120,13 @@ export default function AuthForm({
           disabled={isLoading}
         >
           {isLoading && <LoadingSpinner size="sm" />}
-          {isSignup ? (
-            isLoading ? (
-              'Criando conta...'
-            ) : (
-              'Criar conta'
-            )
-          ) : isLoading ? (
-            'Entrando...'
-          ) : (
-            'Entrar'
-          )}
+          {isSignup
+            ? isLoading
+              ? 'Criando conta...'
+              : 'Criar conta'
+            : isLoading
+              ? 'Entrando...'
+              : 'Entrar'}
         </Button>
 
         <div className="flex items-center gap-4">
@@ -152,15 +148,10 @@ export default function AuthForm({
         >
           {isLoading && <LoadingSpinner size="sm" />}
           {!isLoading && (
-            <SocialIcon
-              network="google"
-              className="w-5 h-5 fill-foreground"
-            />
+            <SocialIcon network="google" className="w-5 h-5 fill-foreground" />
           )}
           <span className="font-medium">
-            {isSignup
-              ? 'Cadastrar com Google'
-              : 'Fazer login com Google'}
+            {isSignup ? 'Cadastrar com Google' : 'Fazer login com Google'}
           </span>
         </button>
       </form>

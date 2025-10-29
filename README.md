@@ -10,30 +10,35 @@ Website institucional da **La Tazza**, uma cafeteria que combina a paixão pelo 
 ## ✨ Funcionalidades
 
 ### 🛒 Loja Online
+
 - Catálogo completo de produtos
 - Sistema de filtros e busca
 - Carrinho de compras inteligente
 - Checkout seguro
 
 ### 🎓 Educação e Workshops
+
 - Cursos de barista profissional
 - Workshops temáticos
 - Sistema de matrículas online
 - Certificados digitais
 
 ### 📝 Blog Cultural
+
 - Artigos sobre café e cultura
 - Receitas especiais
 - Dicas de preparo
 - Histórias da cafeteria
 
 ### 👤 Área do Cliente
+
 - Cadastro e login
 - Histórico de pedidos
 - Lista de desejos
 - Programa de fidelidade
 
 ### 🔐 Painel Administrativo
+
 - Gerenciamento completo de produtos
 - Administração de cursos e workshops
 - Sistema de blog integrado
@@ -59,26 +64,31 @@ Website institucional da **La Tazza**, uma cafeteria que combina a paixão pelo 
 ## 🛠️ Instalação e Configuração
 
 ### 1. Clone o repositório
+
 ```bash
 git clone https://github.com/MatheusGaviota/la-tazza.git
 cd la-tazza
 ```
 
 ### 2. Instale as dependências
+
 ```bash
 npm install
 ```
 
 ### 3. Configure as variáveis de ambiente
+
 ```bash
 cp .env.example .env
 # Edite o arquivo .env com suas credenciais
 ```
 
 ### 4. Configure o Firebase
+
 Siga o guia completo em [`docs/firebase/CONFIGURACAO_FIREBASE.md`](docs/firebase/CONFIGURACAO_FIREBASE.md)
 
 ### 5. Execute o projeto
+
 ```bash
 npm run dev
 ```

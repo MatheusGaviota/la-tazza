@@ -65,4 +65,22 @@ export interface BlogPost {
   updatedAt?: Date;
 }
 
+export interface AdminUser {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+  emailVerified: boolean;
+  disabled: boolean;
+  isAdmin: boolean;
+  createdAt?: string;
+  lastSignInTime?: string;
+  providerData?: {
+    providerId: string;
+    displayName?: string | null;
+    email?: string | null;
+    photoURL?: string | null;
+  }[];
+}
+
 export type ContentType = 'product' | 'course' | 'workshop' | 'blog';

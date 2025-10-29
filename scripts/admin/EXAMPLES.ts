@@ -1,6 +1,6 @@
 /**
  * Exemplos de uso do sistema de gerenciamento de contas
- * 
+ *
  * Para rodar: npm run admin <comando>
  * Ou: npx ts-node scripts/admin/cli.ts <comando>
  */

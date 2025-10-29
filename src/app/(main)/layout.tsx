@@ -17,7 +17,8 @@ export default function MainLayout({
     <>
       <CartProvider>
         <Navbar />
-        <main id="main-content" className="pt-[92px]">
+        <main id="main-content">
+          <div className='h-[104px] bg-foreground'/>
           {children}
         </main>
         <Footer />

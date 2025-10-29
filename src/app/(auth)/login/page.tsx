@@ -129,9 +129,7 @@ export default function LoginPage() {
         setResetEmail('');
       } catch (err) {
         const errorMessage =
-          err instanceof Error
-            ? err.message
-            : 'Erro ao enviar email de reset';
+          err instanceof Error ? err.message : 'Erro ao enviar email de reset';
         setError(errorMessage);
       } finally {
         setIsLoading(false);

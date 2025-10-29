@@ -1,6 +1,6 @@
 /**
  * Carrega as credenciais do Firebase Admin a partir de variáveis de ambiente
- * 
+ *
  * Variáveis necessárias em .env.local:
  * - FIREBASE_ADMIN_PROJECT_ID
  * - FIREBASE_ADMIN_PRIVATE_KEY_ID

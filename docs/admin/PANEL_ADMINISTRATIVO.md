@@ -7,6 +7,7 @@ Painel administrativo completo e profissional para gerenciamento de conteúdo do
 ## ✨ Funcionalidades
 
 ### 🛒 Gerenciamento de Produtos
+
 - ➕ Adicionar novos produtos
 - ✏️ Editar produtos existentes
 - 🗑️ Excluir produtos
@@ -15,6 +16,7 @@ Painel administrativo completo e profissional para gerenciamento de conteúdo do
 - 🖼️ Upload de imagens via Cloudinary
 
 ### 🎓 Gerenciamento de Cursos
+
 - ➕ Criar cursos
 - ✏️ Editar informações dos cursos
 - 🗑️ Remover cursos
@@ -23,6 +25,7 @@ Painel administrativo completo e profissional para gerenciamento de conteúdo do
 - 📊 Níveis (Iniciante, Intermediário, Avançado)
 
 ### 👥 Gerenciamento de Workshops
+
 - ➕ Adicionar workshops
 - ✏️ Editar workshops
 - 🗑️ Deletar workshops
@@ -32,6 +35,7 @@ Painel administrativo completo e profissional para gerenciamento de conteúdo do
 - 🎫 Limite de vagas
 
 ### 📝 Gerenciamento de Blog
+
 - ➕ Criar posts
 - ✏️ Editar posts
 - 🗑️ Excluir posts
@@ -44,6 +48,7 @@ Painel administrativo completo e profissional para gerenciamento de conteúdo do
 ## 🔐 Controle de Acesso
 
 O acesso ao painel administrativo é protegido e requer:
+
 - ✅ Autenticação via Firebase Auth
 - ✅ Verificação de usuário logado
 - ✅ Verificação de custom claim `admin: true` no token JWT
@@ -53,6 +58,7 @@ O acesso ao painel administrativo é protegido e requer:
 ## 🎨 Design
 
 O painel segue os princípios de design do site:
+
 - 🎨 Paleta de cores consistente (Background, Accent, Foreground)
 - 📱 Totalmente responsivo
 - ♿ Acessível (ARIA labels, navegação por teclado)
@@ -133,17 +139,17 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
-    
+
     match /courses/{courseId} {
       allow read: if true;
       allow write: if isAdmin();
     }
-    
+
     match /workshops/{workshopId} {
       allow read: if true;
       allow write: if isAdmin();
     }
-    
+
     match /blog-posts/{postId} {
       allow read: if resource.data.published == true || request.auth != null;
       allow write: if isAdmin();
@@ -160,29 +166,35 @@ service cloud.firestore {
 ## 🚀 Como Usar
 
 ### 1. Acessar o Painel
+
 ```
 http://localhost:3000/admin
 ```
 
 ### 2. Navegar entre Abas
+
 - Clique nas abas superiores para alternar entre Produtos, Cursos, Workshops e Blog
 
 ### 3. Adicionar Novo Item
+
 - Clique no botão "Adicionar [Item]"
-- Preencha todos os campos obrigatórios (*)
+- Preencha todos os campos obrigatórios (\*)
 - Faça upload de uma imagem
 - Clique em "Adicionar"
 
 ### 4. Editar Item
+
 - Clique no botão "Editar" no card do item
 - Modifique os campos necessários
 - Clique em "Atualizar"
 
 ### 5. Excluir Item
+
 - Clique no botão "Excluir" no card do item
 - Confirme a exclusão no modal
 
 ### 6. Gerenciar Administradores
+
 - Para promover um usuário a administrador, use o CLI admin:
   ```bash
   npm run admin promote-admin <USER_UID>
@@ -197,7 +209,7 @@ http://localhost:3000/admin
   ```
 - Para verificar seu próprio status de admin no console do navegador:
   ```javascript
-  import('./lib/admin-utils').then(m => m.checkAdminStatus())
+  import('./lib/admin-utils').then((m) => m.checkAdminStatus());
   ```
 
 ## ⚠️ TODOs e Melhorias Futuras
@@ -225,6 +237,7 @@ http://localhost:3000/admin
 ## 📱 Responsividade
 
 O painel é totalmente responsivo e funciona perfeitamente em:
+
 - 📱 Mobile (320px+)
 - 📱 Tablet (768px+)
 - 💻 Desktop (1024px+)
@@ -253,6 +266,7 @@ Para testar o painel:
 ## 📞 Suporte
 
 Em caso de problemas:
+
 1. Verifique as configurações do Firebase
 2. Confirme as variáveis de ambiente
 3. Verifique as regras do Firestore

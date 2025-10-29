@@ -37,8 +37,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     const errorId = error ? `${inputId}-error` : undefined;
 
     const getVariantClasses = () => {
-      const base = 'border-2 rounded-md focus:outline-none focus:ring-1 focus:ring-offset-0 transition-all';
-      
+      const base =
+        'border-2 rounded-md focus:outline-none focus:ring-1 focus:ring-offset-0 transition-all';
+
       if (disabled) {
         return `${base} bg-background/50 text-foreground/70 cursor-not-allowed border-accent/20`;
       }
@@ -115,20 +116,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         </div>
 
         {helpText && !error && (
-          <p
-            id={helpTextId}
-            className="text-xs text-foreground/60 mt-1"
-          >
+          <p id={helpTextId} className="text-xs text-foreground/60 mt-1">
             {helpText}
           </p>
         )}
 
         {error && (
-          <p
-            id={errorId}
-            className="text-xs text-red-500 mt-1"
-            role="alert"
-          >
+          <p id={errorId} className="text-xs text-red-500 mt-1" role="alert">
             {error}
           </p>
         )}
