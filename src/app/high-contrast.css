@@ -143,3 +143,15 @@ body.high-contrast .bg-accent.text-accent {
   background-color: var(--accent) !important;
   border-color: transparent !important;
 }
+
+/* Blog Hero Section - High Contrast */
+body.high-contrast .page-hero {
+  background-color: var(--accent) !important;
+  color: var(--background) !important;
+  border-color: var(--foreground) !important;
+}
+
+body.high-contrast .page-hero h1,
+body.high-contrast .page-hero p {
+  color: var(--background) !important;
+}
