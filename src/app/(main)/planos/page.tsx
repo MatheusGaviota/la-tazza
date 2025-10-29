@@ -235,8 +235,8 @@ export default function PlanosPage() {
 
                   <Button
                     text="Assinar Agora"
-                    href={`/planos/${plan.id}`}
-                    variant={isHighlighted ? 'secondary' : 'accent'}
+                    href="/contato"
+                    variant={isHighlighted ? 'fore' : 'accent'}
                     className="w-full"
                     aria-label={`Assinar plano ${plan.name}`}
                   />
