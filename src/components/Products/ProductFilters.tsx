@@ -15,7 +15,12 @@ interface ProductFiltersProps {
   onReset: () => void;
 }
 
-const categories = ['Café Especial', 'Café Premium', 'Café Orgânico', 'Café Tradicional'];
+const categories = [
+  'Café Especial',
+  'Café Premium',
+  'Café Orgânico',
+  'Café Tradicional',
+];
 const origins = ['Brasil', 'Colômbia', 'Etiópia', 'Peru', 'Itália'];
 const roasts = ['Claro', 'Médio', 'Escuro'];
 
@@ -163,7 +168,10 @@ export default function ProductFilters({
           <div className="mt-3 space-y-4">
             <div className="flex items-center gap-3">
               <div className="flex-1">
-                <label htmlFor="price-min" className="text-xs text-background/70 block mb-1">
+                <label
+                  htmlFor="price-min"
+                  className="text-xs text-background/70 block mb-1"
+                >
                   Mínimo
                 </label>
                 <div className="relative">
@@ -185,7 +193,10 @@ export default function ProductFilters({
               </div>
               <div className="pt-5 text-background/50">—</div>
               <div className="flex-1">
-                <label htmlFor="price-max" className="text-xs text-background/70 block mb-1">
+                <label
+                  htmlFor="price-max"
+                  className="text-xs text-background/70 block mb-1"
+                >
                   Máximo
                 </label>
                 <div className="relative">
