@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ProductCard from '@/components/Cards/ProductCard';
 import { ProductFilters } from '@/components/Products';
@@ -24,7 +24,7 @@ export interface ProductFiltersState {
   inStockOnly: boolean;
 }
 
-export default function ProductsPage() {
+function ProductsPageContent() {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('search') || '';
 
@@ -401,5 +401,28 @@ export default function ProductsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen">
+          <PageHero
+            title="Nossos Produtos"
+            description="Descubra nossa seleção exclusiva de cafés especiais, cuidadosamente escolhidos para proporcionar a melhor experiência."
+          />
+          <div className="max-w-[1400px] mx-auto px-4 py-12 flex items-center justify-center">
+            <div className="text-center">
+              <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-accent border-r-transparent mb-4" />
+              <p className="text-foreground/70">Carregando produtos...</p>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <ProductsPageContent />
+    </Suspense>
   );
 }
