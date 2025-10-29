@@ -1,273 +1,38 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Image from 'next/image';
 import Button from '@/components/UI/Button';
 import ReviewCard from '@/components/Cards/ReviewCard';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/config/firebase/client';
 
-// Dados dos cursos (em uma aplicação real, isso viria de uma API ou banco de dados)
-const coursesData = [
-  {
-    id: 1,
-    type: 'curso',
-    imageUrl:
-      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png',
-    title: 'Barista Profissional Completo',
-    description:
-      'Aprenda desde os fundamentos até técnicas avançadas de preparo de café. Curso ideal para quem deseja se tornar um barista profissional.',
-    duration: '40 horas',
-    level: 'intermediario',
-    category: 'barista',
-    price: 'R$ 1.200,00',
-    instructor: 'Chef Matteo Rossi',
-    students: 234,
-    rating: 4.9,
-    topics: [
-      'História e cultura do café',
-      'Tipos de grãos e torrefação',
-      'Uso e manutenção de equipamentos',
-      'Técnicas de extração profissionais',
-      'Atendimento ao cliente',
-      'Montagem de cardápio',
-      'Controle de qualidade',
-    ],
-    fullDescription:
-      'Torne-se um barista profissional com nosso curso mais completo. Você aprenderá desde os fundamentos da história e cultura do café até técnicas avançadas de extração, arte latte e atendimento ao cliente. O curso inclui aulas práticas intensivas com equipamentos profissionais de última geração.',
-    requirements: [
-      'Maior de 16 anos',
-      'Interesse genuíno por café',
-      'Disponibilidade para aulas práticas',
-    ],
-    whatYouWillLearn: [
-      'Dominar todas as técnicas de preparo de café expresso',
-      'Criar bebidas clássicas e autorais',
-      'Operar e manter equipamentos profissionais',
-      'Desenvolver paladar e análise sensorial',
-      'Atender clientes com excelência',
-      'Gerenciar estoque e cardápio',
-    ],
-    schedule: [
-      {
-        week: 'Semana 1-2',
-        content:
-          'Fundamentos e história do café, tipos de grãos, processos de torrefação',
-      },
-      {
-        week: 'Semana 3-4',
-        content: 'Equipamentos profissionais, calibração e manutenção',
-      },
-      {
-        week: 'Semana 5-6',
-        content: 'Técnicas de extração, dosagem e moagem perfeitas',
-      },
-      {
-        week: 'Semana 7-8',
-        content: 'Bebidas clássicas e criação de receitas autorais',
-      },
-      {
-        week: 'Semana 9-10',
-        content: 'Atendimento ao cliente e gestão de cafeteria',
-      },
-    ],
-    instructorBio:
-      'Chef Matteo Rossi é barista profissional há mais de 15 anos, com certificações internacionais da SCA (Specialty Coffee Association). Campeão de competições nacionais de latte art e consultor de diversas cafeterias premiadas.',
-    reviews: [
-      {
-        name: 'Maria Silva',
-        rating: 5,
-        comment:
-          'Curso incrível! Aprendi muito mais do que esperava. O Chef Matteo é excelente!',
-        date: 'Há 2 semanas',
-      },
-      {
-        name: 'João Santos',
-        rating: 5,
-        comment:
-          'Melhor investimento que fiz na minha carreira. Já estou trabalhando como barista!',
-        date: 'Há 1 mês',
-      },
-      {
-        name: 'Ana Costa',
-        rating: 4,
-        comment: 'Muito bom! Conteúdo rico e aulas práticas excelentes.',
-        date: 'Há 2 meses',
-      },
-    ],
-    certificate: true,
-    materials: true,
-    support: true,
-    nextDates: ['15 de Novembro', '1 de Dezembro', '20 de Janeiro'],
-  },
-  {
-    id: 2,
-    type: 'curso',
-    imageUrl:
-      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png',
-    title: 'Arte em Latte - Criatividade na Xícara',
-    description:
-      'Domine a arte de criar designs incríveis em suas bebidas. Do coração clássico a desenhos complexos.',
-    duration: '20 horas',
-    level: 'iniciante',
-    category: 'arte-latte',
-    price: 'R$ 680,00',
-    instructor: 'Sofia Martins',
-    students: 189,
-    rating: 4.8,
-    topics: [
-      'Fundamentos do latte art',
-      'Vaporização perfeita do leite',
-      'Desenhos básicos e intermediários',
-      'Técnicas de etching',
-      'Criação de designs próprios',
-    ],
-    fullDescription:
-      'Descubra a arte milenar do latte art e transforme cada xícara em uma obra de arte. Aprenda as técnicas corretas de vaporização do leite e domine desde desenhos básicos até criações complexas e autorais.',
-    requirements: ['Conhecimento básico de café', 'Maior de 16 anos'],
-    whatYouWillLearn: [
-      'Vaporizar leite com textura perfeita',
-      'Criar desenhos clássicos (coração, tulipa, rosetta)',
-      'Técnicas de etching e decoração',
-      'Desenvolver estilo próprio',
-      'Troubleshooting de problemas comuns',
-    ],
-    schedule: [
-      { week: 'Semana 1', content: 'Fundamentos e vaporização do leite' },
-      { week: 'Semana 2', content: 'Desenhos básicos: coração e tulipa' },
-      {
-        week: 'Semana 3',
-        content: 'Desenhos intermediários: rosetta e variações',
-      },
-      { week: 'Semana 4', content: 'Técnicas avançadas e criação autoral' },
-    ],
-    instructorBio:
-      'Sofia Martins é especialista em latte art com mais de 8 anos de experiência. Medalhista em competições nacionais e internacionais, reconhecida por seu estilo criativo único.',
-    reviews: [
-      {
-        name: 'Pedro Lima',
-        rating: 5,
-        comment:
-          'Sofia é uma excelente professora! Consegui fazer minha primeira rosetta perfeita!',
-        date: 'Há 1 semana',
-      },
-      {
-        name: 'Carla Mendes',
-        rating: 5,
-        comment: 'Adorei o curso! Super didático e prático.',
-        date: 'Há 3 semanas',
-      },
-    ],
-    certificate: true,
-    materials: true,
-    support: true,
-    nextDates: ['20 de Novembro', '10 de Dezembro'],
-  },
-  {
-    id: 3,
-    type: 'curso',
-    imageUrl:
-      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png',
-    title: 'Métodos Alternativos de Extração',
-    description:
-      'Explore métodos como Aeropress, Chemex, V60, French Press e Sifão. Descubra o potencial único de cada método.',
-    duration: '16 horas',
-    level: 'intermediario',
-    category: 'extracao',
-    price: 'R$ 560,00',
-    instructor: 'Ricardo Santos',
-    students: 156,
-    rating: 4.7,
-    topics: [
-      'Química da extração',
-      'Moagem e proporções',
-      'Aeropress e suas variações',
-      'Pour over: V60 e Chemex',
-      'Métodos de imersão',
-    ],
-    fullDescription:
-      'Mergulhe no fascinante mundo dos métodos alternativos de extração. Aprenda a dominar cada técnica e descubra como extrair o melhor sabor de cada tipo de café.',
-    requirements: [
-      'Conhecimento básico de café',
-      'Interesse em métodos manuais',
-    ],
-    whatYouWillLearn: [
-      'Química e ciência da extração',
-      'Dominar Aeropress, V60, Chemex',
-      'Ajustar receitas para diferentes cafés',
-      'Técnicas de degustação comparativa',
-    ],
-    schedule: [
-      { week: 'Semana 1', content: 'Fundamentos da extração e química' },
-      { week: 'Semana 2', content: 'Pour over: V60 e Chemex' },
-      { week: 'Semana 3', content: 'Aeropress e suas variações' },
-      { week: 'Semana 4', content: 'Métodos de imersão e comparações' },
-    ],
-    instructorBio:
-      'Ricardo Santos é Q-Grader certificado e especialista em métodos de extração, com experiência em consultoria para cafeterias especiais.',
-    reviews: [
-      {
-        name: 'Lucas Alves',
-        rating: 5,
-        comment: 'Curso essencial para quem quer entender café de verdade!',
-        date: 'Há 2 semanas',
-      },
-    ],
-    certificate: true,
-    materials: true,
-    support: true,
-    nextDates: ['25 de Novembro', '15 de Dezembro'],
-  },
-  {
-    id: 7,
-    type: 'workshop',
-    imageUrl:
-      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png',
-    title: 'Workshop: Expresso Perfeito',
-    description:
-      'Workshop intensivo de um dia focado em dominar a arte do expresso perfeito.',
-    duration: '8 horas',
-    level: 'iniciante',
-    category: 'barista',
-    price: 'R$ 320,00',
-    instructor: 'Chef Matteo Rossi',
-    students: 267,
-    rating: 4.9,
-    topics: [
-      'Calibração da máquina',
-      'Moagem e dosagem',
-      'Tempo de extração',
-      'Análise visual',
-      'Prática intensiva',
-    ],
-    fullDescription:
-      'Workshop intensivo de um dia onde você aprenderá tudo sobre o preparo do expresso perfeito. Muita prática hands-on com equipamentos profissionais.',
-    requirements: ['Interesse em café expresso'],
-    whatYouWillLearn: [
-      'Calibrar máquina de expresso',
-      'Dosar e moer café corretamente',
-      'Identificar um expresso perfeito',
-      'Troubleshooting de problemas',
-    ],
-    schedule: [
-      { week: 'Manhã', content: 'Teoria e fundamentos do expresso' },
-      { week: 'Tarde', content: 'Prática intensiva e troubleshooting' },
-    ],
-    instructorBio:
-      'Chef Matteo Rossi é barista profissional há mais de 15 anos, com certificações internacionais da SCA.',
-    reviews: [
-      {
-        name: 'Beatriz Souza',
-        rating: 5,
-        comment: 'Workshop excelente! Em um dia aprendi muito!',
-        date: 'Há 1 semana',
-      },
-    ],
-    certificate: true,
-    materials: true,
-    support: false,
-    nextDates: ['18 de Novembro', '25 de Novembro', '2 de Dezembro'],
-  },
-];
+interface CourseData {
+  id: string;
+  type: 'curso' | 'workshop';
+  imageUrl: string;
+  title: string;
+  description: string;
+  duration: string;
+  level: string;
+  category: string;
+  price: string;
+  instructor: string;
+  students?: number;
+  rating?: number;
+  topics?: string[];
+  fullDescription?: string;
+  requirements?: string[];
+  whatYouWillLearn?: string[];
+  schedule?: { week: string; content: string }[];
+  instructorBio?: string;
+  reviews?: { name: string; rating: number; comment: string; date: string }[];
+  certificate?: boolean;
+  materials?: boolean;
+  support?: boolean;
+  nextDates?: string[];
+}
 
 const levelLabels: Record<string, string> = {
   iniciante: 'Iniciante',
@@ -285,9 +50,66 @@ export default function CoursePage() {
   const [activeTab, setActiveTab] = useState<
     'sobre' | 'conteudo' | 'instrutor' | 'avaliacoes'
   >('sobre');
+  const [course, setCourse] = useState<CourseData | null>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const params = useParams() as { id?: string } | undefined;
-  const course = coursesData.find((c) => c.id === parseInt(params?.id ?? '', 10));
+
+  useEffect(() => {
+    const fetchCourse = async () => {
+      if (!params?.id) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const courseRef = doc(db, 'courses', params.id);
+        const courseSnap = await getDoc(courseRef);
+
+        if (courseSnap.exists()) {
+          setCourse({
+            id: courseSnap.id,
+            ...courseSnap.data(),
+          } as CourseData);
+        } else {
+          setCourse(null);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar curso:', error);
+        setCourse(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourse();
+  }, [params?.id]);
+
+  if (loading) {
+    return (
+      <main className="min-h-screen">
+        <section className="relative bg-gradient-to-br from-foreground via-accent to-foreground py-12 sm:py-16">
+          <div className="relative max-w-[1400px] mx-auto px-4">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+              <div className="space-y-4 animate-pulse">
+                <div className="h-8 bg-background/20 rounded w-1/4"></div>
+                <div className="h-12 bg-background/20 rounded w-3/4"></div>
+                <div className="h-6 bg-background/20 rounded w-full"></div>
+                <div className="h-6 bg-background/20 rounded w-2/3"></div>
+              </div>
+              <div className="bg-background/10 backdrop-blur-sm rounded-2xl p-6 border border-background/20 animate-pulse">
+                <div className="aspect-video bg-background/20 rounded-xl mb-6"></div>
+                <div className="h-8 bg-background/20 rounded mb-4"></div>
+                <div className="h-12 bg-background/20 rounded mb-3"></div>
+                <div className="h-12 bg-background/20 rounded"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    );
+  }
 
   if (!course) {
     return (
@@ -381,7 +203,9 @@ export default function CoursePage() {
                   >
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
-                  <span className="font-medium">{course.rating} ★</span>
+                  <span className="font-medium">
+                    {course.rating?.toFixed(1) || '0.0'} ★
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 text-background/90">
                   <svg
@@ -397,7 +221,10 @@ export default function CoursePage() {
                       d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
                     />
                   </svg>
-                  <span className="font-medium">{course.students} alunos</span>
+                  <span className="font-medium">
+                    {course.students || 0}{' '}
+                    {(course.students || 0) === 1 ? 'aluno' : 'alunos'}
+                  </span>
                 </div>
               </div>
 
@@ -565,7 +392,7 @@ export default function CoursePage() {
               }`}
               aria-current={activeTab === 'avaliacoes' ? 'page' : undefined}
             >
-              Avaliações ({course.reviews.length})
+              Avaliações ({course.reviews?.length || 0})
             </button>
           </nav>
         </div>
@@ -589,7 +416,7 @@ export default function CoursePage() {
                     O que você vai aprender
                   </h3>
                   <ul className="grid sm:grid-cols-2 gap-3">
-                    {course.whatYouWillLearn.map((item, index) => (
+                    {course.whatYouWillLearn?.map((item, index) => (
                       <li key={index} className="flex items-start gap-3">
                         <svg
                           className="w-5 h-5 text-accent mt-0.5 flex-shrink-0"
@@ -615,7 +442,7 @@ export default function CoursePage() {
                     Requisitos
                   </h3>
                   <ul className="space-y-2">
-                    {course.requirements.map((req, index) => (
+                    {course.requirements?.map((req, index) => (
                       <li key={index} className="flex items-start gap-3">
                         <span className="text-accent mt-0.5">•</span>
                         <span className="text-foreground/80">{req}</span>
@@ -632,7 +459,7 @@ export default function CoursePage() {
                   Conteúdo programático
                 </h2>
                 <div className="space-y-4">
-                  {course.schedule.map((item, index) => (
+                  {course.schedule?.map((item, index) => (
                     <div
                       key={index}
                       className="bg-accent/5 border border-accent/20 rounded-lg p-6 hover:border-accent/40 transition-colors"
@@ -679,7 +506,9 @@ export default function CoursePage() {
                           >
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                           </svg>
-                          <span>{course.rating} avaliação</span>
+                          <span>
+                            {course.rating?.toFixed(1) || '0.0'} avaliação
+                          </span>
                         </div>
                         <div className="flex items-center gap-1">
                           <svg
@@ -695,7 +524,10 @@ export default function CoursePage() {
                               d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
                             />
                           </svg>
-                          <span>{course.students} alunos</span>
+                          <span>
+                            {course.students || 0}{' '}
+                            {(course.students || 0) === 1 ? 'aluno' : 'alunos'}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -712,17 +544,29 @@ export default function CoursePage() {
                 <h2 className="font-alumni text-3xl font-semibold text-foreground mb-6">
                   Avaliações dos alunos
                 </h2>
-                <div className="space-y-6">
-                  {course.reviews.map((review, index) => (
-                    <ReviewCard
-                      key={index}
-                      name={review.name}
-                      rating={review.rating}
-                      comment={review.comment}
-                      date={review.date}
-                    />
-                  ))}
-                </div>
+                {course.reviews && course.reviews.length > 0 ? (
+                  <div className="space-y-6">
+                    {course.reviews.map((review, index) => (
+                      <ReviewCard
+                        key={index}
+                        name={review.name}
+                        rating={review.rating}
+                        comment={review.comment}
+                        date={review.date}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 bg-accent/5 border border-accent/20 rounded-lg">
+                    <div className="text-4xl mb-3">💬</div>
+                    <h3 className="font-alumni text-xl font-semibold text-foreground mb-2">
+                      Nenhuma avaliação ainda
+                    </h3>
+                    <p className="text-foreground/70">
+                      Seja o primeiro a avaliar este curso!
+                    </p>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -731,53 +575,57 @@ export default function CoursePage() {
           <div className="lg:col-span-1">
             <div className="sticky top-4 space-y-6">
               {/* Próximas turmas */}
-              <div className="bg-accent/5 border border-accent/20 rounded-lg p-6">
-                <h3 className="font-alumni text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  Próximas turmas
-                </h3>
-                <ul className="space-y-2">
-                  {course.nextDates.map((date, index) => (
-                    <li
-                      key={index}
-                      className="text-foreground/80 text-sm flex items-center gap-2"
+              {course.nextDates && course.nextDates.length > 0 && (
+                <div className="bg-accent/5 border border-accent/20 rounded-lg p-6">
+                  <h3 className="font-alumni text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
                     >
-                      <span className="w-2 h-2 bg-accent rounded-full"></span>
-                      {date}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    Próximas turmas
+                  </h3>
+                  <ul className="space-y-2">
+                    {course.nextDates.map((date, index) => (
+                      <li
+                        key={index}
+                        className="text-foreground/80 text-sm flex items-center gap-2"
+                      >
+                        <span className="w-2 h-2 bg-accent rounded-full"></span>
+                        {date}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               {/* Tópicos */}
-              <div className="bg-accent/5 border border-accent/20 rounded-lg p-6">
-                <h3 className="font-alumni text-xl font-semibold text-foreground mb-4">
-                  Tópicos do curso
-                </h3>
-                <ul className="space-y-2">
-                  {course.topics.map((topic, index) => (
-                    <li
-                      key={index}
-                      className="text-foreground/80 text-sm flex items-start gap-2"
-                    >
-                      <span className="text-accent mt-1">✓</span>
-                      {topic}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {course.topics && course.topics.length > 0 && (
+                <div className="bg-accent/5 border border-accent/20 rounded-lg p-6">
+                  <h3 className="font-alumni text-xl font-semibold text-foreground mb-4">
+                    Tópicos do curso
+                  </h3>
+                  <ul className="space-y-2">
+                    {course.topics.map((topic, index) => (
+                      <li
+                        key={index}
+                        className="text-foreground/80 text-sm flex items-start gap-2"
+                      >
+                        <span className="text-accent mt-1">✓</span>
+                        {topic}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               {/* Share */}
               <div className="bg-accent/5 border border-accent/20 rounded-lg p-6">
