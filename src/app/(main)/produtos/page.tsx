@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import type { Metadata } from 'next';
 import ProductCard from '@/components/Cards/ProductCard';
 import { ProductFilters } from '@/components/Products';
 import {
