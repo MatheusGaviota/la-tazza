@@ -1,11 +1,7 @@
 import Link from 'next/link';
 import Button from '../../UI/Button';
 import Skeleton from '../../UI/Skeleton';
-import {
-  UserCircle,
-  LogOut,
-  User,
-} from 'lucide-react';
+import { UserCircle, LogOut, User } from 'lucide-react';
 import { navItems } from './constants';
 
 interface User {
@@ -43,7 +39,9 @@ export default function MobileMenu({
   handleLogout,
   isAdmin,
 }: MobileMenuProps) {
-  const menuItems = isAdmin ? [...navItems, { label: 'Admin', href: '/admin' }] : navItems;
+  const menuItems = isAdmin
+    ? [...navItems, { label: 'Admin', href: '/admin' }]
+    : navItems;
   const getInitials = (name: string) => {
     return name
       .split(' ')

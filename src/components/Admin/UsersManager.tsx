@@ -357,6 +357,12 @@ export default function UsersManager() {
                           Google
                         </span>
                       )}
+                      {user.emailVerified && (
+                        <span className="text-sm font-medium text-green-600 bg-green-600/10 px-2 py-1 rounded flex items-center gap-1">
+                          <UserCheck size={12} />
+                          Verificado
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>

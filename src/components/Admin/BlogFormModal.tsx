@@ -369,7 +369,8 @@ export default function BlogFormModal({
           )}
           {!formData.published && isDateBeforeToday(formData.date) && (
             <p className="text-xs text-accent mt-1 font-medium">
-              ⚠️ Post será publicado com a data selecionada ({formatDateForDisplay(formData.date)})
+              ⚠️ Post será publicado com a data selecionada (
+              {formatDateForDisplay(formData.date)})
             </p>
           )}
         </div>
