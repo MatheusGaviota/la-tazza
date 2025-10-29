@@ -55,7 +55,9 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
           // Se o post contiver um authorUid, buscar o perfil dinâmico do autor
           if (fetchedPost?.authorUid) {
             try {
-              const profile = await (await import('@/lib/admin.service')).getUserByUid(fetchedPost.authorUid);
+              const profile = await (
+                await import('@/lib/admin.service')
+              ).getUserByUid(fetchedPost.authorUid);
               setAuthorProfile(profile);
             } catch (err) {
               console.warn('Erro ao buscar perfil do autor:', err);
@@ -80,7 +82,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
         const allPosts = await getPublishedBlogPosts();
         // Filtrar posts publicados, excluir o atual e pegar os 3 mais recentes
         const filteredPosts = allPosts
-          .filter(p => p.id !== post?.id)
+          .filter((p) => p.id !== post?.id)
           .slice(0, 3);
         setRelatedPosts(filteredPosts);
       } catch (error) {
@@ -253,11 +255,17 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
                   aria-label="Breadcrumb"
                   className="inline-flex items-center gap-2 text-sm text-foreground/70 bg-background/60 backdrop-blur-sm px-3 py-1 rounded"
                 >
-                  <Link href="/" className="hover:text-accent transition-colors">
+                  <Link
+                    href="/"
+                    className="hover:text-accent transition-colors"
+                  >
                     Início
                   </Link>
                   <ChevronRight size={16} />
-                  <Link href="/blog" className="hover:text-accent transition-colors">
+                  <Link
+                    href="/blog"
+                    className="hover:text-accent transition-colors"
+                  >
                     Blog
                   </Link>
                   <ChevronRight size={16} />
@@ -310,14 +318,14 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
                 </div>
               ) : (
                 <div className="w-10 h-10 rounded-full bg-background border-2 border-accent flex items-center justify-center">
-                  <span className="text-sm font-bold text-accent">{
-                    (authorProfile?.displayName ?? post.author)
+                  <span className="text-sm font-bold text-accent">
+                    {(authorProfile?.displayName ?? post.author)
                       .split(' ')
                       .map((n) => n[0])
                       .join('')
                       .toUpperCase()
-                      .slice(0, 2)
-                  }</span>
+                      .slice(0, 2)}
+                  </span>
                 </div>
               )}
 
@@ -411,14 +419,14 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
                 </div>
               ) : (
                 <div className="w-16 h-16 rounded-full bg-background border-2 border-accent flex items-center justify-center flex-shrink-0">
-                  <span className="text-3xl font-bold text-accent">{
-                    (authorProfile?.displayName ?? post.author)
+                  <span className="text-3xl font-bold text-accent">
+                    {(authorProfile?.displayName ?? post.author)
                       .split(' ')
                       .map((n) => n[0])
                       .join('')
                       .toUpperCase()
-                      .slice(0, 2)
-                  }</span>
+                      .slice(0, 2)}
+                  </span>
                 </div>
               )}
 

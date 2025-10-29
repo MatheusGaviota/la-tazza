@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import ProductCard from '@/components/Cards/ProductCard';
 import { ProductFilters } from '@/components/Products';
 import {
@@ -24,6 +25,9 @@ export interface ProductFiltersState {
 }
 
 export default function ProductsPage() {
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get('search') || '';
+
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -64,6 +68,19 @@ export default function ProductsPage() {
   // Filtrar e ordenar produtos
   const filteredProducts = useMemo(() => {
     let filtered = [...products];
+
+    // Aplicar filtro de pesquisa
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (p) =>
+          p.title.toLowerCase().includes(query) ||
+          p.description.toLowerCase().includes(query) ||
+          p.category.toLowerCase().includes(query) ||
+          (p.origin && p.origin.toLowerCase().includes(query)) ||
+          (p.roast && p.roast.toLowerCase().includes(query))
+      );
+    }
 
     // Aplicar filtros
     if (filters.categories.length > 0) {
@@ -110,7 +127,7 @@ export default function ProductsPage() {
     }
 
     return filtered;
-  }, [products, filters, sortBy]);
+  }, [products, filters, sortBy, searchQuery]);
 
   const handleResetFilters = () => {
     setFilters({
@@ -223,14 +240,24 @@ export default function ProductsPage() {
                   <span className="text-sm font-medium">Filtros</span>
                 </button>
 
-                <p className="text-sm text-foreground/70">
-                  <span className="font-semibold text-foreground">
-                    {filteredProducts.length}
-                  </span>{' '}
-                  {filteredProducts.length === 1
-                    ? 'produto encontrado'
-                    : 'produtos encontrados'}
-                </p>
+                <div className="flex flex-col gap-1">
+                  <p className="text-sm text-foreground/70">
+                    <span className="font-semibold text-foreground">
+                      {filteredProducts.length}
+                    </span>{' '}
+                    {filteredProducts.length === 1
+                      ? 'produto encontrado'
+                      : 'produtos encontrados'}
+                  </p>
+                  {searchQuery && (
+                    <p
+                      className="text-xs text-foreground/60"
+                      aria-live="polite"
+                    >
+                      Buscando por: &quot;{searchQuery}&quot;
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div className="flex items-center gap-3 w-full sm:w-auto">

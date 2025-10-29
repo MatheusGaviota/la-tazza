@@ -22,12 +22,12 @@ function AccessibilityTray() {
     // Exibir popup na primeira visita ou sempre que o usuário retornar
     const timer = setTimeout(() => {
       setShowPopup(true);
-      
+
       // Auto-ocultar o popup após 5 segundos
       const hideTimer = setTimeout(() => {
         setShowPopup(false);
       }, 5000);
-      
+
       return () => clearTimeout(hideTimer);
     }, 1000); // Aguarda 1 segundo após o carregamento da página
 
@@ -105,7 +105,7 @@ function AccessibilityTray() {
         aria-expanded={isOpen}
       >
         <MoreVertical className="w-6 h-6 text-background sm:rotate-0 max-sm:rotate-90" />
-        
+
         {/* Popup de dica */}
         {showPopup && !isOpen && (
           <div
@@ -119,10 +119,12 @@ function AccessibilityTray() {
               <Eye className="w-4 h-4 inline-block mr-2 -mt-0.5" />
               Ferramentas de acessibilidade
               {/* Seta do popup */}
-              <div className="absolute 
+              <div
+                className="absolute 
                             sm:left-full sm:top-1/2 sm:-translate-y-1/2 sm:border-l-accent
                             max-sm:top-full max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:border-t-accent
-                            border-[6px] border-transparent" />
+                            border-[6px] border-transparent"
+              />
             </div>
           </div>
         )}

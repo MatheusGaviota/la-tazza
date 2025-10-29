@@ -115,11 +115,11 @@ export default function WorkshopFormModal({
       setTopics(workshop.topics || []);
       setWhatYouWillLearn(workshop.whatYouWillLearn || []);
       setRequirements(workshop.requirements || []);
-      
+
       const schedule = workshop.schedule || [];
       setScheduleItems(schedule.map((s) => s.week || ''));
       setScheduleContents(schedule.map((s) => s.content || ''));
-      
+
       setNextDates(workshop.nextDates || []);
     } else {
       resetForm();
@@ -167,23 +167,31 @@ export default function WorkshopFormModal({
     const newErrors: Record<string, string> = {};
 
     if (!formData.title.trim()) newErrors.title = 'Título é obrigatório';
-    if (!formData.description.trim()) newErrors.description = 'Descrição curta é obrigatória';
-    if (!formData.fullDescription.trim()) newErrors.fullDescription = 'Descrição completa é obrigatória';
+    if (!formData.description.trim())
+      newErrors.description = 'Descrição curta é obrigatória';
+    if (!formData.fullDescription.trim())
+      newErrors.fullDescription = 'Descrição completa é obrigatória';
     if (!formData.date.trim()) newErrors.date = 'Data é obrigatória';
     if (!formData.duration.trim()) newErrors.duration = 'Duração é obrigatória';
     if (!formData.level.trim()) newErrors.level = 'Nível é obrigatório';
-    if (!formData.category.trim()) newErrors.category = 'Categoria é obrigatória';
-    if (!formData.instructor.trim()) newErrors.instructor = 'Instrutor é obrigatório';
-    if (!formData.instructorBio.trim()) newErrors.instructorBio = 'Biografia do instrutor é obrigatória';
+    if (!formData.category.trim())
+      newErrors.category = 'Categoria é obrigatória';
+    if (!formData.instructor.trim())
+      newErrors.instructor = 'Instrutor é obrigatório';
+    if (!formData.instructorBio.trim())
+      newErrors.instructorBio = 'Biografia do instrutor é obrigatória';
     if (!formData.price.trim()) newErrors.price = 'Preço é obrigatório';
     if (!imagePreview) newErrors.image = 'Imagem é obrigatória';
     if (topics.length === 0) newErrors.topics = 'Adicione pelo menos um tópico';
-    if (whatYouWillLearn.length === 0) newErrors.whatYouWillLearn = 'Adicione pelo menos um item de aprendizado';
-    if (requirements.length === 0) newErrors.requirements = 'Adicione pelo menos um requisito';
+    if (whatYouWillLearn.length === 0)
+      newErrors.whatYouWillLearn = 'Adicione pelo menos um item de aprendizado';
+    if (requirements.length === 0)
+      newErrors.requirements = 'Adicione pelo menos um requisito';
     if (scheduleItems.length === 0 || scheduleContents.length === 0) {
       newErrors.schedule = 'Adicione pelo menos um item no cronograma';
     }
-    if (nextDates.length === 0) newErrors.nextDates = 'Adicione pelo menos uma data';
+    if (nextDates.length === 0)
+      newErrors.nextDates = 'Adicione pelo menos uma data';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -235,7 +243,9 @@ export default function WorkshopFormModal({
         instructor: formData.instructor.trim(),
         instructorBio: formData.instructorBio.trim(),
         price: formData.price.trim(),
-        maxParticipants: formData.maxParticipants ? parseInt(formData.maxParticipants) : undefined,
+        maxParticipants: formData.maxParticipants
+          ? parseInt(formData.maxParticipants)
+          : undefined,
         imageUrl,
         topics,
         whatYouWillLearn,
@@ -285,12 +295,16 @@ export default function WorkshopFormModal({
 
         {/* Informações Básicas */}
         <div className="space-y-4 p-4 bg-accent/5 rounded-lg border-2 border-accent/20">
-          <h3 className="font-semibold text-lg text-foreground">Informações Básicas</h3>
+          <h3 className="font-semibold text-lg text-foreground">
+            Informações Básicas
+          </h3>
 
           <Input
             label="Título do Workshop"
             value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
+            }
             error={errors.title}
             required
             placeholder="Ex: Workshop: Expresso Perfeito"
@@ -300,7 +314,9 @@ export default function WorkshopFormModal({
             id="workshop-description"
             label="Descrição Curta"
             value={formData.description}
-            onChange={(value) => setFormData({ ...formData, description: value })}
+            onChange={(value) =>
+              setFormData({ ...formData, description: value })
+            }
             error={errors.description}
             required
             rows={2}
@@ -312,7 +328,9 @@ export default function WorkshopFormModal({
             id="workshop-full-description"
             label="Descrição Completa"
             value={formData.fullDescription}
-            onChange={(value) => setFormData({ ...formData, fullDescription: value })}
+            onChange={(value) =>
+              setFormData({ ...formData, fullDescription: value })
+            }
             error={errors.fullDescription}
             required
             rows={4}
@@ -336,7 +354,9 @@ export default function WorkshopFormModal({
           <Input
             label="Duração"
             value={formData.duration}
-            onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, duration: e.target.value })
+            }
             error={errors.duration}
             required
             placeholder="Ex: 8 horas ou 1 dia"
@@ -350,20 +370,26 @@ export default function WorkshopFormModal({
             </label>
             <select
               value={formData.level}
-              onChange={(e) => setFormData({ ...formData, level: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, level: e.target.value })
+              }
               className="w-full px-4 py-2 border-2 border-foreground/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
             >
               <option value="iniciante">Iniciante</option>
               <option value="intermediario">Intermediário</option>
               <option value="avancado">Avançado</option>
             </select>
-            {errors.level && <p className="text-red-500 text-sm mt-1">{errors.level}</p>}
+            {errors.level && (
+              <p className="text-red-500 text-sm mt-1">{errors.level}</p>
+            )}
           </div>
 
           <Input
             label="Categoria"
             value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, category: e.target.value })
+            }
             error={errors.category}
             required
             placeholder="Ex: barista, arte-latte, extracao"
@@ -374,7 +400,9 @@ export default function WorkshopFormModal({
           <Input
             label="Preço"
             value={formData.price}
-            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, price: e.target.value })
+            }
             error={errors.price}
             required
             placeholder="Ex: R$ 320,00"
@@ -385,7 +413,9 @@ export default function WorkshopFormModal({
             type="number"
             min="1"
             value={formData.maxParticipants}
-            onChange={(e) => setFormData({ ...formData, maxParticipants: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, maxParticipants: e.target.value })
+            }
             placeholder="20"
             helpText="Deixe vazio para ilimitado"
           />
@@ -393,12 +423,16 @@ export default function WorkshopFormModal({
 
         {/* Instrutor */}
         <div className="space-y-4 p-4 bg-accent/5 rounded-lg border-2 border-accent/20">
-          <h3 className="font-semibold text-lg text-foreground">Informações do Instrutor</h3>
+          <h3 className="font-semibold text-lg text-foreground">
+            Informações do Instrutor
+          </h3>
 
           <Input
             label="Nome do Instrutor"
             value={formData.instructor}
-            onChange={(e) => setFormData({ ...formData, instructor: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, instructor: e.target.value })
+            }
             error={errors.instructor}
             required
             placeholder="Ex: Chef Matteo Rossi"
@@ -408,7 +442,9 @@ export default function WorkshopFormModal({
             id="workshop-instructor-bio"
             label="Biografia do Instrutor"
             value={formData.instructorBio}
-            onChange={(value) => setFormData({ ...formData, instructorBio: value })}
+            onChange={(value) =>
+              setFormData({ ...formData, instructorBio: value })
+            }
             error={errors.instructorBio}
             required
             rows={3}
@@ -419,7 +455,9 @@ export default function WorkshopFormModal({
 
         {/* Tópicos */}
         <div className="space-y-4 p-4 bg-accent/5 rounded-lg border-2 border-accent/20">
-          <h3 className="font-semibold text-lg text-foreground">Tópicos do Workshop</h3>
+          <h3 className="font-semibold text-lg text-foreground">
+            Tópicos do Workshop
+          </h3>
           <DynamicListField
             label="Tópicos Principais"
             items={topics}
@@ -434,7 +472,9 @@ export default function WorkshopFormModal({
 
         {/* O que você vai aprender */}
         <div className="space-y-4 p-4 bg-accent/5 rounded-lg border-2 border-accent/20">
-          <h3 className="font-semibold text-lg text-foreground">O Que Você Vai Aprender</h3>
+          <h3 className="font-semibold text-lg text-foreground">
+            O Que Você Vai Aprender
+          </h3>
           <DynamicListField
             label="Aprendizados"
             items={whatYouWillLearn}
@@ -464,8 +504,10 @@ export default function WorkshopFormModal({
 
         {/* Cronograma */}
         <div className="space-y-4 p-4 bg-accent/5 rounded-lg border-2 border-accent/20">
-          <h3 className="font-semibold text-lg text-foreground">Cronograma do Dia</h3>
-          
+          <h3 className="font-semibold text-lg text-foreground">
+            Cronograma do Dia
+          </h3>
+
           <DynamicListField
             label="Períodos"
             items={scheduleItems}
@@ -487,7 +529,9 @@ export default function WorkshopFormModal({
                   <label className="text-sm text-foreground/70">{item}</label>
                   <textarea
                     value={scheduleContents[index] || ''}
-                    onChange={(e) => handleScheduleContentChange(index, e.target.value)}
+                    onChange={(e) =>
+                      handleScheduleContentChange(index, e.target.value)
+                    }
                     placeholder="Descreva o conteúdo deste período..."
                     rows={2}
                     className="w-full px-4 py-2 border-2 border-foreground/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none"
@@ -500,7 +544,9 @@ export default function WorkshopFormModal({
 
         {/* Próximas Datas */}
         <div className="space-y-4 p-4 bg-accent/5 rounded-lg border-2 border-accent/20">
-          <h3 className="font-semibold text-lg text-foreground">Próximas Edições</h3>
+          <h3 className="font-semibold text-lg text-foreground">
+            Próximas Edições
+          </h3>
           <DynamicListField
             label="Datas Disponíveis"
             items={nextDates}
@@ -516,26 +562,34 @@ export default function WorkshopFormModal({
         {/* Features */}
         <div className="space-y-4 p-4 bg-accent/5 rounded-lg border-2 border-accent/20">
           <h3 className="font-semibold text-lg text-foreground">Inclusos</h3>
-          
+
           <div className="space-y-3">
             <label className="flex items-center gap-3 cursor-pointer">
               <input
                 type="checkbox"
                 checked={formData.certificate}
-                onChange={(e) => setFormData({ ...formData, certificate: e.target.checked })}
+                onChange={(e) =>
+                  setFormData({ ...formData, certificate: e.target.checked })
+                }
                 className="w-5 h-5 rounded border-2 border-accent text-accent focus:ring-accent"
               />
-              <span className="text-sm font-medium text-foreground">Certificado de participação</span>
+              <span className="text-sm font-medium text-foreground">
+                Certificado de participação
+              </span>
             </label>
 
             <label className="flex items-center gap-3 cursor-pointer">
               <input
                 type="checkbox"
                 checked={formData.materials}
-                onChange={(e) => setFormData({ ...formData, materials: e.target.checked })}
+                onChange={(e) =>
+                  setFormData({ ...formData, materials: e.target.checked })
+                }
                 className="w-5 h-5 rounded border-2 border-accent text-accent focus:ring-accent"
               />
-              <span className="text-sm font-medium text-foreground">Material didático incluso</span>
+              <span className="text-sm font-medium text-foreground">
+                Material didático incluso
+              </span>
             </label>
           </div>
         </div>

@@ -82,9 +82,7 @@ export default function MultipleImageUploadField({
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
 
-      {helpText && (
-        <p className="text-xs text-foreground/60">{helpText}</p>
-      )}
+      {helpText && <p className="text-xs text-foreground/60">{helpText}</p>}
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         {/* Imagens existentes */}
@@ -152,8 +150,7 @@ export default function MultipleImageUploadField({
             <Upload size={24} />
             <span className="text-xs font-medium">
               Adicionar
-              <br />
-              ({totalImages}/{maxImages})
+              <br />({totalImages}/{maxImages})
             </span>
           </button>
         )}

@@ -201,7 +201,9 @@ export default function BlogFormModal({
         imageUrl = await uploadToCloudinary(imageFile, 'blog');
       }
 
-      const authorName = post ? post.author : user?.displayName ?? user?.email ?? '';
+      const authorName = post
+        ? post.author
+        : (user?.displayName ?? user?.email ?? '');
       const authorUid = user?.uid ?? post?.authorUid ?? '';
 
       const postData = {
@@ -300,7 +302,9 @@ export default function BlogFormModal({
         <Input
           label="Categoria"
           value={formData.category}
-          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, category: e.target.value })
+          }
           error={errors.category}
           helpText="Ex: Técnicas, Receitas, História"
           required

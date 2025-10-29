@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import Button from '../../UI/Button';
 import Skeleton from '../../UI/Skeleton';
-import { UserCircle, LogOut, User } from 'lucide-react';
+import { UserCircle, LogOut, User, Search } from 'lucide-react';
 import { navItems } from './constants';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface User {
   displayName: string | null;
@@ -39,9 +41,22 @@ export default function MobileMenu({
   handleLogout,
   isAdmin,
 }: MobileMenuProps) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
+
   const menuItems = isAdmin
     ? [...navItems, { label: 'Admin', href: '/admin' }]
     : navItems;
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/produtos?search=${encodeURIComponent(searchQuery.trim())}`);
+      setOpen(false);
+      setSearchQuery('');
+    }
+  };
+
   const getInitials = (name: string) => {
     return name
       .split(' ')
@@ -56,6 +71,29 @@ export default function MobileMenu({
   return (
     <div id="mobile-menu" className="md:hidden mt-2 pb-4 px-4">
       <ul className="flex flex-col space-y-2 text-background">
+        {/* Search Bar */}
+        <li className="pb-2">
+          <form
+            onSubmit={handleSearch}
+            role="search"
+            aria-label="Pesquisar produtos"
+            className="relative"
+          >
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Pesquisar produtos..."
+              className="w-full px-4 py-2 pl-10 rounded-lg bg-background/10 border-2 border-background/30 text-background placeholder-background/60 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent"
+              aria-label="Campo de pesquisa"
+            />
+            <Search
+              size={20}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-background/60"
+            />
+          </form>
+        </li>
+
         {menuItems.map((item) => (
           <li key={item.href}>
             <Link
