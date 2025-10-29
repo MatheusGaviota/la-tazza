@@ -112,8 +112,6 @@ export async function deleteCloudinaryImage(publicId: string): Promise<void> {
     }
   } catch (error) {
     console.error('Erro ao deletar imagem:', error);
-    throw error instanceof Error
-      ? error
-      : new Error('Erro ao deletar imagem');
+    throw error instanceof Error ? error : new Error('Erro ao deletar imagem');
   }
 }

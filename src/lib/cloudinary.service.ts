@@ -84,7 +84,7 @@ export const uploadImage = async (
     }
 
     let fileToUpload: string;
-    
+
     if (file instanceof Buffer) {
       fileToUpload = `data:image/png;base64,${file.toString('base64')}`;
     } else {
