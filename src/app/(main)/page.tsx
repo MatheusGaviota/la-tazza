@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import Hero from '@/components/Products/Hero';
 import Carousel from '@/components/UI/Carousel';
 import ProductCard from '@/components/Cards/ProductCard';
@@ -6,6 +7,12 @@ import CourseCard from '@/components/Cards/CourseCard';
 import BlogCard from '@/components/Cards/BlogCard';
 import ReviewCard from '@/components/Cards/ReviewCard';
 import { ArrowRight } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Início',
+  description:
+    'Explore nossa seleção de cafés especiais premium, cursos profissionais de barista e descubra o universo do café com a La Tazza. Grãos selecionados, educação de qualidade e paixão pelo café.',
+};
 
 export default function Home() {
   // TODO: Remover dados mocados dos produtos e buscar de uma API/banco de dados

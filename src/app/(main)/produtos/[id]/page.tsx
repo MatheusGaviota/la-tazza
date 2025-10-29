@@ -44,6 +44,9 @@ export default function ProductDetailPage({
         setProduct(productData);
 
         if (productData) {
+          // Update page title for SEO
+          document.title = `${productData.title} | La Tazza`;
+
           // Buscar produtos relacionados (mesma categoria)
           const allProducts = await getProducts();
           const related = allProducts

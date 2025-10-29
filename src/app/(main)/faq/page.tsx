@@ -1,12 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronDown, Search, HelpCircle } from 'lucide-react';
 
 export default function FAQPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [categoryFilter, setCategoryFilter] = useState('Todas');
+
+  // Update page title for SEO
+  useEffect(() => {
+    document.title = 'Perguntas Frequentes (FAQ) | La Tazza';
+  }, []);
 
   const categories = [
     'Todas',

@@ -151,6 +151,11 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<TabType>('products');
   const [mounted, setMounted] = useState(false);
 
+  // Update page title for SEO
+  useEffect(() => {
+    document.title = 'Painel Administrativo | La Tazza';
+  }, []);
+
   useEffect(() => {
     setMounted(true);
   }, []);

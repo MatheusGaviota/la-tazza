@@ -68,10 +68,16 @@ export default function CoursePage() {
         const courseSnap = await getDoc(courseRef);
 
         if (courseSnap.exists()) {
-          setCourse({
+          const courseData = {
             id: courseSnap.id,
             ...courseSnap.data(),
-          } as CourseData);
+          } as CourseData;
+          setCourse(courseData);
+
+          // Update page title for SEO
+          if (courseData.title) {
+            document.title = `${courseData.title} | La Tazza`;
+          }
         } else {
           setCourse(null);
         }

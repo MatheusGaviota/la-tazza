@@ -1,8 +1,51 @@
 import { Poppins, Alumni_Sans } from 'next/font/google';
+import type { Metadata } from 'next';
 import './globals.css';
 import './high-contrast.css';
 import { AuthProvider } from '@/contexts/AuthContext';
 import AccessibilityTray from '@/components/UI/AccessibilityTray';
+
+export const metadata: Metadata = {
+  metadataBase: new URL('https://latazza.com.br'),
+  title: {
+    default: 'La Tazza - Cafés Especiais, Cursos e Workshops',
+    template: '%s | La Tazza',
+  },
+  description:
+    'Descubra cafés especiais de alta qualidade, cursos profissionais de barista e workshops exclusivos. A La Tazza oferece uma experiência completa no universo do café.',
+  keywords: [
+    'café especial',
+    'cafés premium',
+    'curso de barista',
+    'latte art',
+    'cafeteria',
+    'grãos de café',
+    'café gourmet',
+    'workshop de café',
+  ],
+  authors: [{ name: 'La Tazza' }],
+  creator: 'La Tazza',
+  publisher: 'La Tazza',
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'pt_BR',
+    url: 'https://latazza.com.br',
+    siteName: 'La Tazza',
+    title: 'La Tazza - Cafés Especiais, Cursos e Workshops',
+    description:
+      'Descubra cafés especiais de alta qualidade, cursos profissionais de barista e workshops exclusivos.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'La Tazza - Cafés Especiais, Cursos e Workshops',
+    description:
+      'Descubra cafés especiais de alta qualidade, cursos profissionais de barista e workshops exclusivos.',
+  },
+};
 
 const poppins = Poppins({
   variable: '--font-poppins',

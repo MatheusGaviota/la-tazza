@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
+import type { Metadata } from 'next';
 import ProductCard from '@/components/Cards/ProductCard';
 import { ProductFilters } from '@/components/Products';
 import {
@@ -38,6 +39,11 @@ export default function ProductsPage() {
     priceRange: [0, 200],
     inStockOnly: false,
   });
+
+  // Update page title for SEO
+  useEffect(() => {
+    document.title = 'Produtos - Cafés Especiais | La Tazza';
+  }, []);
 
   useEffect(() => {
     const fetchProducts = async () => {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Mail,
   Phone,
@@ -25,6 +25,11 @@ export default function ContatoPage() {
 
   const [enviando, setEnviando] = useState(false);
   const [enviado, setEnviado] = useState(false);
+
+  // Update page title for SEO
+  useEffect(() => {
+    document.title = 'Contato - Fale Conosco | La Tazza';
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<

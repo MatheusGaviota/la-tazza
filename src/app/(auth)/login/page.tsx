@@ -149,6 +149,13 @@ export default function LoginPage() {
     }
   }, [isAuthenticated, user, loading, router]);
 
+  // Update page title for SEO
+  useEffect(() => {
+    document.title = isSignup
+      ? 'Criar Conta | La Tazza'
+      : 'Login | La Tazza';
+  }, [isSignup]);
+
   // Animação do fundo: fade-in
   useEffect(() => {
     setBgOpacity(0.5);
