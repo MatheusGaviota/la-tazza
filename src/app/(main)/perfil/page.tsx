@@ -23,6 +23,7 @@ export default function ProfilePage() {
     userData,
     isSaving,
     isUploadingPhoto,
+    isSendingVerification,
     toast,
     deleteModal,
     handleSavePersonalInfo,
@@ -115,10 +116,11 @@ export default function ProfilePage() {
             onSave={handleSavePersonalInfo}
           />
           {user?.providerData[0]?.providerId !== 'google.com' && (
-            <SecurityCard 
+            <SecurityCard
               isEmailVerified={user?.emailVerified ?? false}
               onChangePassword={onChangePassword}
               onSendVerificationEmail={handleSendVerificationEmail}
+              isSendingVerification={isSendingVerification}
             />
           )}
           <PreferencesCard />

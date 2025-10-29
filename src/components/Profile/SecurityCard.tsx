@@ -14,12 +14,14 @@ interface SecurityCardProps {
   isEmailVerified: boolean;
   onChangePassword: (data: PasswordData) => void;
   onSendVerificationEmail: () => void;
+  isSendingVerification?: boolean;
 }
 
-export default function SecurityCard({ 
+export default function SecurityCard({
   isEmailVerified,
   onChangePassword,
-  onSendVerificationEmail 
+  onSendVerificationEmail,
+  isSendingVerification = false,
 }: SecurityCardProps) {
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [passwordData, setPasswordData] = useState<PasswordData>({
@@ -71,9 +73,13 @@ export default function SecurityCard({
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
             <p className="text-foreground/70 mb-1">
-              Status: {' '}
-              <span className={`font-semibold ${isEmailVerified ? 'text-green-600' : 'text-amber-600'}`}>
-                {isEmailVerified ? '✓ Email Verificado' : '⚠ Email Não Verificado'}
+              Status:{' '}
+              <span
+                className={`font-semibold ${isEmailVerified ? 'text-green-600' : 'text-amber-600'}`}
+              >
+                {isEmailVerified
+                  ? '✓ Email Verificado'
+                  : '⚠ Email Não Verificado'}
               </span>
             </p>
             {!isEmailVerified && (
@@ -84,8 +90,13 @@ export default function SecurityCard({
           </div>
           {!isEmailVerified && (
             <Button
-              text="Enviar Email de Verificação"
+              text={
+                isSendingVerification
+                  ? 'Enviando...'
+                  : 'Enviar Email de Verificação'
+              }
               onClick={onSendVerificationEmail}
+              disabled={isSendingVerification}
               variant="accent"
               className="w-full sm:w-auto text-center"
             />
