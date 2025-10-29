@@ -11,4 +11,6 @@ export { default as UsersManager } from './UsersManager';
 export { default as UserActionModal } from './UserActionModal';
 export { default as BaseFormModal } from './BaseFormModal';
 export { default as ImageUploadField } from './ImageUploadField';
+export { default as MultipleImageUploadField } from './MultipleImageUploadField';
 export { default as TextareaField } from './TextareaField';
+export { default as DynamicListField } from './DynamicListField';

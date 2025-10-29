@@ -8,6 +8,7 @@ import {
   deleteDoc,
   query,
   orderBy,
+  where,
   Timestamp,
 } from 'firebase/firestore';
 import { db, auth } from './firebase';
@@ -17,6 +18,8 @@ import type {
   Workshop,
   BlogPost,
   AdminUser,
+  Comment,
+  ProductReview,
 } from '@/types/admin.types';
 
 // ============================================================================
@@ -194,6 +197,21 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
   })) as BlogPost[];
 }
 
+export async function getPublishedBlogPosts(): Promise<BlogPost[]> {
+  const postsRef = collection(db, 'blog-posts');
+  const q = query(
+    postsRef,
+    where('published', '==', true),
+    orderBy('date', 'desc')
+  );
+  const snapshot = await getDocs(q);
+
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as BlogPost[];
+}
+
 export async function getBlogPost(id: string): Promise<BlogPost | null> {
   const docRef = doc(db, 'blog-posts', id);
   const docSnap = await getDoc(docRef);
@@ -208,11 +226,16 @@ export async function getBlogPostBySlug(
   slug: string
 ): Promise<BlogPost | null> {
   const postsRef = collection(db, 'blog-posts');
-  const snapshot = await getDocs(postsRef);
+  const q = query(
+    postsRef,
+    where('slug', '==', slug),
+    where('published', '==', true)
+  );
+  const snapshot = await getDocs(q);
 
-  const post = snapshot.docs.find((doc) => doc.data().slug === slug);
-  if (post) {
-    return { id: post.id, ...post.data() } as BlogPost;
+  if (!snapshot.empty) {
+    const doc = snapshot.docs[0];
+    return { id: doc.id, ...doc.data() } as BlogPost;
   }
   return null;
 }
@@ -241,8 +264,24 @@ export async function updateBlogPost(
 }
 
 export async function deleteBlogPost(id: string): Promise<void> {
-  const docRef = doc(db, 'blog-posts', id);
-  await deleteDoc(docRef);
+  try {
+    const token = await getAuthToken();
+    const response = await fetch(`/api/admin/blog-posts/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Erro ao deletar post');
+    }
+  } catch (error) {
+    console.error('Erro ao deletar post:', error);
+    throw error;
+  }
 }
 
 // ============================================================================
@@ -277,6 +316,29 @@ export async function getUsers(): Promise<AdminUser[]> {
   } catch (error) {
     console.error('Erro ao buscar usuários:', error);
     throw error;
+  }
+}
+
+export async function getUserByUid(uid: string): Promise<AdminUser | null> {
+  try {
+    // Endpoint público para obter dados públicos do usuário (nome e photoURL)
+    const response = await fetch(`/api/public/users/${uid}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      console.warn('getUserByUid: response not ok', response.status);
+      return null;
+    }
+
+    const data = await response.json();
+    return data.user || data;
+  } catch (error) {
+    console.error('Erro ao buscar usuário por UID:', error);
+    return null;
   }
 }
 
@@ -366,6 +428,179 @@ export async function toggleUserStatus(
     }
   } catch (error) {
     console.error('Erro ao atualizar status:', error);
+    throw error;
+  }
+}
+
+// ============================================================================
+// Comments CRUD
+// ============================================================================
+
+export async function getComments(postId: string): Promise<Comment[]> {
+  try {
+    const commentsRef = collection(db, 'comments');
+    const q = query(
+      commentsRef,
+      where('postId', '==', postId),
+      orderBy('createdAt', 'desc')
+    );
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: doc.data().createdAt?.toDate?.() || new Date(),
+    })) as Comment[];
+  } catch (error) {
+    console.error('Erro ao buscar comentários:', error);
+    // Se for erro de permissão ou índice, retornar array vazio ao invés de lançar erro
+    if (
+      error instanceof Error &&
+      (error.message.includes('permission') ||
+        error.message.includes('index') ||
+        error.message.includes('requires an index'))
+    ) {
+      console.warn(
+        'Retornando array vazio devido a erro de permissão/índice:',
+        error.message
+      );
+      return [];
+    }
+    throw error;
+  }
+}
+
+export async function addComment(
+  comment: Omit<Comment, 'id' | 'createdAt'>
+): Promise<string> {
+  try {
+    const token = await getAuthToken();
+    const response = await fetch('/api/comments', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(comment),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Erro ao adicionar comentário');
+    }
+
+    const data = await response.json();
+    return data.id;
+  } catch (error) {
+    console.error('Erro ao adicionar comentário:', error);
+    throw error;
+  }
+}
+
+export async function deleteComment(commentId: string): Promise<void> {
+  try {
+    const token = await getAuthToken();
+    const response = await fetch(`/api/comments/${commentId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Erro ao deletar comentário');
+    }
+  } catch (error) {
+    console.error('Erro ao deletar comentário:', error);
+    throw error;
+  }
+}
+
+// ============================================================================
+// Product Reviews CRUD
+// ============================================================================
+
+export async function getProductReviews(
+  productId: string
+): Promise<ProductReview[]> {
+  try {
+    const reviewsRef = collection(db, 'product-reviews');
+    const q = query(
+      reviewsRef,
+      where('productId', '==', productId),
+      orderBy('createdAt', 'desc')
+    );
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: doc.data().createdAt?.toDate?.() || new Date(),
+    })) as ProductReview[];
+  } catch (error) {
+    console.error('Erro ao buscar avaliações:', error);
+    if (
+      error instanceof Error &&
+      (error.message.includes('permission') ||
+        error.message.includes('index') ||
+        error.message.includes('requires an index'))
+    ) {
+      console.warn(
+        'Retornando array vazio devido a erro de permissão/índice:',
+        error.message
+      );
+      return [];
+    }
+    throw error;
+  }
+}
+
+export async function addProductReview(
+  review: Omit<ProductReview, 'id' | 'createdAt'>
+): Promise<string> {
+  try {
+    const token = await getAuthToken();
+    const response = await fetch('/api/reviews', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(review),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Erro ao adicionar avaliação');
+    }
+
+    const data = await response.json();
+    return data.id;
+  } catch (error) {
+    console.error('Erro ao adicionar avaliação:', error);
+    throw error;
+  }
+}
+
+export async function deleteProductReview(reviewId: string): Promise<void> {
+  try {
+    const token = await getAuthToken();
+    const response = await fetch(`/api/reviews/${reviewId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Erro ao deletar avaliação');
+    }
+  } catch (error) {
+    console.error('Erro ao deletar avaliação:', error);
     throw error;
   }
 }

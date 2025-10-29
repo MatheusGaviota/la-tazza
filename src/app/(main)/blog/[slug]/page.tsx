@@ -11,11 +11,17 @@ import {
   Facebook,
   Twitter,
   Linkedin,
-  MessageCircle,
   ChevronUp,
+  ChevronRight,
 } from 'lucide-react';
 import BlogCard from '@/components/Cards/BlogCard';
+import { CommentSection } from '@/components/Blog';
 import { useState, useEffect } from 'react';
+import Skeleton from '@/components/UI/Skeleton';
+import type { AdminUser } from '@/types/admin.types';
+import { getBlogPostBySlug, getPublishedBlogPosts } from '@/lib/admin.service';
+import type { BlogPost } from '@/types/admin.types';
+import { useAdmin } from '@/hooks';
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -23,30 +29,73 @@ interface BlogPostPageProps {
 
 export default function BlogPostPage({ params }: BlogPostPageProps) {
   const [slug, setSlug] = useState<string>('');
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [authorProfile, setAuthorProfile] = useState<AdminUser | null>(null);
+  const [loading, setLoading] = useState(true);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [activeSection, setActiveSection] = useState('');
+  const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
+  const { isAdmin } = useAdmin();
 
   useEffect(() => {
     params.then((resolvedParams) => setSlug(resolvedParams.slug));
   }, [params]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 400);
+    if (slug) {
+      const fetchPost = async () => {
+        try {
+          const fetchedPost = await getBlogPostBySlug(slug);
+          setPost(fetchedPost);
 
-      // Detectar seção ativa para o índice
-      const sections = document.querySelectorAll('h2[id]');
-      let current = '';
+          // Atualizar título da aba do navegador
+          if (fetchedPost?.title) {
+            document.title = `${fetchedPost.title} - La Tazza`;
+          }
 
-      sections.forEach((section) => {
-        const sectionTop = (section as HTMLElement).offsetTop;
-        if (window.scrollY >= sectionTop - 100) {
-          current = section.id;
+          // Se o post contiver um authorUid, buscar o perfil dinâmico do autor
+          if (fetchedPost?.authorUid) {
+            try {
+              const profile = await (await import('@/lib/admin.service')).getUserByUid(fetchedPost.authorUid);
+              setAuthorProfile(profile);
+            } catch (err) {
+              console.warn('Erro ao buscar perfil do autor:', err);
+              setAuthorProfile(null);
+            }
+          } else {
+            setAuthorProfile(null);
+          }
+        } catch (error) {
+          console.error('Erro ao buscar post:', error);
+        } finally {
+          setLoading(false);
         }
-      });
+      };
+      fetchPost();
+    }
+  }, [slug]);
 
-      setActiveSection(current);
+  useEffect(() => {
+    const fetchRelatedPosts = async () => {
+      try {
+        const allPosts = await getPublishedBlogPosts();
+        // Filtrar posts publicados, excluir o atual e pegar os 3 mais recentes
+        const filteredPosts = allPosts
+          .filter(p => p.id !== post?.id)
+          .slice(0, 3);
+        setRelatedPosts(filteredPosts);
+      } catch (error) {
+        console.error('Erro ao buscar posts relacionados:', error);
+        setRelatedPosts([]);
+      }
     };
+
+    if (post) {
+      fetchRelatedPosts();
+    }
+  }, [post]);
+
+  useEffect(() => {
+    const handleScroll = () => setShowScrollTop(window.scrollY > 400);
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -57,6 +106,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
   };
 
   const handleShare = async (platform: string) => {
+    if (!post) return;
     const url = window.location.href;
     const title = post.title;
 
@@ -85,151 +135,104 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
     }
   };
 
-  const tableOfContents = [
-    { id: 'introducao', title: 'Introdução à Arte em Latte' },
-    { id: 'equipamentos', title: 'Equipamentos Essenciais' },
-    { id: 'tecnica-leite', title: 'A Técnica do Leite Perfeito' },
-    { id: 'padroes-basicos', title: 'Padrões Básicos para Iniciantes' },
-    { id: 'dicas-pratica', title: 'Dicas para Praticar' },
-    { id: 'erros-comuns', title: 'Erros Comuns e Como Evitá-los' },
-    { id: 'conclusao', title: 'Conclusão' },
-  ];
+  // removed table of contents — use inline anchors in content if needed
 
-  // TODO: Buscar post do banco de dados/API baseado no slug
-  const post = {
-    slug,
-    title: 'Arte em Latte: Guia Completo para Iniciantes',
-    excerpt:
-      'Descubra os segredos por trás das belas criações de latte art e aprenda as técnicas fundamentais para começar sua jornada.',
-    imageUrl:
-      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761076352/Como_Fazer_Arte_no_Caf%C3%A9_lxe5fm.png',
-    author: 'Maria Santos',
-    authorImage:
-      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-    date: '15 Out 2025',
-    readTime: '8 min',
-    category: 'Técnicas',
-    content: `
-      <h2 id="introducao">Introdução à Arte em Latte</h2>
-      <p>A arte em latte, ou latte art, é uma das técnicas mais admiradas no mundo do café especial. Ela combina precisão técnica com criatividade artística, transformando uma xícara de café em uma verdadeira obra de arte. Neste guia completo, você aprenderá tudo o que precisa para começar sua jornada no fascinante mundo da latte art.</p>
+  if (loading) {
+    return (
+      <main className="min-h-screen">
+        {/* Hero skeleton */}
+        <div className="w-full bg-foreground">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="relative w-full aspect-[21/9] md:aspect-[21/6] overflow-hidden">
+              <Skeleton className="absolute inset-0" />
+            </div>
+          </div>
+        </div>
 
-      <h2 id="equipamentos">Equipamentos Essenciais</h2>
-      <p>Antes de começar a praticar, é fundamental ter os equipamentos adequados. Você precisará de:</p>
-      <ul>
-        <li><strong>Máquina de espresso</strong> - Para extrair o café e vaporizar o leite</li>
-        <li><strong>Jarra de leite (pitcher)</strong> - Preferencialmente de aço inoxidável, com capacidade entre 350ml e 600ml</li>
-        <li><strong>Xícaras apropriadas</strong> - Formato adequado para facilitar a criação dos desenhos</li>
-        <li><strong>Termômetro</strong> - Para controlar a temperatura do leite (opcional, mas recomendado para iniciantes)</li>
-      </ul>
+        {/* Article skeleton */}
+        <article className="w-full max-w-[1400px] mx-auto px-4 py-12">
+          <div className="max-w-3xl mx-auto">
+            <div className="mb-4">
+              <Skeleton className="w-28 h-6" />
+            </div>
 
-      <h2 id="tecnica-leite">A Técnica do Leite Perfeito</h2>
-      <p>O segredo de uma boa latte art está no leite. Ele precisa ter a textura ideal - nem muito aerado, nem muito denso. A microespuma perfeita deve ter uma consistência aveludada e brilhante, semelhante à tinta branca.</p>
-      
-      <h3>Passo a passo para vaporizar o leite:</h3>
-      <ol>
-        <li>Comece com leite gelado (4-6°C) em uma jarra limpa</li>
-        <li>Posicione o bico vaporizador logo abaixo da superfície do leite</li>
-        <li>Abra o vapor completamente e crie um vórtex, girando o leite</li>
-        <li>Quando atingir cerca de 60-65°C, feche o vapor</li>
-        <li>Bata levemente a jarra na bancada para eliminar bolhas grandes</li>
-        <li>Gire a jarra para manter a textura homogênea</li>
-      </ol>
+            <div className="mb-6">
+              <Skeleton className="w-full h-14" />
+            </div>
 
-      <h2 id="padroes-basicos">Padrões Básicos para Iniciantes</h2>
-      <p>Comece praticando estes três padrões fundamentais:</p>
+            <div className="flex items-center gap-4 mb-8 pb-8 border-b-2 border-accent/20">
+              <Skeleton className="w-36 h-6" />
+            </div>
 
-      <h3>1. Coração (Heart)</h3>
-      <p>O coração é o padrão mais básico e fundamental. Ele ensina o controle do fluxo e a altura adequada da jarra. Para criar um coração:</p>
-      <ul>
-        <li>Comece despejando o leite no centro da xícara de uma altura de cerca de 10cm</li>
-        <li>Quando a xícara estiver quase cheia, aproxime a jarra da superfície</li>
-        <li>Aumente o fluxo e desenhe um círculo branco</li>
-        <li>Puxe a jarra para trás, cortando o círculo e formando o coração</li>
-      </ul>
+            <div className="flex items-center gap-3 mb-8">
+              <Skeleton className="w-24 h-8" />
+              <Skeleton className="w-8 h-8 rounded-full" />
+              <Skeleton className="w-8 h-8 rounded-full" />
+              <Skeleton className="w-8 h-8 rounded-full" />
+            </div>
 
-      <h3>2. Tulipa (Tulip)</h3>
-      <p>A tulipa é uma progressão natural do coração. Ela requer mais controle e timing.</p>
+            <div className="space-y-4">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <Skeleton key={i} className="w-full h-6" />
+              ))}
+            </div>
 
-      <h3>3. Rosetta</h3>
-      <p>A rosetta é considerada o padrão mais clássico e elegante da latte art. Dominar a rosetta demonstra verdadeira habilidade técnica.</p>
+            <div className="mt-12 p-6 bg-accent/5 border-2 border-accent/20 rounded-lg">
+              <div className="flex items-center gap-4">
+                <Skeleton className="w-16 h-16 rounded-full" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="w-48 h-6" />
+                  <Skeleton className="w-32 h-4" />
+                </div>
+              </div>
+            </div>
+          </div>
 
-      <h2 id="dicas-pratica">Dicas para Praticar</h2>
-      <ul>
-        <li><strong>Pratique regularmente</strong> - A consistência é fundamental para desenvolver a memória muscular</li>
-        <li><strong>Comece devagar</strong> - Não se apresse para fazer padrões complexos antes de dominar os básicos</li>
-        <li><strong>Filme suas tentativas</strong> - Assistir ao vídeo ajuda a identificar erros</li>
-        <li><strong>Use água e detergente</strong> - Para economizar café e leite durante a prática</li>
-        <li><strong>Mantenha a calma</strong> - A latte art requer paciência e persistência</li>
-      </ul>
+          {/* Related posts skeleton */}
+          <div className="mt-20">
+            <div className="max-w-[1400px] mx-auto">
+              <h2 className="sr-only">Você também pode gostar</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="space-y-3">
+                    <Skeleton className="w-full h-40 rounded-lg" />
+                    <Skeleton className="w-full h-6" />
+                    <Skeleton className="w-3/4 h-4" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </article>
+      </main>
+    );
+  }
 
-      <h2 id="erros-comuns">Erros Comuns e Como Evitá-los</h2>
-      <p><strong>Leite muito aerado:</strong> Reduz a incorporação de ar durante a vaporização. O leite deve ficar brilhante e sedoso, não espumoso.</p>
-      <p><strong>Altura inadequada:</strong> A distância da jarra até a xícara é crucial. Muito alto cria instabilidade, muito baixo não permite controle.</p>
-      <p><strong>Fluxo inconsistente:</strong> Pratique manter um fluxo constante e controlado do leite.</p>
-
-      <h2 id="conclusao">Conclusão</h2>
-      <p>A arte em latte é uma habilidade que se desenvolve com o tempo e a prática constante. Não desanime se suas primeiras tentativas não saírem perfeitas - mesmo os baristas profissionais levaram tempo para dominar essas técnicas. O mais importante é se divertir durante o processo e celebrar cada pequeno progresso.</p>
-      
-      <p>Lembre-se: cada xícara é uma nova oportunidade de aprender e melhorar. Continue praticando, seja paciente consigo mesmo e, acima de tudo, aprecie a jornada de se tornar um artista do café!</p>
-    `,
-  };
-
-  // Posts relacionados
-  const relatedPosts = [
-    {
-      slug: 'metodos-de-extracao',
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-      title: 'Métodos de Extração: V60 vs Chemex',
-      excerpt:
-        'Compare os métodos de extração mais populares e descubra qual se adequa melhor ao seu paladar.',
-      author: 'Ana Costa',
-      date: '10 Out 2025',
-      readTime: '6 min',
-      category: 'Técnicas',
-    },
-    {
-      slug: 'escolhendo-moedor-ideal',
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-      title: 'Como Escolher o Moedor Ideal',
-      excerpt:
-        'Guia completo sobre moedores de café, desde os modelos manuais até os elétricos profissionais.',
-      author: 'Maria Santos',
-      date: '5 Out 2025',
-      readTime: '7 min',
-      category: 'Equipamentos',
-    },
-    {
-      slug: 'receitas-de-cafe-gelado',
-      imageUrl:
-        'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-      title: '5 Receitas Refrescantes de Café Gelado',
-      excerpt:
-        'Receitas práticas e deliciosas para os dias quentes, do clássico cold brew às criações mais modernas.',
-      author: 'Pedro Oliveira',
-      date: '8 Out 2025',
-      readTime: '10 min',
-      category: 'Receitas',
-    },
-  ];
-
-  return (
-    <main className="min-h-screen">
-      {/* Back Button */}
-      <div className="w-full bg-background border-b-2 border-accent/20 sticky top-[104px] z-40">
-        <div className="max-w-[1400px] mx-auto px-4 py-4 flex items-center">
+  if (!post) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="font-alumni text-4xl font-bold text-foreground mb-4">
+            Post não encontrado
+          </h1>
+          <p className="text-foreground/60 mb-6">
+            O post que você está procurando não existe ou não está disponível.
+          </p>
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 text-foreground hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent rounded"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-background rounded-lg font-medium hover:bg-accent/90 transition-all focus:outline-none focus:ring-2 focus:ring-accent"
           >
             <ArrowLeft size={20} aria-hidden="true" />
             Voltar para o blog
           </Link>
         </div>
-      </div>
+      </main>
+    );
+  }
 
-      {/* Hero Image */}
+  return (
+    <main className="min-h-screen">
+      {/* Hero Image + Breadcrumb overlay */}
       <div className="w-full bg-foreground">
         <div className="max-w-[1400px] mx-auto">
           <div className="relative w-full aspect-[21/9] md:aspect-[21/6] overflow-hidden">
@@ -242,6 +245,28 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
               priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-foreground via-foreground/40 to-transparent" />
+
+            {/* Breadcrumb fixa sobre o banner */}
+            <div className="absolute top-6 left-0 right-0 z-30">
+              <div className="max-w-[1400px] mx-auto px-4">
+                <nav
+                  aria-label="Breadcrumb"
+                  className="inline-flex items-center gap-2 text-sm text-foreground/70 bg-background/60 backdrop-blur-sm px-3 py-1 rounded"
+                >
+                  <Link href="/" className="hover:text-accent transition-colors">
+                    Início
+                  </Link>
+                  <ChevronRight size={16} />
+                  <Link href="/blog" className="hover:text-accent transition-colors">
+                    Blog
+                  </Link>
+                  <ChevronRight size={16} />
+                  <span className="text-foreground font-medium truncate max-w-[600px]">
+                    {post.title}
+                  </span>
+                </nav>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -264,17 +289,41 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
           {/* Meta Info */}
           <div className="flex flex-wrap items-center gap-4 text-foreground/60 mb-8 pb-8 border-b-2 border-accent/20">
             <div className="flex items-center gap-2">
-              <div className="relative w-10 h-10 rounded-full overflow-hidden bg-accent">
-                <Image
-                  src={post.authorImage}
-                  alt={post.author}
-                  fill
-                  className="object-cover"
-                />
-              </div>
+              {/* Author avatar: use photo when available, otherwise initials (same style as navbar) */}
+              {authorProfile?.photoURL ? (
+                <div className="relative w-10 h-10 rounded-full overflow-hidden bg-accent flex-shrink-0">
+                  <Image
+                    src={authorProfile.photoURL}
+                    alt={authorProfile.displayName ?? post.author}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              ) : post.authorPhoto ? (
+                <div className="relative w-10 h-10 rounded-full overflow-hidden bg-accent flex-shrink-0">
+                  <Image
+                    src={post.authorPhoto}
+                    alt={post.author}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-background border-2 border-accent flex items-center justify-center">
+                  <span className="text-sm font-bold text-accent">{
+                    (authorProfile?.displayName ?? post.author)
+                      .split(' ')
+                      .map((n) => n[0])
+                      .join('')
+                      .toUpperCase()
+                      .slice(0, 2)
+                  }</span>
+                </div>
+              )}
+
               <span className="flex items-center gap-1 font-medium text-foreground">
                 <User size={14} aria-hidden="true" />
-                {post.author}
+                {authorProfile?.displayName ?? post.author}
               </span>
             </div>
             <span className="flex items-center gap-1">
@@ -322,30 +371,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
             </button>
           </div>
 
-          {/* Table of Contents */}
-          <aside className="mb-8 p-6 bg-accent/5 border-2 border-accent/20 rounded-lg">
-            <h3 className="font-alumni text-xl font-bold text-foreground mb-4">
-              Neste Artigo
-            </h3>
-            <nav>
-              <ul className="space-y-2">
-                {tableOfContents.map((item) => (
-                  <li key={item.id}>
-                    <a
-                      href={`#${item.id}`}
-                      className={`block text-sm py-1 px-2 rounded transition-all hover:bg-accent/10 hover:text-accent ${
-                        activeSection === item.id
-                          ? 'text-accent font-medium bg-accent/10'
-                          : 'text-foreground/70'
-                      }`}
-                    >
-                      {item.title}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </aside>
+          {/* Table of Contents removed — anchors are available in content if present */}
 
           {/* Article Body */}
           <div
@@ -364,158 +390,82 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 
           {/* Author Bio */}
           <div className="mt-12 p-6 bg-accent/5 border-2 border-accent/20 rounded-lg">
-            <div className="flex items-start gap-4">
-              <div className="relative w-16 h-16 rounded-full overflow-hidden bg-accent flex-shrink-0">
-                <Image
-                  src={post.authorImage}
-                  alt={post.author}
-                  fill
-                  className="object-cover"
-                />
-              </div>
+            <div className="flex items-center gap-4">
+              {authorProfile?.photoURL ? (
+                <div className="relative w-16 h-16 rounded-full overflow-hidden bg-accent flex-shrink-0">
+                  <Image
+                    src={authorProfile.photoURL}
+                    alt={authorProfile.displayName ?? post.author}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              ) : post.authorPhoto ? (
+                <div className="relative w-16 h-16 rounded-full overflow-hidden bg-accent flex-shrink-0">
+                  <Image
+                    src={post.authorPhoto}
+                    alt={post.author}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-background border-2 border-accent flex items-center justify-center flex-shrink-0">
+                  <span className="text-3xl font-bold text-accent">{
+                    (authorProfile?.displayName ?? post.author)
+                      .split(' ')
+                      .map((n) => n[0])
+                      .join('')
+                      .toUpperCase()
+                      .slice(0, 2)
+                  }</span>
+                </div>
+              )}
+
               <div>
-                <h3 className="font-alumni text-2xl font-bold text-foreground mb-2">
-                  {post.author}
+                <h3 className="font-alumni text-2xl font-bold text-foreground">
+                  {authorProfile?.displayName ?? post.author}
                 </h3>
-                <p className="text-foreground/70 text-sm leading-relaxed">
-                  Barista profissional com mais de 10 anos de experiência no
-                  mundo do café especial. Apaixonada por compartilhar
-                  conhecimento e ajudar pessoas a descobrirem a arte do café.
+                <p className="text-sm text-foreground/70 mt-1">
+                  Um dos administradores do nosso site.
                 </p>
               </div>
             </div>
           </div>
 
           {/* Comments Section */}
-          <div className="mt-12 p-6 bg-background border-2 border-accent/20 rounded-lg">
-            <div className="flex items-center gap-2 mb-6">
-              <MessageCircle size={24} className="text-accent" />
-              <h3 className="font-alumni text-2xl font-bold text-foreground">
-                Comentários (3)
-              </h3>
-            </div>
-
-            {/* Comment Form */}
-            <form className="mb-8">
-              <textarea
-                placeholder="Deixe seu comentário..."
-                rows={4}
-                className="w-full p-4 rounded-lg border-2 border-accent/20 bg-background text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all resize-none"
-                aria-label="Escreva seu comentário"
-              />
-              <div className="flex justify-end mt-3">
-                <button
-                  type="submit"
-                  className="px-6 py-2.5 bg-accent text-background rounded-lg font-medium hover:bg-accent/90 transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0"
-                >
-                  Publicar Comentário
-                </button>
-              </div>
-            </form>
-
-            {/* Sample Comments */}
-            <div className="space-y-6">
-              <div className="flex gap-4">
-                <div className="relative w-10 h-10 rounded-full overflow-hidden bg-accent flex-shrink-0">
-                  <Image
-                    src="https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png"
-                    alt="Carlos Silva"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="font-semibold text-foreground">
-                      Carlos Silva
-                    </span>
-                    <span className="text-xs text-foreground/60">
-                      há 2 dias
-                    </span>
-                  </div>
-                  <p className="text-foreground/80 text-sm leading-relaxed">
-                    Excelente artigo! Comecei a praticar latte art há algumas
-                    semanas e essas dicas foram muito úteis. Principalmente
-                    sobre a temperatura do leite, fazia tudo errado!
-                  </p>
-                  <button className="text-sm text-accent hover:underline mt-2">
-                    Responder
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="relative w-10 h-10 rounded-full overflow-hidden bg-accent flex-shrink-0">
-                  <Image
-                    src="https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png"
-                    alt="Beatriz Santos"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="font-semibold text-foreground">
-                      Beatriz Santos
-                    </span>
-                    <span className="text-xs text-foreground/60">
-                      há 5 dias
-                    </span>
-                  </div>
-                  <p className="text-foreground/80 text-sm leading-relaxed">
-                    Muito bom! Vou compartilhar com os meus alunos do curso de
-                    barista. Conteúdo didático e bem explicado.
-                  </p>
-                  <button className="text-sm text-accent hover:underline mt-2">
-                    Responder
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="relative w-10 h-10 rounded-full overflow-hidden bg-accent flex-shrink-0">
-                  <Image
-                    src="https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png"
-                    alt="Rafael Lima"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="font-semibold text-foreground">
-                      Rafael Lima
-                    </span>
-                    <span className="text-xs text-foreground/60">
-                      há 1 semana
-                    </span>
-                  </div>
-                  <p className="text-foreground/80 text-sm leading-relaxed">
-                    A dica de usar água e detergente para treinar é genial! Vou
-                    economizar muito café e leite praticando. Valeu!
-                  </p>
-                  <button className="text-sm text-accent hover:underline mt-2">
-                    Responder
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <CommentSection
+            postId={post.id}
+            postAuthorUid={post.authorUid}
+            isAdmin={isAdmin}
+          />
         </div>
 
         {/* Related Posts */}
-        <div className="mt-20">
-          <div className="max-w-[1400px] mx-auto">
-            <h2 className="font-alumni text-3xl sm:text-4xl font-bold text-foreground mb-8 text-center">
-              Você também pode gostar
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedPosts.map((relatedPost) => (
-                <BlogCard key={relatedPost.slug} {...relatedPost} />
-              ))}
+        {relatedPosts.length > 0 && (
+          <div className="mt-20">
+            <div className="max-w-[1400px] mx-auto">
+              <h2 className="font-alumni text-3xl sm:text-4xl font-bold text-foreground mb-8 text-center">
+                Você também pode gostar
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {relatedPosts.map((relatedPost) => (
+                  <BlogCard
+                    key={relatedPost.id}
+                    slug={relatedPost.slug}
+                    imageUrl={relatedPost.imageUrl}
+                    title={relatedPost.title}
+                    excerpt={relatedPost.excerpt}
+                    author={relatedPost.author}
+                    date={relatedPost.date}
+                    readTime={relatedPost.readTime}
+                    category={relatedPost.category}
+                  />
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </article>
 
       {/* Scroll to Top Button */}

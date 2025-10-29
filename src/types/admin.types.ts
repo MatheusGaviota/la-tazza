@@ -6,10 +6,25 @@ export interface Product {
   id: string;
   title: string;
   description: string;
+  fullDescription?: string;
   price: number;
   category: string;
   imageUrl: string;
+  images?: string[];
+  origin?: string;
+  roast?: string;
+  weight?: string;
   stock?: number;
+  inStock?: boolean;
+  rating?: number;
+  reviews?: number;
+  highlights?: string[];
+  preparation?: string[];
+  nutrients?: {
+    cafeína?: string;
+    calorias?: string;
+    acidez?: string;
+  };
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -56,6 +71,8 @@ export interface BlogPost {
   excerpt: string;
   content: string;
   author: string;
+  authorPhoto?: string;
+  authorUid?: string;
   date: string;
   readTime: string;
   category: string;
@@ -63,6 +80,29 @@ export interface BlogPost {
   published: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface Comment {
+  id: string;
+  postId: string;
+  userId: string;
+  userName: string;
+  userPhoto?: string;
+  content: string;
+  createdAt: Date;
+  authorUid?: string;
+}
+
+export interface ProductReview {
+  id: string;
+  productId: string;
+  userId: string;
+  userName: string;
+  userPhoto?: string;
+  rating: number;
+  content: string;
+  createdAt: Date;
+  authorUid?: string;
 }
 
 export interface AdminUser {

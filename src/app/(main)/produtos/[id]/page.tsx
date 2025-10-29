@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, use } from 'react';
+import { useState, use, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import AddToCartButton from '@/components/Cart/AddToCartButton';
@@ -14,155 +14,10 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import ProductCard from '@/components/Cards/ProductCard';
-
-// TODO: Remover dados mocados e buscar de uma API/banco de dados
-const mockProducts = [
-  {
-    id: '1',
-    imageUrl:
-      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-    title: 'Expresso Masterpiece',
-    description:
-      'Blend exclusivo de grãos arábica para um café intenso e encorpado.',
-    price: 45.9,
-    category: 'Café Especial',
-    origin: 'Brasil',
-    roast: 'Escuro',
-    inStock: true,
-    rating: 4.8,
-    reviews: 124,
-    weight: '500g',
-    fullDescription:
-      'O Expresso Masterpiece é um blend exclusivo de grãos arábica selecionados das melhores plantações do Brasil. Com um perfil de torra escura, este café oferece notas intensas de chocolate amargo, caramelo e nozes. Perfeito para espressos intensos e encorpados, com crema densa e aromática. Cada xícara proporciona uma experiência sensorial completa, ideal para os apaixonados por café.',
-    highlights: [
-      'Blend exclusivo de grãos selecionados',
-      'Torra escura - Corpo intenso',
-      'Notas de chocolate e caramelo',
-      'Crema densa e duradoura',
-      'Origem: Brasil',
-      'Peso: 500g',
-    ],
-    preparation: [
-      'Máquina de Espresso',
-      'Coador de Metal',
-      'Prensa Francesa',
-      'Moka',
-    ],
-    nutrients: {
-      cafeína: '95mg por xícara',
-      calorias: '2 kcal',
-      acidez: 'Baixa',
-    },
-  },
-  {
-    id: '2',
-    imageUrl:
-      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-    title: 'Blend Suave',
-    description: 'Combinação equilibrada para um café suave e aromático.',
-    price: 39.9,
-    category: 'Café Especial',
-    origin: 'Colômbia',
-    roast: 'Médio',
-    inStock: true,
-    rating: 4.6,
-    reviews: 98,
-    weight: '500g',
-    fullDescription:
-      'Blend Suave é uma combinação equilibrada de grãos de diferentes regiões, criada para oferecer uma experiência suave e aromática. Com torra média, este café apresenta um perfil versátil, adequado para qualquer método de preparo. Notas de frutas vermelhas e mel complementam a doçura natural dos grãos.',
-    highlights: [
-      'Blend equilibrado e versátil',
-      'Torra média - Sabor balanceado',
-      'Notas de frutas vermelhas',
-      'Adequado para todos os métodos',
-      'Origem: Colômbia',
-      'Peso: 500g',
-    ],
-    preparation: [
-      'Máquina de Espresso',
-      'Coador de Metal',
-      'Prensa Francesa',
-      'Pour Over',
-    ],
-    nutrients: {
-      cafeína: '85mg por xícara',
-      calorias: '2 kcal',
-      acidez: 'Média',
-    },
-  },
-  {
-    id: '3',
-    imageUrl:
-      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-    title: 'Origens Premium',
-    description: 'Seleção de grãos de origem única para paladares exigentes.',
-    price: 59.9,
-    category: 'Café Premium',
-    origin: 'Etiópia',
-    roast: 'Médio',
-    inStock: true,
-    rating: 4.9,
-    reviews: 87,
-    weight: '500g',
-    fullDescription:
-      'Origens Premium oferece uma seleção de grãos de origem única das montanhas da Etiópia. Este café é conhecido por seu perfil floral e frutado, com notas de blueberry e jazz floral. A torra média realça os sabores complexos naturais dos grãos, oferecendo uma experiência premium para conhecedores.',
-    highlights: [
-      'Grãos de origem única',
-      'Torra média - Notas florais',
-      'Sabor complexo e sofisticado',
-      'Origem: Etiópia',
-      'Peso: 500g',
-      'Para paladares exigentes',
-    ],
-    preparation: [
-      'Pour Over',
-      'Prensa Francesa',
-      'Coador de Metal',
-      'Aeropress',
-    ],
-    nutrients: {
-      cafeína: '80mg por xícara',
-      calorias: '2 kcal',
-      acidez: 'Alta - Doce',
-    },
-  },
-  {
-    id: '4',
-    imageUrl:
-      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-    title: 'Café Orgânico',
-    description: 'Café cultivado de forma sustentável, sem agrotóxicos.',
-    price: 52.9,
-    category: 'Café Orgânico',
-    origin: 'Peru',
-    roast: 'Claro',
-    inStock: true,
-    rating: 4.7,
-    reviews: 76,
-    weight: '500g',
-    fullDescription:
-      'Café Orgânico é cultivado de forma sustentável no Peru, sem uso de agrotóxicos ou pesticidas. A torra clara preserva os sabores naturais do grão, com notas leves de chocolate, caramelo e uma acidez agradável. Perfeito para quem busca uma opção responsável e saudável.',
-    highlights: [
-      'Certificado orgânico',
-      'Cultivo sustentável',
-      'Sem agrotóxicos',
-      'Torra clara - Sabor natural',
-      'Origem: Peru',
-      'Peso: 500g',
-    ],
-    preparation: [
-      'Pour Over',
-      'Coador de Metal',
-      'Aeropress',
-      'Máquina de Espresso',
-    ],
-    nutrients: {
-      cafeína: '75mg por xícara',
-      calorias: '2 kcal',
-      acidez: 'Média-Alta',
-    },
-  },
-];
+import { ProductReviewSection } from '@/components/Products';
+import { getProduct, getProducts } from '@/lib/admin.service';
+import { Product } from '@/types/admin.types';
+import { useAdmin } from '@/hooks';
 
 export default function ProductDetailPage({
   params,
@@ -170,21 +25,60 @@ export default function ProductDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const { isAdmin } = useAdmin();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
 
-  // Encontrar produto
-  const product = useMemo(() => mockProducts.find((p) => p.id === id), [id]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const productData = await getProduct(id);
+        setProduct(productData);
 
-  // Produtos relacionados (mesma categoria, excluindo o atual)
-  const relatedProducts = useMemo(
-    () =>
-      mockProducts
-        .filter((p) => p.category === product?.category && p.id !== product?.id)
-        .slice(0, 4),
-    [product]
-  );
+        if (productData) {
+          // Buscar produtos relacionados (mesma categoria)
+          const allProducts = await getProducts();
+          const related = allProducts
+            .filter(
+              (p) =>
+                p.category === productData.category && p.id !== productData.id
+            )
+            .slice(0, 4);
+          setRelatedProducts(related);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar produto:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  // Array de imagens (usar as múltiplas imagens ou a principal)
+  const images = product?.images && product.images.length > 0 
+    ? product.images 
+    : product?.imageUrl 
+    ? [product.imageUrl] 
+    : [];
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-accent border-r-transparent mb-4" />
+          <p className="text-foreground/70">Carregando produto...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -207,8 +101,12 @@ export default function ProductDetailPage({
     );
   }
 
-  // Array de imagens (simulando múltiplas imagens do mesmo produto)
-  const images = [product.imageUrl, product.imageUrl, product.imageUrl];
+  // Array de imagens vazio - fallback já está acima
+  const rating = product?.rating || 0;
+  const reviews = product?.reviews || 0;
+  const highlights = product?.highlights || [];
+  const preparation = product?.preparation || [];
+  const nutrients = product?.nutrients || {};
 
   return (
     <div className="min-h-screen">
@@ -232,38 +130,46 @@ export default function ProductDetailPage({
           <div className="flex flex-col gap-4">
             {/* Imagem Principal */}
             <div className="relative w-full aspect-square rounded-xl overflow-hidden border-2 border-foreground bg-accent/5">
-              <Image
-                src={images[selectedImage]}
-                alt={product.title}
-                fill
-                className="object-cover"
-                priority
-              />
+              {images.length > 0 ? (
+                <Image
+                  src={images[selectedImage]}
+                  alt={product.title}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-foreground/30">
+                  Sem imagem
+                </div>
+              )}
             </div>
 
             {/* Thumbnails */}
-            <div className="flex gap-3">
-              {images.map((image, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedImage(index)}
-                  className={`relative w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
-                    selectedImage === index
-                      ? 'border-accent'
-                      : 'border-foreground/20 hover:border-foreground/40'
-                  }`}
-                  aria-label={`Ver imagem ${index + 1}`}
-                  aria-pressed={selectedImage === index}
-                >
-                  <Image
-                    src={image}
-                    alt={`${product.title} - Imagem ${index + 1}`}
-                    fill
-                    className="object-cover"
-                  />
-                </button>
-              ))}
-            </div>
+            {images.length > 1 && (
+              <div className="flex gap-3">
+                {images.map((image, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedImage(index)}
+                    className={`relative w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                      selectedImage === index
+                        ? 'border-accent'
+                        : 'border-foreground/20 hover:border-foreground/40'
+                    }`}
+                    aria-label={`Ver imagem ${index + 1}`}
+                    aria-pressed={selectedImage === index}
+                  >
+                    <Image
+                      src={image}
+                      alt={`${product.title} - Imagem ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Informações do Produto */}
@@ -329,20 +235,23 @@ export default function ProductDetailPage({
                     key={i}
                     size={20}
                     className={
-                      i < Math.round(product.rating)
+                      i < Math.round(rating)
                         ? 'fill-yellow-500 text-yellow-500'
                         : 'text-foreground/20'
                     }
                   />
                 ))}
               </div>
-              <span className="font-semibold text-foreground">
-                {product.rating}
-              </span>
-              <span className="text-foreground/70">
-                ({product.reviews}{' '}
-                {product.reviews === 1 ? 'avaliação' : 'avaliações'})
-              </span>
+              {rating > 0 && (
+                <>
+                  <span className="font-semibold text-foreground">
+                    {rating}
+                  </span>
+                  <span className="text-foreground/70">
+                    ({reviews} {reviews === 1 ? 'avaliação' : 'avaliações'})
+                  </span>
+                </>
+              )}
             </div>
 
             {/* Preço */}
@@ -351,9 +260,11 @@ export default function ProductDetailPage({
                 <span className="font-alumni text-5xl font-bold text-accent">
                   R$ {product.price.toFixed(2)}
                 </span>
-                <span className="text-lg text-foreground/60">
-                  por {product.weight}
-                </span>
+                {product.weight && (
+                  <span className="text-lg text-foreground/60">
+                    por {product.weight}
+                  </span>
+                )}
               </div>
 
               {/* Quantidade e Carrinho */}
@@ -431,29 +342,31 @@ export default function ProductDetailPage({
                   7 dias de garantia
                 </p>
               </div>
-            </div>
-
             {/* Características do Produto */}
-            <div className="space-y-3">
-              <h3 className="font-semibold text-foreground">
-                Características:
-              </h3>
-              <ul className="space-y-2">
-                {product.highlights.map((highlight, index) => (
-                  <li
-                    key={index}
-                    className="flex items-start gap-3 text-foreground/80"
-                  >
-                    <span className="text-accent font-bold mt-1">✓</span>
-                    <span>{highlight}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {highlights.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="font-semibold text-foreground">
+                  Características:
+                </h3>
+                <ul className="space-y-2">
+                  {highlights.map((highlight, index) => (
+                    <li
+                      key={index}
+                      className="flex items-start gap-3 text-foreground/80"
+                    >
+                      <span className="text-accent font-bold mt-1">✓</span>
+                      <span>{highlight}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
+      </div>
 
-        {/* Abas de Informações */}
+      {/* Abas de Informações */}
+      <div className="max-w-[1400px] mx-auto">
         <div className="mt-16 border-t-2 border-foreground/10 pt-12">
           <div className="space-y-8">
             {/* Descrição Completa */}
@@ -462,47 +375,68 @@ export default function ProductDetailPage({
                 Sobre o Produto
               </h2>
               <p className="text-foreground/80 leading-relaxed mb-6">
-                {product.fullDescription}
+                {product.fullDescription || product.description}
               </p>
 
               {/* Métodos de Preparação */}
-              <div className="mt-8">
-                <h3 className="font-semibold text-lg text-foreground mb-3">
-                  Métodos de Preparação Recomendados:
-                </h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {product.preparation.map((method) => (
-                    <div
-                      key={method}
-                      className="px-4 py-2 bg-accent/10 border-2 border-accent rounded-lg text-center font-medium text-foreground"
-                    >
-                      {method}
-                    </div>
-                  ))}
+              {preparation.length > 0 && (
+                <div className="mt-8">
+                  <h3 className="font-semibold text-lg text-foreground mb-3">
+                    Métodos de Preparação Recomendados:
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {preparation.map((method) => (
+                      <div
+                        key={method}
+                        className="px-4 py-2 bg-accent/10 border-2 border-accent rounded-lg text-center font-medium text-foreground"
+                      >
+                        {method}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Informações Nutricionais */}
-              <div className="mt-8">
-                <h3 className="font-semibold text-lg text-foreground mb-3">
-                  Informações Nutricionais (por xícara 200ml):
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {Object.entries(product.nutrients).map(([key, value]) => (
-                    <div
-                      key={key}
-                      className="p-4 bg-accent/5 border-2 border-accent/20 rounded-lg"
-                    >
-                      <p className="text-sm text-foreground/70 capitalize mb-1">
-                        {key === 'cafeína' && '☕ Cafeína'}
-                        {key === 'calorias' && '⚡ Calorias'}
-                        {key === 'acidez' && '🌡️ Acidez'}
-                      </p>
-                      <p className="font-semibold text-foreground">{value}</p>
-                    </div>
-                  ))}
+              {Object.keys(nutrients).length > 0 && (
+                <div className="mt-8">
+                  <h3 className="font-semibold text-lg text-foreground mb-3">
+                    Informações Nutricionais (por xícara 200ml):
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {nutrients.cafeína && (
+                      <div className="p-4 bg-accent/5 border-2 border-accent/20 rounded-lg">
+                        <p className="text-sm text-foreground/70 mb-1">
+                          ☕ Cafeína
+                        </p>
+                        <p className="font-semibold text-foreground">
+                          {nutrients.cafeína}
+                        </p>
+                      </div>
+                    )}
+                    {nutrients.calorias && (
+                      <div className="p-4 bg-accent/5 border-2 border-accent/20 rounded-lg">
+                        <p className="text-sm text-foreground/70 mb-1">
+                          ⚡ Calorias
+                        </p>
+                        <p className="font-semibold text-foreground">
+                          {nutrients.calorias}
+                        </p>
+                      </div>
+                    )}
+                    {nutrients.acidez && (
+                      <div className="p-4 bg-accent/5 border-2 border-accent/20 rounded-lg">
+                        <p className="text-sm text-foreground/70 mb-1">
+                          🌡️ Acidez
+                        </p>
+                        <p className="font-semibold text-foreground">
+                          {nutrients.acidez}
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -528,7 +462,11 @@ export default function ProductDetailPage({
             </div>
           </div>
         )}
+
+        {/* Seção de Avaliações */}
+        <ProductReviewSection productId={id} isAdmin={isAdmin} />
       </div>
+    </div>
     </div>
   );
 }

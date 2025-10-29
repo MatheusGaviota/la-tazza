@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import BlogCard from '@/components/Cards/BlogCard';
 import { Search } from 'lucide-react';
-import { getBlogPosts } from '@/lib/admin.service';
+import { getPublishedBlogPosts } from '@/lib/admin.service';
 import type { BlogPost } from '@/types/admin.types';
+import { PageHero } from '@/components/Layout';
 
 export default function BlogPage() {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
@@ -18,14 +19,13 @@ export default function BlogPage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const posts = await getBlogPosts();
-        const publishedPosts = posts.filter((post) => post.published);
-        setBlogPosts(publishedPosts);
+        const posts = await getPublishedBlogPosts();
+        setBlogPosts(posts);
 
         // Extrair categorias únicas
         const uniqueCategories = [
           'Todos',
-          ...new Set(publishedPosts.map((post) => post.category)),
+          ...new Set(posts.map((post) => post.category)),
         ];
         setCategories(uniqueCategories);
       } catch (error) {
@@ -62,22 +62,13 @@ export default function BlogPage() {
   return (
     <main className="min-h-[calc(100vh-104px)]">
       {/* Hero Section */}
-      <section className="w-full bg-foreground text-background py-16 sm:py-20 md:py-24">
-        <div className="max-w-[1400px] mx-auto px-4">
-          <div className="max-w-3xl">
-            <h1 className="font-alumni text-5xl sm:text-6xl md:text-7xl font-bold mb-4">
-              Blog La Tazza
-            </h1>
-            <p className="text-lg sm:text-xl text-background/80">
-              Descubra histórias, técnicas e inspirações do universo do café.
-              Conteúdo exclusivo para apaixonados por café especial.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        title="Blog La Tazza"
+        description="Descubra histórias, técnicas e inspirações do universo do café. Conteúdo exclusivo para apaixonados por café especial."
+      />
 
       {/* Search and Filters */}
-      <section className="w-full bg-background border-b-2 border-accent/20 sticky top-[102px] z-40">
+      <section className="w-full bg-background border-b-2 border-accent/20">
         <div className="max-w-[1400px] mx-auto px-4 py-6">
           <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center justify-between">
             {/* Search Bar */}
