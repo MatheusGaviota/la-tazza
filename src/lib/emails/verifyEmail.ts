@@ -16,7 +16,7 @@ function safeBaseUrl() {
     process.env.NEXT_PUBLIC_APP_URL ||
     process.env.NEXT_PUBLIC_BASE_URL;
   if (envUrl) return envUrl.replace(/\/$/, '');
-  return 'http://localhost:3000';
+  return 'https://la-tazza.vercel.app';
 }
 
 /**
