@@ -15,9 +15,10 @@ import {
 } from 'lucide-react';
 import ProductCard from '@/components/Cards/ProductCard';
 import { ProductReviewSection } from '@/components/Products';
-import { getProduct, getProducts } from '@/lib/admin.service';
+import { getProduct, getProducts, getProductReviews } from '@/lib/admin.service';
 import { Product } from '@/types/admin.types';
 import { useAdmin } from '@/hooks';
+import Skeleton from '@/components/UI/Skeleton';
 
 export default function ProductDetailPage({
   params,
@@ -32,6 +33,8 @@ export default function ProductDetailPage({
   const [liked, setLiked] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [averageRating, setAverageRating] = useState(0);
+  const [reviewCount, setReviewCount] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
