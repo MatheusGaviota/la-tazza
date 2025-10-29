@@ -93,6 +93,18 @@ export interface Comment {
   authorUid?: string;
 }
 
+export interface ProductReview {
+  id: string;
+  productId: string;
+  userId: string;
+  userName: string;
+  userPhoto?: string;
+  rating: number;
+  content: string;
+  createdAt: Date;
+  authorUid?: string;
+}
+
 export interface AdminUser {
   uid: string;
   email: string | null;
