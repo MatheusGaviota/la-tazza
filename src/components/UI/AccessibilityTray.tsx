@@ -16,6 +16,23 @@ function AccessibilityTray() {
   const [fontSize, setFontSize] = useState(100);
   const [highContrast, setHighContrast] = useState(false);
   const [grayscale, setGrayscale] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+
+  useEffect(() => {
+    // Exibir popup na primeira visita ou sempre que o usuário retornar
+    const timer = setTimeout(() => {
+      setShowPopup(true);
+      
+      // Auto-ocultar o popup após 5 segundos
+      const hideTimer = setTimeout(() => {
+        setShowPopup(false);
+      }, 5000);
+      
+      return () => clearTimeout(hideTimer);
+    }, 1000); // Aguarda 1 segundo após o carregamento da página
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     document.documentElement.style.fontSize = `${fontSize}%`;
@@ -42,6 +59,7 @@ function AccessibilityTray() {
 
   const toggleOpen = useCallback(() => {
     setIsOpen((prev) => !prev);
+    setShowPopup(false); // Ocultar popup ao abrir a bandeja
   }, []);
 
   const toggleHighContrast = useCallback(() => {
@@ -87,6 +105,27 @@ function AccessibilityTray() {
         aria-expanded={isOpen}
       >
         <MoreVertical className="w-6 h-6 text-background sm:rotate-0 max-sm:rotate-90" />
+        
+        {/* Popup de dica */}
+        {showPopup && !isOpen && (
+          <div
+            className="absolute z-10 pointer-events-none animate-[fadeIn_0.3s_ease-out]
+                      sm:right-full sm:top-1/2 sm:-translate-y-1/2 sm:mr-3
+                      max-sm:bottom-full max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:mb-3"
+            role="tooltip"
+            aria-live="polite"
+          >
+            <div className="relative bg-accent text-background px-4 py-2 rounded-lg shadow-lg whitespace-nowrap text-sm font-medium">
+              <Eye className="w-4 h-4 inline-block mr-2 -mt-0.5" />
+              Ferramentas de acessibilidade
+              {/* Seta do popup */}
+              <div className="absolute 
+                            sm:left-full sm:top-1/2 sm:-translate-y-1/2 sm:border-l-accent
+                            max-sm:top-full max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:border-t-accent
+                            border-[6px] border-transparent" />
+            </div>
+          </div>
+        )}
       </button>
 
       {/* Tray Content */}
