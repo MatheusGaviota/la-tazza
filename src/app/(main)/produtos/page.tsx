@@ -3,7 +3,12 @@
 import { useState, useMemo } from 'react';
 import ProductCard from '@/components/Cards/ProductCard';
 import { ProductFilters } from '@/components/Products';
-import { Filter, LayoutGrid, LayoutList, SlidersHorizontal } from 'lucide-react';
+import {
+  Filter,
+  LayoutGrid,
+  LayoutList,
+  SlidersHorizontal,
+} from 'lucide-react';
 
 // TODO: Remover dados mocados e buscar de uma API/banco de dados
 const mockProducts = [
@@ -135,7 +140,9 @@ export default function ProductsPage() {
 
     // Aplicar filtros
     if (filters.categories.length > 0) {
-      filtered = filtered.filter((p) => filters.categories.includes(p.category));
+      filtered = filtered.filter((p) =>
+        filters.categories.includes(p.category)
+      );
     }
 
     if (filters.origins.length > 0) {
@@ -147,7 +154,8 @@ export default function ProductsPage() {
     }
 
     filtered = filtered.filter(
-      (p) => p.price >= filters.priceRange[0] && p.price <= filters.priceRange[1]
+      (p) =>
+        p.price >= filters.priceRange[0] && p.price <= filters.priceRange[1]
     );
 
     if (filters.inStockOnly) {
@@ -250,7 +258,9 @@ export default function ProductsPage() {
                   <span className="font-semibold text-foreground">
                     {filteredProducts.length}
                   </span>{' '}
-                  {filteredProducts.length === 1 ? 'produto encontrado' : 'produtos encontrados'}
+                  {filteredProducts.length === 1
+                    ? 'produto encontrado'
+                    : 'produtos encontrados'}
                 </p>
               </div>
 
