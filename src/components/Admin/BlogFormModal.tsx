@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import Input from '@/components/UI/Input';
 import { BlogPost } from '@/types/admin.types';
 import { createBlogPost, updateBlogPost } from '@/lib/admin.service';
@@ -25,7 +26,6 @@ export default function BlogFormModal({
     title: '',
     excerpt: '',
     content: '',
-    author: '',
     date: '',
     readTime: '',
     category: '',
@@ -107,7 +107,6 @@ export default function BlogFormModal({
       title: '',
       excerpt: '',
       content: '',
-      author: '',
       date: today,
       readTime: '',
       category: '',
@@ -119,6 +118,8 @@ export default function BlogFormModal({
     setErrors({});
   };
 
+  const { user } = useAuth();
+
   useEffect(() => {
     if (post) {
       setFormData({
@@ -126,7 +127,6 @@ export default function BlogFormModal({
         title: post.title,
         excerpt: post.excerpt,
         content: post.content,
-        author: post.author,
         date: parseDisplayDate(post.date),
         readTime: post.readTime,
         category: post.category,
@@ -178,7 +178,6 @@ export default function BlogFormModal({
     if (!formData.slug.trim()) newErrors.slug = 'Slug é obrigatório';
     if (!formData.excerpt.trim()) newErrors.excerpt = 'Resumo é obrigatório';
     if (!formData.content.trim()) newErrors.content = 'Conteúdo é obrigatório';
-    if (!formData.author.trim()) newErrors.author = 'Autor é obrigatório';
     if (!formData.date.trim()) newErrors.date = 'Data é obrigatória';
     if (!formData.readTime.trim())
       newErrors.readTime = 'Tempo de leitura é obrigatório';
@@ -202,12 +201,16 @@ export default function BlogFormModal({
         imageUrl = await uploadToCloudinary(imageFile, 'blog');
       }
 
+      const authorName = post ? post.author : user?.displayName ?? user?.email ?? '';
+      const authorUid = user?.uid ?? post?.authorUid ?? '';
+
       const postData = {
         slug: formData.slug.trim(),
         title: formData.title.trim(),
         excerpt: formData.excerpt.trim(),
         content: formData.content.trim(),
-        author: formData.author.trim(),
+        author: authorName,
+        authorUid,
         date: formatDateForDisplay(formData.date.trim()),
         readTime: formData.readTime.trim(),
         category: formData.category.trim(),
@@ -293,22 +296,11 @@ export default function BlogFormModal({
         monospace
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Input
-          label="Autor"
-          value={formData.author}
-          onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-          error={errors.author}
-          required
-          placeholder="Nome do autor"
-        />
-
+      <div className="grid grid-cols-1 gap-4">
         <Input
           label="Categoria"
           value={formData.category}
-          onChange={(e) =>
-            setFormData({ ...formData, category: e.target.value })
-          }
+          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
           error={errors.category}
           helpText="Ex: Técnicas, Receitas, História"
           required
