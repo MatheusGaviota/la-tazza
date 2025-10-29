@@ -70,10 +70,76 @@ body.high-contrast [class*='bg-accent/'] * {
   stroke: currentColor !important;
 }
 
+/* Badges: garantir contraste adequado para badges coloridas (verde, laranja,
+   vermelho, azul) usadas no painel admin. No modo de alto contraste mapeamos
+   as badges para o accent do sistema (ou cores de alto contraste) e forçamos
+   ícones/filhos a herdarem a cor para consistência. */
+body.high-contrast .text-green-600,
+body.high-contrast .bg-green-600\/10,
+body.high-contrast [class*='text-green-600'],
+body.high-contrast [class*='bg-green-600/'] {
+  color: var(--background) !important; /* branco */
+  background-color: var(--accent) !important; /* usar accent para destaque */
+  border-color: transparent !important;
+}
+
+body.high-contrast .text-orange-600,
+body.high-contrast .bg-orange-600\/10,
+body.high-contrast [class*='text-orange-600'],
+body.high-contrast [class*='bg-orange-600/'] {
+  color: var(--background) !important;
+  background-color: #d43f00 !important; /* laranja mais escuro para contraste */
+  border-color: transparent !important;
+}
+
+body.high-contrast .text-red-600,
+body.high-contrast .bg-red-600\/10,
+body.high-contrast [class*='text-red-600'],
+body.high-contrast [class*='bg-red-600/'] {
+  color: var(--background) !important;
+  background-color: #b30000 !important; /* vermelho escuro */
+  border-color: transparent !important;
+}
+
+body.high-contrast .text-blue-600,
+body.high-contrast .bg-blue-600\/10,
+body.high-contrast [class*='text-blue-600'],
+body.high-contrast [class*='bg-blue-600/'] {
+  color: var(--background) !important;
+  background-color: var(--accent) !important;
+  border-color: transparent !important;
+}
+
+/* Garantir que ícones e textos internos nas badges sigam a cor definida */
+body.high-contrast .text-green-600 *,
+body.high-contrast .text-orange-600 *,
+body.high-contrast .text-red-600 *,
+body.high-contrast .text-blue-600 *,
+body.high-contrast [class*='bg-green-600/'] *,
+body.high-contrast [class*='bg-orange-600/'] *,
+body.high-contrast [class*='bg-red-600/'] *,
+body.high-contrast [class*='bg-blue-600/'] * {
+  color: inherit !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
 /* Some interactive elements use text-accent on top of accent backgrounds;
    force them to inherit the background text color when inside an accent
    background. This helps login buttons and workshop CTAs remain white. */
 body.high-contrast .bg-accent .text-accent,
-body.high-contrast [class*='bg-accent/'] .text-accent {
+body.high-contrast .bg-accent.text-accent,
+body.high-contrast [class*='bg-accent/'] .text-accent,
+body.high-contrast [class*='bg-accent/'][class*='text-accent'] {
   color: inherit !important;
+}
+
+/* Caso um elemento combine `text-accent` e `bg-accent/10` (badge "Você"),
+   garantir que o texto fique branco e o fundo use a cor de accent sólida para
+   contraste (override de baixa opacidade). */
+body.high-contrast [class*='bg-accent/'][class*='text-accent'],
+body.high-contrast .bg-accent.text-accent {
+  color: var(--background) !important;
+  background-color: var(--accent) !important;
+  border-color: transparent !important;
 }
