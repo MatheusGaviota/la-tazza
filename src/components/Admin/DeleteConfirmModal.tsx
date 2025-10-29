@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { X, Trash2 } from 'lucide-react';
 import Button from '@/components/UI/Button';
+import { useScrollLock } from '@/hooks';
 
 interface DeleteConfirmModalProps {
   isOpen: boolean;
@@ -23,6 +24,8 @@ export default function DeleteConfirmModal({
 }: DeleteConfirmModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
 
+  useScrollLock(isOpen);
+
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && !loading) onClose();
@@ -30,13 +33,11 @@ export default function DeleteConfirmModal({
 
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
       modalRef.current?.focus();
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = '';
     };
   }, [isOpen, onClose, loading]);
 

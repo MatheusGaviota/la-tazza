@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { X, Shield, ShieldOff, UserCheck, UserX } from 'lucide-react';
 import Button from '@/components/UI/Button';
 import { AdminUser } from '@/types/admin.types';
+import { useScrollLock } from '@/hooks';
 
 interface UserActionModalProps {
   isOpen: boolean;
@@ -24,6 +25,8 @@ export default function UserActionModal({
 }: UserActionModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
 
+  useScrollLock(isOpen);
+
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && !loading) onClose();
@@ -31,13 +34,11 @@ export default function UserActionModal({
 
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
       modalRef.current?.focus();
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = '';
     };
   }, [isOpen, onClose, loading]);
 

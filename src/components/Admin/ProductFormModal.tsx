@@ -8,6 +8,7 @@ import { Product } from '@/types/admin.types';
 import { createProduct, updateProduct } from '@/lib/admin.service';
 import { uploadToCloudinary } from '@/lib/cloudinary-client';
 import Image from 'next/image';
+import { useScrollLock } from '@/hooks';
 
 interface ProductFormModalProps {
   isOpen: boolean;
@@ -33,6 +34,8 @@ export default function ProductFormModal({
   const [imagePreview, setImagePreview] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  useScrollLock(isOpen);
 
   useEffect(() => {
     setMounted(true);
@@ -160,7 +163,7 @@ export default function ProductFormModal({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="sticky top-0 bg-background border-b-2 border-foreground/10 px-6 py-4 flex items-center justify-between">
+        <div className="sticky top-0 z-10 bg-background border-b-2 border-foreground/10 px-6 py-4 flex items-center justify-between">
           <h2 className="font-alumni text-2xl font-bold text-foreground">
             {product ? 'Editar Produto' : 'Adicionar Produto'}
           </h2>

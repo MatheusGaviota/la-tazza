@@ -8,6 +8,7 @@ import { Course } from '@/types/admin.types';
 import { createCourse, updateCourse } from '@/lib/admin.service';
 import { uploadToCloudinary } from '@/lib/cloudinary-client';
 import Image from 'next/image';
+import { useScrollLock } from '@/hooks';
 
 interface CourseFormModalProps {
   isOpen: boolean;
@@ -33,6 +34,8 @@ export default function CourseFormModal({
   const [imagePreview, setImagePreview] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  useScrollLock(isOpen);
 
   useEffect(() => {
     setMounted(true);
@@ -143,7 +146,7 @@ export default function CourseFormModal({
         className="bg-background rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-background border-b-2 border-foreground/10 px-6 py-4 flex items-center justify-between">
+        <div className="sticky top-0 z-10 bg-background border-b-2 border-foreground/10 px-6 py-4 flex items-center justify-between">
           <h2 className="font-alumni text-2xl font-bold text-foreground">
             {course ? 'Editar Curso' : 'Adicionar Curso'}
           </h2>
