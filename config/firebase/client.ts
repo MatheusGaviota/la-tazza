@@ -31,14 +31,16 @@ function validateFirebaseConfig(): void {
   ];
 
   const missingFields = requiredFields.filter(
-    (field) => !firebaseConfig[field]?.trim?.(),
+    (field) => !firebaseConfig[field]?.trim?.()
   );
 
   if (missingFields.length === 0) return;
 
-  const fieldList = missingFields.map((f) => `NEXT_PUBLIC_FIREBASE_${f.toUpperCase()}`).join(', ');
+  const fieldList = missingFields
+    .map((f) => `NEXT_PUBLIC_FIREBASE_${f.toUpperCase()}`)
+    .join(', ');
   const error = new Error(
-    `Variáveis de ambiente Firebase não configuradas: ${fieldList}. Verifique o arquivo .env`,
+    `Variáveis de ambiente Firebase não configuradas: ${fieldList}. Verifique o arquivo .env`
   );
   console.error('Firebase Configuration Error:', error.message);
   throw error;
