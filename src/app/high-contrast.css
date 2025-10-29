@@ -239,3 +239,28 @@ body.high-contrast section.bg-accent\/5 .bg-accent\/10 p,
 body.high-contrast section[class*='bg-accent/5'] [class*='bg-accent/10'] p {
   color: var(--foreground) !important;
 }
+
+/* Google Login Button - ensure black text, icon and strong borders */
+body.high-contrast button[aria-label*='Google'] {
+  color: var(--foreground) !important;
+  border-color: var(--foreground) !important;
+  border-width: 2px !important;
+}
+
+body.high-contrast button[aria-label*='Google'] span {
+  color: var(--foreground) !important;
+}
+
+body.high-contrast button[aria-label*='Google'] svg {
+  filter: none !important;
+  fill: var(--foreground) !important;
+  color: var(--foreground) !important;
+}
+
+/* Course Card - difficulty badge should have black text */
+body.high-contrast .bg-background\/90.backdrop-blur-sm,
+body.high-contrast .bg-background\/90.backdrop-blur-sm.text-foreground {
+  color: var(--foreground) !important;
+  background-color: var(--background) !important;
+  border-color: var(--foreground) !important;
+}
