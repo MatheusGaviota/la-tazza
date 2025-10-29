@@ -209,16 +209,23 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               {/* Actions */}
               <div className="space-y-2">
                 <Link
-                  href="/carrinho"
+                  href="/checkout"
                   onClick={handleClose}
                   className="flex items-center justify-center gap-2 w-full py-3 bg-accent text-background rounded-lg font-medium hover:bg-accent/90 transition-all focus:outline-none focus:ring-2 focus:ring-accent"
                 >
-                  Ver Carrinho Completo
+                  Finalizar Compra
                   <ArrowRight size={18} />
+                </Link>
+                <Link
+                  href="/carrinho"
+                  onClick={handleClose}
+                  className="flex items-center justify-center w-full py-3 bg-transparent border-2 border-accent/20 text-foreground rounded-lg font-medium hover:border-accent hover:bg-accent/5 transition-all focus:outline-none focus:ring-2 focus:ring-accent"
+                >
+                  Ver Carrinho Completo
                 </Link>
                 <button
                   onClick={handleClose}
-                  className="w-full py-3 bg-transparent border-2 border-accent/20 text-foreground rounded-lg font-medium hover:border-accent hover:bg-accent/5 transition-all focus:outline-none focus:ring-2 focus:ring-accent"
+                  className="w-full py-3 text-sm text-foreground/70 hover:text-foreground transition-colors"
                 >
                   Continuar Comprando
                 </button>

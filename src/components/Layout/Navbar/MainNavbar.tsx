@@ -62,7 +62,7 @@ export default function MainNavbar({
 
         <div className="flex items-center gap-6">
           {/* desktop menu */}
-          <ul className="hidden md:flex items-center space-x-6 text-background">
+          <ul className="hidden xl:flex items-center space-x-6 text-background">
             {menuItems.map((item) => (
               <li key={item.href}>
                 <Link
@@ -74,7 +74,7 @@ export default function MainNavbar({
               </li>
             ))}
           </ul>
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden xl:flex items-center gap-3">
             {/* Search Icon */}
             <SearchButton />
 
@@ -108,7 +108,7 @@ export default function MainNavbar({
           {/* mobile menu button */}
           <button
             type="button"
-            className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-background hover:bg-accent/20 border-2 border-accent"
+            className="xl:hidden inline-flex items-center justify-center p-2 rounded-md text-background hover:bg-accent/20 border-2 border-accent"
             aria-controls="mobile-menu"
             aria-expanded={open}
             onClick={() => setOpen(!open)}
