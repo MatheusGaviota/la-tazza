@@ -1,6 +1,52 @@
 import { PageHero } from '@/components/Layout';
 import { Check, Coffee, Package, Sparkles } from 'lucide-react';
 import Button from '@/components/UI/Button';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Tazza Club - Assinatura de Cafés Especiais',
+  description:
+    'Receba cafés especiais selecionados mensalmente na sua casa. Planos a partir de R$ 79,90/mês com frete grátis. Descubra novos sabores e origens com a comodidade da assinatura.',
+  keywords: [
+    'assinatura de café',
+    'clube de café',
+    'café por assinatura',
+    'tazza club',
+    'cafés especiais mensais',
+    'assinatura café especial',
+    'clube de cafés premium',
+    'café entrega mensal',
+    'plano de assinatura café',
+  ],
+  openGraph: {
+    title: 'Tazza Club - Assinatura de Cafés Especiais | La Tazza',
+    description:
+      'Receba cafés especiais selecionados mensalmente. Planos a partir de R$ 79,90/mês com frete grátis e sem compromisso.',
+    type: 'website',
+    locale: 'pt_BR',
+    siteName: 'La Tazza',
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761103591/background-login_k6m6ai.png',
+        width: 1200,
+        height: 630,
+        alt: 'Tazza Club - Assinatura de Cafés Especiais',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Tazza Club - Assinatura de Cafés Especiais',
+    description:
+      'Receba cafés especiais selecionados mensalmente na sua casa. Planos a partir de R$ 79,90/mês.',
+    images: [
+      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1761103591/background-login_k6m6ai.png',
+    ],
+  },
+  alternates: {
+    canonical: '/planos',
+  },
+};
 
 export default function PlanosPage() {
   const plans = [
