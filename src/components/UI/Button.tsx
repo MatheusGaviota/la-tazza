@@ -1,17 +1,19 @@
 import Link from 'next/link';
 
+export type ButtonVariant =
+  | 'accent'
+  | 'fore'
+  | 'ghost-accent'
+  | 'ghost-fore'
+  | 'ghost'
+  | 'danger';
+
 type ButtonProps = {
   text?: string;
   href?: string;
   onClick?: () => void;
   type?: 'button' | 'submit' | 'reset';
-  variant?:
-    | 'accent'
-    | 'fore'
-    | 'ghost-accent'
-    | 'ghost-fore'
-    | 'ghost'
-    | 'danger';
+  variant?: ButtonVariant;
   className?: string;
   disabled?: boolean;
   children?: React.ReactNode;

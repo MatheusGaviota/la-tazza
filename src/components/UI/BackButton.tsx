@@ -1,25 +1,30 @@
 'use client';
 
 import { ArrowLeft } from 'lucide-react';
-import Button from '@/components/UI/Button';
+import { useRouter } from 'next/navigation';
+import Button, { type ButtonVariant } from '@/components/UI/Button';
 
 type BackButtonProps = {
-  variant?:
-    | 'accent'
-    | 'fore'
-    | 'ghost-accent'
-    | 'ghost-fore'
-    | 'ghost'
-    | 'danger';
+  variant?: ButtonVariant;
   className?: string;
+  fallbackHref?: string;
 };
 
 export default function BackButton({
   variant = 'ghost-fore',
   className = '',
+  fallbackHref = '/',
 }: BackButtonProps) {
+  const router = useRouter();
+
   const handleBack = () => {
-    window.history.back();
+    // Check if there's history to go back to
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      // Fallback to home page or provided fallback
+      router.push(fallbackHref);
+    }
   };
 
   return (
