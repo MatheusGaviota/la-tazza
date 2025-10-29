@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, X } from 'lucide-react';
+import { getProducts } from '@/lib/admin.service';
 
 interface ProductFiltersProps {
   filters: {
@@ -15,23 +16,60 @@ interface ProductFiltersProps {
   onReset: () => void;
 }
 
-const categories = [
-  'Café Especial',
-  'Café Premium',
-  'Café Orgânico',
-  'Café Tradicional',
-];
-const origins = ['Brasil', 'Colômbia', 'Etiópia', 'Peru', 'Itália'];
-const roasts = ['Claro', 'Médio', 'Escuro'];
-
 export default function ProductFilters({
   filters,
   onFiltersChange,
   onReset,
 }: ProductFiltersProps) {
+  const [categories, setCategories] = useState<string[]>([]);
+  const [origins, setOrigins] = useState<string[]>([]);
+  const [roasts, setRoasts] = useState<string[]>([]);
+  const [maxPrice, setMaxPrice] = useState<number>(200);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
     new Set(['categories', 'price', 'origins', 'roasts'])
   );
+
+  // Carregar opções de filtro dos produtos existentes
+  useEffect(() => {
+    const loadFilterOptions = async () => {
+      try {
+        const products = await getProducts();
+
+        // Extrair categorias únicas
+        const uniqueCategories = [
+          ...new Set(products.map((p) => p.category).filter(Boolean)),
+        ].sort();
+        setCategories(uniqueCategories);
+
+        // Extrair origens únicas
+        const uniqueOrigins = [
+          ...new Set(
+            products.map((p) => p.origin).filter((o): o is string => !!o)
+          ),
+        ].sort();
+        setOrigins(uniqueOrigins);
+
+        // Extrair tipos de torra únicos
+        const uniqueRoasts = [
+          ...new Set(
+            products.map((p) => p.roast).filter((r): r is string => !!r)
+          ),
+        ].sort();
+        setRoasts(uniqueRoasts);
+
+        // Calcular preço máximo
+        const prices = products.map((p) => p.price);
+        if (prices.length > 0) {
+          const max = Math.ceil(Math.max(...prices));
+          setMaxPrice(max);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar opções de filtro:', error);
+      }
+    };
+
+    loadFilterOptions();
+  }, []);
 
   const toggleSection = (section: string) => {
     const newExpanded = new Set(expandedSections);
@@ -130,22 +168,28 @@ export default function ProductFilters({
         </button>
         {expandedSections.has('categories') && (
           <div className="mt-3 space-y-2">
-            {categories.map((category) => (
-              <label
-                key={category}
-                className="flex items-center gap-3 cursor-pointer group"
-              >
-                <input
-                  type="checkbox"
-                  checked={filters.categories.includes(category)}
-                  onChange={() => handleCategoryToggle(category)}
-                  className="w-4 h-4 rounded border-2 border-background text-accent focus:ring-2 focus:ring-background cursor-pointer"
-                />
-                <span className="text-sm text-background group-hover:text-background/80 transition-colors">
-                  {category}
-                </span>
-              </label>
-            ))}
+            {categories.length > 0 ? (
+              categories.map((category) => (
+                <label
+                  key={category}
+                  className="flex items-center gap-3 cursor-pointer group"
+                >
+                  <input
+                    type="checkbox"
+                    checked={filters.categories.includes(category)}
+                    onChange={() => handleCategoryToggle(category)}
+                    className="w-4 h-4 rounded border-2 border-background text-accent focus:ring-2 focus:ring-background cursor-pointer"
+                  />
+                  <span className="text-sm text-background group-hover:text-background/80 transition-colors">
+                    {category}
+                  </span>
+                </label>
+              ))
+            ) : (
+              <p className="text-xs text-background/60 italic">
+                Nenhuma categoria disponível
+              </p>
+            )}
           </div>
         )}
       </div>
@@ -207,7 +251,7 @@ export default function ProductFilters({
                     id="price-max"
                     type="number"
                     min={filters.priceRange[0]}
-                    max="100"
+                    max={maxPrice}
                     value={filters.priceRange[1]}
                     onChange={(e) =>
                       handlePriceChange(1, Number(e.target.value))
@@ -221,7 +265,7 @@ export default function ProductFilters({
               <input
                 type="range"
                 min="0"
-                max="100"
+                max={maxPrice}
                 value={filters.priceRange[1]}
                 onChange={(e) => handlePriceChange(1, Number(e.target.value))}
                 className="w-full h-2 bg-background/20 rounded-lg appearance-none cursor-pointer accent-background"
@@ -248,22 +292,28 @@ export default function ProductFilters({
         </button>
         {expandedSections.has('origins') && (
           <div className="mt-3 space-y-2">
-            {origins.map((origin) => (
-              <label
-                key={origin}
-                className="flex items-center gap-3 cursor-pointer group"
-              >
-                <input
-                  type="checkbox"
-                  checked={filters.origins.includes(origin)}
-                  onChange={() => handleOriginToggle(origin)}
-                  className="w-4 h-4 rounded border-2 border-background text-accent focus:ring-2 focus:ring-background cursor-pointer"
-                />
-                <span className="text-sm text-background group-hover:text-background/80 transition-colors">
-                  {origin}
-                </span>
-              </label>
-            ))}
+            {origins.length > 0 ? (
+              origins.map((origin) => (
+                <label
+                  key={origin}
+                  className="flex items-center gap-3 cursor-pointer group"
+                >
+                  <input
+                    type="checkbox"
+                    checked={filters.origins.includes(origin)}
+                    onChange={() => handleOriginToggle(origin)}
+                    className="w-4 h-4 rounded border-2 border-background text-accent focus:ring-2 focus:ring-background cursor-pointer"
+                  />
+                  <span className="text-sm text-background group-hover:text-background/80 transition-colors">
+                    {origin}
+                  </span>
+                </label>
+              ))
+            ) : (
+              <p className="text-xs text-background/60 italic">
+                Nenhuma origem disponível
+              </p>
+            )}
           </div>
         )}
       </div>
@@ -284,22 +334,28 @@ export default function ProductFilters({
         </button>
         {expandedSections.has('roasts') && (
           <div className="mt-3 space-y-2">
-            {roasts.map((roast) => (
-              <label
-                key={roast}
-                className="flex items-center gap-3 cursor-pointer group"
-              >
-                <input
-                  type="checkbox"
-                  checked={filters.roasts.includes(roast)}
-                  onChange={() => handleRoastToggle(roast)}
-                  className="w-4 h-4 rounded border-2 border-background text-accent focus:ring-2 focus:ring-background cursor-pointer"
-                />
-                <span className="text-sm text-background group-hover:text-background/80 transition-colors">
-                  {roast}
-                </span>
-              </label>
-            ))}
+            {roasts.length > 0 ? (
+              roasts.map((roast) => (
+                <label
+                  key={roast}
+                  className="flex items-center gap-3 cursor-pointer group"
+                >
+                  <input
+                    type="checkbox"
+                    checked={filters.roasts.includes(roast)}
+                    onChange={() => handleRoastToggle(roast)}
+                    className="w-4 h-4 rounded border-2 border-background text-accent focus:ring-2 focus:ring-background cursor-pointer"
+                  />
+                  <span className="text-sm text-background group-hover:text-background/80 transition-colors">
+                    {roast}
+                  </span>
+                </label>
+              ))
+            ) : (
+              <p className="text-xs text-background/60 italic">
+                Nenhum tipo de torra disponível
+              </p>
+            )}
           </div>
         )}
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import ProductCard from '@/components/Cards/ProductCard';
 import { ProductFilters } from '@/components/Products';
 import {
@@ -10,107 +10,8 @@ import {
   SlidersHorizontal,
 } from 'lucide-react';
 import { PageHero } from '@/components/Layout';
-
-// TODO: Remover dados mocados e buscar de uma API/banco de dados
-const mockProducts = [
-  {
-    id: '1',
-    imageUrl:
-      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-    title: 'Expresso Masterpiece',
-    description:
-      'Blend exclusivo de grãos arábica para um café intenso e encorpado.',
-    price: 45.9,
-    category: 'Café Especial',
-    origin: 'Brasil',
-    roast: 'Escuro',
-    inStock: true,
-  },
-  {
-    id: '2',
-    imageUrl:
-      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-    title: 'Blend Suave',
-    description: 'Combinação equilibrada para um café suave e aromático.',
-    price: 39.9,
-    category: 'Café Especial',
-    origin: 'Colômbia',
-    roast: 'Médio',
-    inStock: true,
-  },
-  {
-    id: '3',
-    imageUrl:
-      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-    title: 'Origens Premium',
-    description: 'Seleção de grãos de origem única para paladares exigentes.',
-    price: 59.9,
-    category: 'Café Premium',
-    origin: 'Etiópia',
-    roast: 'Médio',
-    inStock: true,
-  },
-  {
-    id: '4',
-    imageUrl:
-      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-    title: 'Café Orgânico',
-    description: 'Café cultivado de forma sustentável, sem agrotóxicos.',
-    price: 52.9,
-    category: 'Café Orgânico',
-    origin: 'Peru',
-    roast: 'Claro',
-    inStock: true,
-  },
-  {
-    id: '5',
-    imageUrl:
-      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-    title: 'Café Gourmet',
-    description: 'Grãos selecionados com notas de chocolate e caramelo.',
-    price: 68.9,
-    category: 'Café Premium',
-    origin: 'Brasil',
-    roast: 'Escuro',
-    inStock: true,
-  },
-  {
-    id: '6',
-    imageUrl:
-      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-    title: 'Café Tradicional',
-    description: 'O clássico café brasileiro para o dia a dia.',
-    price: 29.9,
-    category: 'Café Tradicional',
-    origin: 'Brasil',
-    roast: 'Médio',
-    inStock: true,
-  },
-  {
-    id: '7',
-    imageUrl:
-      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-    title: 'Café Descafeinado',
-    description: 'Sabor completo sem cafeína, perfeito para qualquer hora.',
-    price: 42.9,
-    category: 'Café Especial',
-    origin: 'Colômbia',
-    roast: 'Médio',
-    inStock: false,
-  },
-  {
-    id: '8',
-    imageUrl:
-      'https://res.cloudinary.com/dyenpzpcr/image/upload/v1760981332/expresso-masterpiece_wb6pkj.png',
-    title: 'Café Italiano',
-    description: 'Blend intenso e aromático ao estilo italiano.',
-    price: 54.9,
-    category: 'Café Premium',
-    origin: 'Itália',
-    roast: 'Escuro',
-    inStock: true,
-  },
-];
+import { getProducts } from '@/lib/admin.service';
+import { Product } from '@/types/admin.types';
 
 export type SortOption = 'relevance' | 'price-asc' | 'price-desc' | 'name';
 
@@ -123,6 +24,9 @@ export interface ProductFiltersState {
 }
 
 export default function ProductsPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -131,13 +35,30 @@ export default function ProductsPage() {
     categories: [],
     origins: [],
     roasts: [],
-    priceRange: [0, 100],
+    priceRange: [0, 200],
     inStockOnly: false,
   });
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await getProducts();
+        setProducts(data);
+      } catch (err) {
+        console.error('Erro ao carregar produtos:', err);
+        setError('Não foi possível carregar os produtos. Tente novamente.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   // Filtrar e ordenar produtos
   const filteredProducts = useMemo(() => {
-    let filtered = [...mockProducts];
+    let filtered = [...products];
 
     // Aplicar filtros
     if (filters.categories.length > 0) {
@@ -146,12 +67,16 @@ export default function ProductsPage() {
       );
     }
 
-    if (filters.origins.length > 0) {
-      filtered = filtered.filter((p) => filters.origins.includes(p.origin));
+    if (filters.origins.length > 0 && filters.origins.some((o) => o)) {
+      filtered = filtered.filter(
+        (p) => p.origin && filters.origins.includes(p.origin)
+      );
     }
 
-    if (filters.roasts.length > 0) {
-      filtered = filtered.filter((p) => filters.roasts.includes(p.roast));
+    if (filters.roasts.length > 0 && filters.roasts.some((r) => r)) {
+      filtered = filtered.filter(
+        (p) => p.roast && filters.roasts.includes(p.roast)
+      );
     }
 
     filtered = filtered.filter(
@@ -180,17 +105,62 @@ export default function ProductsPage() {
     }
 
     return filtered;
-  }, [filters, sortBy]);
+  }, [products, filters, sortBy]);
 
   const handleResetFilters = () => {
     setFilters({
       categories: [],
       origins: [],
       roasts: [],
-      priceRange: [0, 100],
+      priceRange: [0, 200],
       inStockOnly: false,
     });
   };
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen">
+        <PageHero
+          title="Nossos Produtos"
+          description="Descubra nossa seleção exclusiva de cafés especiais, cuidadosamente escolhidos para proporcionar a melhor experiência."
+        />
+        <div className="max-w-[1400px] mx-auto px-4 py-12 flex items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-accent border-r-transparent mb-4" />
+            <p className="text-foreground/70">Carregando produtos...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen">
+        <PageHero
+          title="Nossos Produtos"
+          description="Descubra nossa seleção exclusiva de cafés especiais, cuidadosamente escolhidos para proporcionar a melhor experiência."
+        />
+        <div className="max-w-[1400px] mx-auto px-4 py-12 flex items-center justify-center">
+          <div className="text-center max-w-md">
+            <div className="text-red-500 text-6xl mb-4">⚠️</div>
+            <h3 className="font-alumni text-2xl font-semibold text-foreground mb-2">
+              Erro ao Carregar Produtos
+            </h3>
+            <p className="text-foreground/70 mb-6">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-6 py-2 bg-accent text-background rounded-lg hover:bg-accent/90 transition-colors font-medium"
+            >
+              Tentar Novamente
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
