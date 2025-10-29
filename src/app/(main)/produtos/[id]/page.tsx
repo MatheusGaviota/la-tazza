@@ -15,9 +15,10 @@ import {
 } from 'lucide-react';
 import ProductCard from '@/components/Cards/ProductCard';
 import { ProductReviewSection } from '@/components/Products';
-import { getProduct, getProducts } from '@/lib/admin.service';
+import { getProduct, getProducts, getProductReviews } from '@/lib/admin.service';
 import { Product } from '@/types/admin.types';
 import { useAdmin } from '@/hooks';
+import Skeleton from '@/components/UI/Skeleton';
 
 export default function ProductDetailPage({
   params,
@@ -32,6 +33,8 @@ export default function ProductDetailPage({
   const [liked, setLiked] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [averageRating, setAverageRating] = useState(0);
+  const [reviewCount, setReviewCount] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,6 +53,14 @@ export default function ProductDetailPage({
             )
             .slice(0, 4);
           setRelatedProducts(related);
+
+          // Buscar avaliações para calcular média
+          const reviews = await getProductReviews(id);
+          setReviewCount(reviews.length);
+          if (reviews.length > 0) {
+            const avg = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+            setAverageRating(avg);
+          }
         }
       } catch (error) {
         console.error('Erro ao carregar produto:', error);
@@ -68,13 +79,96 @@ export default function ProductDetailPage({
     ? [product.imageUrl] 
     : [];
 
-  // Loading state
+  // Loading state com Skeletons
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-accent border-r-transparent mb-4" />
-          <p className="text-foreground/70">Carregando produto...</p>
+      <div className="min-h-screen">
+        {/* Breadcrumb Skeleton */}
+        <div className="max-w-[1400px] mx-auto px-4 py-4 flex items-center gap-2">
+          <Skeleton width={60} height={20} />
+          <Skeleton width={16} height={16} className="rounded-sm" />
+          <Skeleton width={80} height={20} />
+          <Skeleton width={16} height={16} className="rounded-sm" />
+          <Skeleton width={150} height={20} />
+        </div>
+
+        {/* Conteúdo Principal */}
+        <div className="max-w-[1400px] mx-auto px-4 py-8 md:py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            {/* Galeria de Imagens Skeleton */}
+            <div className="flex flex-col gap-4">
+              <Skeleton className="w-full aspect-square" />
+              <div className="flex gap-3">
+                {[...Array(4)].map((_, i) => (
+                  <Skeleton key={i} width={80} height={80} />
+                ))}
+              </div>
+            </div>
+
+            {/* Informações do Produto Skeleton */}
+            <div className="flex flex-col gap-6">
+              {/* Categoria e ações */}
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex flex-col gap-3">
+                  <Skeleton width={120} height={32} className="rounded-full" />
+                  <Skeleton width={100} height={20} />
+                </div>
+                <div className="flex gap-2">
+                  <Skeleton width={44} height={44} />
+                  <Skeleton width={44} height={44} />
+                </div>
+              </div>
+
+              {/* Título */}
+              <div>
+                <Skeleton width="80%" height={48} className="mb-2" />
+                <Skeleton width="100%" height={24} />
+              </div>
+
+              {/* Rating */}
+              <div className="flex items-center gap-4 pb-4 border-b-2 border-foreground/10">
+                <Skeleton width={120} height={24} />
+                <Skeleton width={40} height={24} />
+                <Skeleton width={100} height={24} />
+              </div>
+
+              {/* Preço */}
+              <div className="space-y-4">
+                <Skeleton width={200} height={56} />
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Skeleton width={136} height={48} />
+                  <Skeleton className="flex-1" height={48} />
+                </div>
+              </div>
+
+              {/* Informações Adicionais */}
+              <div className="grid grid-cols-3 gap-4 py-6 border-y-2 border-foreground/10">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="flex flex-col items-center gap-2">
+                    <Skeleton width={24} height={24} variant="circular" />
+                    <Skeleton width={80} height={40} />
+                  </div>
+                ))}
+              </div>
+
+              {/* Características */}
+              <div className="space-y-3">
+                <Skeleton width={150} height={24} />
+                {[...Array(3)].map((_, i) => (
+                  <Skeleton key={i} width="100%" height={24} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Abas de Informações */}
+        <div className="max-w-[1400px] mx-auto px-4">
+          <div className="mt-16 border-t-2 border-foreground/10 pt-12">
+            <Skeleton width={200} height={36} className="mb-4" />
+            <Skeleton width="100%" height={80} className="mb-6" />
+            <Skeleton width="100%" height={60} />
+          </div>
         </div>
       </div>
     );
@@ -102,8 +196,6 @@ export default function ProductDetailPage({
   }
 
   // Array de imagens vazio - fallback já está acima
-  const rating = product?.rating || 0;
-  const reviews = product?.reviews || 0;
   const highlights = product?.highlights || [];
   const preparation = product?.preparation || [];
   const nutrients = product?.nutrients || {};
@@ -235,20 +327,20 @@ export default function ProductDetailPage({
                     key={i}
                     size={20}
                     className={
-                      i < Math.round(rating)
+                      i < Math.round(averageRating)
                         ? 'fill-yellow-500 text-yellow-500'
                         : 'text-foreground/20'
                     }
                   />
                 ))}
               </div>
-              {rating > 0 && (
+              {reviewCount > 0 && (
                 <>
                   <span className="font-semibold text-foreground">
-                    {rating}
+                    {averageRating.toFixed(1)}
                   </span>
                   <span className="text-foreground/70">
-                    ({reviews} {reviews === 1 ? 'avaliação' : 'avaliações'})
+                    ({reviewCount} {reviewCount === 1 ? 'avaliação' : 'avaliações'})
                   </span>
                 </>
               )}
@@ -464,7 +556,14 @@ export default function ProductDetailPage({
         )}
 
         {/* Seção de Avaliações */}
-        <ProductReviewSection productId={id} isAdmin={isAdmin} />
+        <ProductReviewSection 
+          productId={id} 
+          isAdmin={isAdmin}
+          onReviewsUpdate={(count, avg) => {
+            setReviewCount(count);
+            setAverageRating(avg);
+          }}
+        />
       </div>
     </div>
     </div>
