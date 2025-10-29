@@ -11,6 +11,7 @@ import {
   Users,
   ArrowLeft,
   Lock,
+  UsersRound,
 } from 'lucide-react';
 import Button from '@/components/UI/Button';
 import LoadingSpinner from '@/components/UI/LoadingSpinner';
@@ -18,14 +19,16 @@ import ProductsManager from '@/components/Admin/ProductsManager';
 import CoursesManager from '@/components/Admin/CoursesManager';
 import BlogManager from '@/components/Admin/BlogManager';
 import WorkshopsManager from '@/components/Admin/WorkshopsManager';
+import UsersManager from '@/components/Admin/UsersManager';
 
-type TabType = 'products' | 'courses' | 'workshops' | 'blog';
+type TabType = 'products' | 'courses' | 'workshops' | 'blog' | 'users';
 
 const TABS = [
   { id: 'products' as TabType, label: 'Produtos', icon: Package },
   { id: 'courses' as TabType, label: 'Cursos', icon: GraduationCap },
   { id: 'workshops' as TabType, label: 'Workshops', icon: Users },
   { id: 'blog' as TabType, label: 'Blog', icon: FileText },
+  { id: 'users' as TabType, label: 'Usuários', icon: UsersRound },
 ] as const;
 
 function AccessDenied({ onNavigate }: { onNavigate: () => void }) {
@@ -45,7 +48,8 @@ function AccessDenied({ onNavigate }: { onNavigate: () => void }) {
         </p>
 
         <p className="text-foreground/50 text-sm mb-8">
-          Entre em contato com o administrador do site se acreditar que isto é um erro.
+          Entre em contato com o administrador do site se acreditar que isto é
+          um erro.
         </p>
 
         <Button
@@ -61,12 +65,15 @@ function AccessDenied({ onNavigate }: { onNavigate: () => void }) {
   );
 }
 
-function AdminContent({ activeTab, setActiveTab }: {
+function AdminContent({
+  activeTab,
+  setActiveTab,
+}: {
   activeTab: TabType;
   setActiveTab: (tab: TabType) => void;
 }) {
   return (
-    <main className="min-h-screen py-8 sm:py-12">
+    <main className="min-h-[calc(100vh-92px)] py-8 sm:py-12">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="mb-12">
@@ -74,7 +81,7 @@ function AdminContent({ activeTab, setActiveTab }: {
             Painel Administrativo
           </h1>
           <p className="text-foreground/70 text-lg">
-            Gerencie produtos, cursos, workshops e publicações do blog
+            Gerencie produtos, cursos, workshops, publicações e usuários
           </p>
         </div>
 
@@ -101,7 +108,7 @@ function AdminContent({ activeTab, setActiveTab }: {
                   focus:ring-2 focus:ring-accent focus:ring-offset-2
                   ${
                     isActive
-                      ? 'bg-accent text-background shadow-md'
+                      ? 'bg-accent text-background'
                       : 'text-foreground/70 hover:text-foreground hover:bg-foreground/10'
                   }
                 `}
@@ -128,6 +135,7 @@ function AdminContent({ activeTab, setActiveTab }: {
               {activeTab === 'courses' && <CoursesManager />}
               {activeTab === 'workshops' && <WorkshopsManager />}
               {activeTab === 'blog' && <BlogManager />}
+              {activeTab === 'users' && <UsersManager />}
             </section>
           ))}
         </div>
@@ -169,7 +177,5 @@ export default function AdminPage() {
     return <AccessDenied onNavigate={() => router.push('/')} />;
   }
 
-  return (
-    <AdminContent activeTab={activeTab} setActiveTab={setActiveTab} />
-  );
+  return <AdminContent activeTab={activeTab} setActiveTab={setActiveTab} />;
 }
