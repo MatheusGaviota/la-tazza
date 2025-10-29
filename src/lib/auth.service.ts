@@ -331,6 +331,31 @@ export async function changePassword(
 }
 
 /**
+ * Envia email de verificação para o usuário autenticado
+ * @throws {Error} Se o email já estiver verificado ou se o envio falhar
+ */
+export async function sendVerificationEmail(): Promise<void> {
+  try {
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+      throw new Error('Usuário não autenticado');
+    }
+
+    if (currentUser.emailVerified) {
+      throw new Error('Email já está verificado');
+    }
+
+    // Importar dinamicamente para evitar erros de bundling
+    const { sendEmailVerification } = await import('firebase/auth');
+    
+    await sendEmailVerification(currentUser);
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+}
+
+/**
  * Realiza logout do usuário
  * Limpa sessão e dados locais
  *
