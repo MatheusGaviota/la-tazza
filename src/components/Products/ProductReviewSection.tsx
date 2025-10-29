@@ -89,6 +89,14 @@ export default function ProductReviewSection({
       });
 
       setReviews(reviewsWithUpdatedUsers);
+
+      // Calcular e notificar média para o componente pai
+      if (onReviewsUpdate && reviewsWithUpdatedUsers.length > 0) {
+        const avg = reviewsWithUpdatedUsers.reduce((sum, r) => sum + r.rating, 0) / reviewsWithUpdatedUsers.length;
+        onReviewsUpdate(reviewsWithUpdatedUsers.length, avg);
+      } else if (onReviewsUpdate) {
+        onReviewsUpdate(0, 0);
+      }
     } catch (err) {
       console.error('Erro ao carregar avaliações:', err);
       setError('Erro ao carregar avaliações');
