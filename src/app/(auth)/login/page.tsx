@@ -151,9 +151,7 @@ export default function LoginPage() {
 
   // Update page title for SEO
   useEffect(() => {
-    document.title = isSignup
-      ? 'Criar Conta | La Tazza'
-      : 'Login | La Tazza';
+    document.title = isSignup ? 'Criar Conta | La Tazza' : 'Login | La Tazza';
   }, [isSignup]);
 
   // Animação do fundo: fade-in
