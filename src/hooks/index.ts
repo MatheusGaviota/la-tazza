@@ -71,3 +71,13 @@ export { useAdmin } from './useAdmin';
  * ```
  */
 export { useStableId } from './useStableId';
+
+/**
+ * Hook para bloquear o scroll da página
+ * Útil para modais e overlays
+ * @example
+ * ```tsx
+ * useScrollLock(isModalOpen);
+ * ```
+ */
+export { useScrollLock } from './useScrollLock';
