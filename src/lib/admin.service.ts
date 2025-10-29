@@ -19,6 +19,7 @@ import type {
   BlogPost,
   AdminUser,
   Comment,
+  ProductReview,
 } from '@/types/admin.types';
 
 // ============================================================================
@@ -513,6 +514,93 @@ export async function deleteComment(commentId: string): Promise<void> {
     }
   } catch (error) {
     console.error('Erro ao deletar comentário:', error);
+    throw error;
+  }
+}
+
+// ============================================================================
+// Product Reviews CRUD
+// ============================================================================
+
+export async function getProductReviews(
+  productId: string
+): Promise<ProductReview[]> {
+  try {
+    const reviewsRef = collection(db, 'product-reviews');
+    const q = query(
+      reviewsRef,
+      where('productId', '==', productId),
+      orderBy('createdAt', 'desc')
+    );
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: doc.data().createdAt?.toDate?.() || new Date(),
+    })) as ProductReview[];
+  } catch (error) {
+    console.error('Erro ao buscar avaliações:', error);
+    if (
+      error instanceof Error &&
+      (error.message.includes('permission') ||
+        error.message.includes('index') ||
+        error.message.includes('requires an index'))
+    ) {
+      console.warn(
+        'Retornando array vazio devido a erro de permissão/índice:',
+        error.message
+      );
+      return [];
+    }
+    throw error;
+  }
+}
+
+export async function addProductReview(
+  review: Omit<ProductReview, 'id' | 'createdAt'>
+): Promise<string> {
+  try {
+    const token = await getAuthToken();
+    const response = await fetch('/api/reviews', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(review),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Erro ao adicionar avaliação');
+    }
+
+    const data = await response.json();
+    return data.id;
+  } catch (error) {
+    console.error('Erro ao adicionar avaliação:', error);
+    throw error;
+  }
+}
+
+export async function deleteProductReview(reviewId: string): Promise<void> {
+  try {
+    const token = await getAuthToken();
+    const response = await fetch(`/api/reviews/${reviewId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Erro ao deletar avaliação');
+    }
+  } catch (error) {
+    console.error('Erro ao deletar avaliação:', error);
     throw error;
   }
 }
