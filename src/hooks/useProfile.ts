@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { updateProfile, User } from 'firebase/auth';
-import { deleteUserAccount, changePassword } from '@/lib/auth.service';
+import {
+  deleteUserAccount,
+  changePassword,
+  sendVerificationEmail,
+} from '@/lib/auth.service';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   validatePhone,
@@ -38,6 +42,7 @@ export interface DeleteAccountModal {
 interface UseProfileReturn {
   userData: PersonalInfo;
   isSaving: boolean;
+  isSendingVerification: boolean;
   isUploadingPhoto: boolean;
   toast: ToastState;
   deleteModal: DeleteAccountModal;
@@ -45,6 +50,7 @@ interface UseProfileReturn {
   handleChangePassword: (data: PasswordData) => Promise<boolean>;
   handlePhotoChange: (file: File) => Promise<void>;
   handleRemovePhoto: () => Promise<void>;
+  handleSendVerificationEmail: () => Promise<void>;
   showToast: (message: string, type?: 'success' | 'error') => void;
   closeToast: () => void;
   openDeleteModal: () => void;
@@ -63,6 +69,7 @@ export const useProfile = (user: User | null): UseProfileReturn => {
   });
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const [isSendingVerification, setIsSendingVerification] = useState(false);
   const [toast, setToast] = useState<ToastState>({
     show: false,
     message: '',
@@ -369,9 +376,40 @@ export const useProfile = (user: User | null): UseProfileReturn => {
     }
   };
 
+  const handleSendVerificationEmail = async () => {
+    if (!user) {
+      showToast('Usuário não autenticado', 'error');
+      return;
+    }
+
+    if (user.emailVerified) {
+      showToast('Email já está verificado', 'success');
+      return;
+    }
+
+    setIsSendingVerification(true);
+
+    try {
+      await sendVerificationEmail();
+      showToast(
+        'Email de verificação enviado! Verifique sua caixa de entrada.',
+        'success'
+      );
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Erro ao enviar email de verificação. Tente novamente.';
+      showToast(message, 'error');
+    } finally {
+      setIsSendingVerification(false);
+    }
+  };
+
   return {
     userData,
     isSaving,
+    isSendingVerification,
     isUploadingPhoto,
     toast,
     deleteModal,
@@ -379,6 +417,7 @@ export const useProfile = (user: User | null): UseProfileReturn => {
     handleChangePassword,
     handlePhotoChange,
     handleRemovePhoto,
+    handleSendVerificationEmail,
     showToast,
     closeToast,
     openDeleteModal,

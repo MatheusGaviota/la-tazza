@@ -44,7 +44,9 @@ export default function MainNavbar({
   setOpen,
   isAdmin,
 }: MainNavbarProps) {
-  const menuItems = isAdmin ? [...navItems, { label: 'Admin', href: '/admin' }] : navItems;
+  const menuItems = isAdmin
+    ? [...navItems, { label: 'Admin', href: '/admin' }]
+    : navItems;
   return (
     <nav
       className="max-w-[1400px] mx-auto px-4"

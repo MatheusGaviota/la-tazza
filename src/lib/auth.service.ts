@@ -331,6 +331,46 @@ export async function changePassword(
 }
 
 /**
+ * Envia email de verificação para o usuário autenticado
+ * @throws {Error} Se o email já estiver verificado ou se o envio falhar
+ */
+export async function sendVerificationEmail(): Promise<void> {
+  try {
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+      throw new Error('Usuário não autenticado');
+    }
+
+    if (currentUser.emailVerified) {
+      throw new Error('Email já está verificado');
+    }
+
+    // Em vez de usar o fluxo do cliente do Firebase, chamamos a API server-side
+    // que usa Resend + Firebase Admin para enviar o e-mail e gerenciar tokens.
+    const idToken = await currentUser.getIdToken();
+
+    const resp = await fetch('/api/auth/send-verification', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    });
+
+    if (!resp.ok) {
+      const data = await resp.json().catch(() => null);
+      throw new Error(
+        data?.error || 'Falha ao solicitar envio do e‑mail de verificação'
+      );
+    }
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+}
+
+/**
  * Realiza logout do usuário
  * Limpa sessão e dados locais
  *

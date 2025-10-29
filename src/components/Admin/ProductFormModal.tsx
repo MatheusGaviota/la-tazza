@@ -207,9 +207,7 @@ export default function ProductFormModal({
       <Input
         label="Categoria"
         value={formData.category}
-        onChange={(e) =>
-          setFormData({ ...formData, category: e.target.value })
-        }
+        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
         error={errors.category}
         helpText="Ex: Café Especial, Café Premium, etc."
         required
