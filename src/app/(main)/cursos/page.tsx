@@ -29,6 +29,12 @@ export default function CursosPage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Update page title for SEO
+  useEffect(() => {
+    document.title =
+      'Cursos e Workshops de Barista | La Tazza - Aprenda com Especialistas';
+  }, []);
+
   const categories = [
     { id: 'todos', label: 'Todos' },
     { id: 'barista', label: 'Barista' },

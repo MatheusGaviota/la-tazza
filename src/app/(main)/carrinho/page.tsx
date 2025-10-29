@@ -13,13 +13,18 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function CarrinhoPage() {
   const { items, updateQuantity, removeItem, totalPrice, clearCart } =
     useCart();
   const [cupomCode, setCupomCode] = useState('');
   const [cupomAplicado, setCupomAplicado] = useState(false);
+
+  // Update page title for SEO
+  useEffect(() => {
+    document.title = 'Carrinho de Compras | La Tazza';
+  }, []);
 
   const frete = totalPrice > 150 ? 0 : 15.9;
   const desconto = cupomAplicado ? totalPrice * 0.1 : 0;

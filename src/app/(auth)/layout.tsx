@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Autenticação - La Tazza',
-  description: 'Login e registro de usuários',
+  title: 'Login e Cadastro',
+  description:
+    'Acesse sua conta La Tazza ou crie uma nova conta para aproveitar todos os benefícios: compras, cursos e conteúdo exclusivo.',
 };
 
 export default function AuthLayout({

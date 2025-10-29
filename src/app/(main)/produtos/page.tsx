@@ -39,6 +39,11 @@ export default function ProductsPage() {
     inStockOnly: false,
   });
 
+  // Update page title for SEO
+  useEffect(() => {
+    document.title = 'Produtos - Cafés Especiais | La Tazza';
+  }, []);
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {

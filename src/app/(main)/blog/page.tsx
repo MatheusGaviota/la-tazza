@@ -15,6 +15,12 @@ export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
+  // Update page title for SEO
+  useEffect(() => {
+    document.title =
+      'Blog - Histórias e Dicas sobre Café | La Tazza';
+  }, []);
+
   // Buscar posts publicados do banco
   useEffect(() => {
     const fetchPosts = async () => {
