@@ -43,7 +43,10 @@ export async function checkAdminStatus(): Promise<boolean> {
     const idTokenResult = await currentUser.getIdTokenResult();
 
     const isAdmin = idTokenResult.claims.admin === true;
-    console.log(`👤 Status do usuário atual:`, isAdmin ? 'Administrador' : 'Usuário comum');
+    console.log(
+      `👤 Status do usuário atual:`,
+      isAdmin ? 'Administrador' : 'Usuário comum'
+    );
     return isAdmin;
   } catch (error) {
     console.error('❌ Erro ao verificar status:', error);

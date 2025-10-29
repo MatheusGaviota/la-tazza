@@ -10,12 +10,13 @@ import {
   orderBy,
   Timestamp,
 } from 'firebase/firestore';
-import { db } from './firebase';
+import { db, auth } from './firebase';
 import type {
   Product,
   Course,
   Workshop,
   BlogPost,
+  AdminUser,
 } from '@/types/admin.types';
 
 // ============================================================================
@@ -26,7 +27,7 @@ export async function getProducts(): Promise<Product[]> {
   const productsRef = collection(db, 'products');
   const q = query(productsRef, orderBy('createdAt', 'desc'));
   const snapshot = await getDocs(q);
-  
+
   return snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
@@ -36,7 +37,7 @@ export async function getProducts(): Promise<Product[]> {
 export async function getProduct(id: string): Promise<Product | null> {
   const docRef = doc(db, 'products', id);
   const docSnap = await getDoc(docRef);
-  
+
   if (docSnap.exists()) {
     return { id: docSnap.id, ...docSnap.data() } as Product;
   }
@@ -79,7 +80,7 @@ export async function getCourses(): Promise<Course[]> {
   const coursesRef = collection(db, 'courses');
   const q = query(coursesRef, orderBy('createdAt', 'desc'));
   const snapshot = await getDocs(q);
-  
+
   return snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
@@ -89,7 +90,7 @@ export async function getCourses(): Promise<Course[]> {
 export async function getCourse(id: string): Promise<Course | null> {
   const docRef = doc(db, 'courses', id);
   const docSnap = await getDoc(docRef);
-  
+
   if (docSnap.exists()) {
     return { id: docSnap.id, ...docSnap.data() } as Course;
   }
@@ -132,7 +133,7 @@ export async function getWorkshops(): Promise<Workshop[]> {
   const workshopsRef = collection(db, 'workshops');
   const q = query(workshopsRef, orderBy('date', 'desc'));
   const snapshot = await getDocs(q);
-  
+
   return snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
@@ -142,7 +143,7 @@ export async function getWorkshops(): Promise<Workshop[]> {
 export async function getWorkshop(id: string): Promise<Workshop | null> {
   const docRef = doc(db, 'workshops', id);
   const docSnap = await getDoc(docRef);
-  
+
   if (docSnap.exists()) {
     return { id: docSnap.id, ...docSnap.data() } as Workshop;
   }
@@ -186,7 +187,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
   const postsRef = collection(db, 'blog-posts');
   const q = query(postsRef, orderBy('date', 'desc'));
   const snapshot = await getDocs(q);
-  
+
   return snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
@@ -196,17 +197,19 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
 export async function getBlogPost(id: string): Promise<BlogPost | null> {
   const docRef = doc(db, 'blog-posts', id);
   const docSnap = await getDoc(docRef);
-  
+
   if (docSnap.exists()) {
     return { id: docSnap.id, ...docSnap.data() } as BlogPost;
   }
   return null;
 }
 
-export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+export async function getBlogPostBySlug(
+  slug: string
+): Promise<BlogPost | null> {
   const postsRef = collection(db, 'blog-posts');
   const snapshot = await getDocs(postsRef);
-  
+
   const post = snapshot.docs.find((doc) => doc.data().slug === slug);
   if (post) {
     return { id: post.id, ...post.data() } as BlogPost;
@@ -240,4 +243,129 @@ export async function updateBlogPost(
 export async function deleteBlogPost(id: string): Promise<void> {
   const docRef = doc(db, 'blog-posts', id);
   await deleteDoc(docRef);
+}
+
+// ============================================================================
+// Users Management
+// ============================================================================
+
+async function getAuthToken(): Promise<string> {
+  const user = auth.currentUser;
+  if (!user) {
+    throw new Error('Usuário não autenticado');
+  }
+  return await user.getIdToken();
+}
+
+export async function getUsers(): Promise<AdminUser[]> {
+  try {
+    const token = await getAuthToken();
+    const response = await fetch('/api/admin/users', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Erro ao buscar usuários');
+    }
+
+    const data = await response.json();
+    return data.users;
+  } catch (error) {
+    console.error('Erro ao buscar usuários:', error);
+    throw error;
+  }
+}
+
+export async function deleteUser(uid: string): Promise<void> {
+  try {
+    const token = await getAuthToken();
+    const response = await fetch(`/api/admin/users/${uid}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      let errorMessage = 'Erro ao deletar usuário';
+      try {
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const error = await response.json();
+          errorMessage = error.error || errorMessage;
+        } else {
+          // Se não for JSON, usar o status text
+          errorMessage = `Erro ${response.status}: ${response.statusText}`;
+        }
+      } catch {
+        // Se não conseguir fazer parse, usar status
+        errorMessage = `Erro ${response.status}: ${response.statusText}`;
+      }
+      throw new Error(errorMessage);
+    }
+  } catch (error) {
+    console.error('Erro ao deletar usuário:', error);
+    throw error;
+  }
+}
+
+export async function toggleUserAdmin(
+  uid: string,
+  isAdmin: boolean
+): Promise<void> {
+  try {
+    const token = await getAuthToken();
+    const response = await fetch(`/api/admin/users/${uid}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'toggle-admin',
+        isAdmin,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Erro ao atualizar privilégios');
+    }
+  } catch (error) {
+    console.error('Erro ao atualizar privilégios:', error);
+    throw error;
+  }
+}
+
+export async function toggleUserStatus(
+  uid: string,
+  disabled: boolean
+): Promise<void> {
+  try {
+    const token = await getAuthToken();
+    const response = await fetch(`/api/admin/users/${uid}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'toggle-status',
+        disabled,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Erro ao atualizar status');
+    }
+  } catch (error) {
+    console.error('Erro ao atualizar status:', error);
+    throw error;
+  }
 }
