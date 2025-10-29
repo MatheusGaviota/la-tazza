@@ -258,6 +258,9 @@ body.high-contrast button[aria-label*='Google'] svg {
 }
 
 /* Course Card - difficulty badge should have black text */
-body.high-contrast .bg-background\/90.backdrop-blur-sm {
+body.high-contrast .bg-background\/90.backdrop-blur-sm,
+body.high-contrast .bg-background\/90.backdrop-blur-sm.text-foreground {
   color: var(--foreground) !important;
+  background-color: var(--background) !important;
+  border-color: var(--foreground) !important;
 }
