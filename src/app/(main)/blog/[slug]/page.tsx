@@ -217,7 +217,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
   return (
     <main className="min-h-screen">
       {/* Back Button */}
-      <div className="w-full bg-background border-b-2 border-accent/20 sticky top-[92px] z-40">
+      <div className="w-full bg-background border-b-2 border-accent/20 sticky top-[102px] z-40">
         <div className="max-w-[1400px] mx-auto px-4 py-4 flex items-center">
           <Link
             href="/blog"
