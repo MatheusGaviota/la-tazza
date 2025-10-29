@@ -556,7 +556,14 @@ export default function ProductDetailPage({
         )}
 
         {/* Seção de Avaliações */}
-        <ProductReviewSection productId={id} isAdmin={isAdmin} />
+        <ProductReviewSection 
+          productId={id} 
+          isAdmin={isAdmin}
+          onReviewsUpdate={(count, avg) => {
+            setReviewCount(count);
+            setAverageRating(avg);
+          }}
+        />
       </div>
     </div>
     </div>
