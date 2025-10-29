@@ -166,7 +166,10 @@ body.high-contrast section[data-section='sobre-la-tazza'] {
 body.high-contrast section[aria-label='Sobre La Tazza'] > div > h2,
 body.high-contrast section[data-section='sobre-la-tazza'] > div > h2,
 body.high-contrast section[aria-label='Sobre La Tazza'] > div > p:first-of-type,
-body.high-contrast section[data-section='sobre-la-tazza'] > div > p:first-of-type {
+body.high-contrast
+  section[data-section='sobre-la-tazza']
+  > div
+  > p:first-of-type {
   color: var(--background) !important;
 }
 
@@ -188,11 +191,7 @@ body.high-contrast section[data-section='sobre-la-tazza'] .bg-background\/90 {
   border-width: 2px !important;
 }
 
-body.high-contrast
-  section[aria-label='Sobre La Tazza']
-  .backdrop-blur-sm,
-body.high-contrast
-  section[data-section='sobre-la-tazza']
-  .backdrop-blur-sm {
+body.high-contrast section[aria-label='Sobre La Tazza'] .backdrop-blur-sm,
+body.high-contrast section[data-section='sobre-la-tazza'] .backdrop-blur-sm {
   backdrop-filter: none !important;
 }

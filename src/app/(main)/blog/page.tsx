@@ -17,8 +17,7 @@ export default function BlogPage() {
 
   // Update page title for SEO
   useEffect(() => {
-    document.title =
-      'Blog - Histórias e Dicas sobre Café | La Tazza';
+    document.title = 'Blog - Histórias e Dicas sobre Café | La Tazza';
   }, []);
 
   // Buscar posts publicados do banco

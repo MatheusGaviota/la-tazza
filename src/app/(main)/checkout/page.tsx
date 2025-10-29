@@ -30,8 +30,9 @@ export default function CheckoutPage() {
 
   // Form states
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('credit');
-  const [shippingMethod, setShippingMethod] = useState<ShippingMethod>('standard');
-  
+  const [shippingMethod, setShippingMethod] =
+    useState<ShippingMethod>('standard');
+
   // Personal info
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -137,11 +138,13 @@ export default function CheckoutPage() {
               Seu pedido foi realizado com sucesso!
             </h2>
             <p className="text-foreground/70 mb-6">
-              Enviamos um e-mail de confirmação para <strong>{email}</strong> com
-              todos os detalhes do seu pedido e o código de rastreamento.
+              Enviamos um e-mail de confirmação para <strong>{email}</strong>{' '}
+              com todos os detalhes do seu pedido e o código de rastreamento.
             </p>
             <div className="bg-background rounded-lg p-6 mb-6">
-              <p className="text-sm text-foreground/60 mb-2">Número do Pedido</p>
+              <p className="text-sm text-foreground/60 mb-2">
+                Número do Pedido
+              </p>
               <p className="font-alumni text-2xl font-bold text-accent">
                 #LT{Math.floor(Math.random() * 1000000)}
               </p>

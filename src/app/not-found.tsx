@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { Coffee, Home, ArrowLeft } from 'lucide-react';
+import { Coffee, Home } from 'lucide-react';
 import Button from '@/components/UI/Button';
+import BackButton from '@/components/UI/BackButton';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -70,15 +71,7 @@ export default function NotFound() {
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button
-            onClick={() => window.history.back()}
-            variant="ghost-fore"
-            className="w-full sm:w-auto"
-            aria-label="Voltar para a página anterior"
-          >
-            <ArrowLeft size={20} />
-            <span>Voltar</span>
-          </Button>
+          <BackButton variant="ghost-fore" className="w-full sm:w-auto" />
           <Button
             href="/"
             variant="accent"
