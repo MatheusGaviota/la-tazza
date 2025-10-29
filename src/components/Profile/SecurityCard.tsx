@@ -12,7 +12,7 @@ interface PasswordData {
 
 interface SecurityCardProps {
   isEmailVerified: boolean;
-  onChangePassword: (data: PasswordData) => void;
+  onChangePassword: (data: PasswordData) => Promise<boolean>;
   onSendVerificationEmail: () => void;
   isSendingVerification?: boolean;
 }
@@ -30,18 +30,17 @@ export default function SecurityCard({
     confirmPassword: '',
   });
 
-  const handleChangePassword = () => {
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
-      return;
+  const handleChangePassword = async () => {
+    const success = await onChangePassword(passwordData);
+    
+    if (success) {
+      setPasswordData({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      });
+      setIsChangingPassword(false);
     }
-
-    onChangePassword(passwordData);
-    setPasswordData({
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: '',
-    });
-    setIsChangingPassword(false);
   };
 
   const handleCancel = () => {
