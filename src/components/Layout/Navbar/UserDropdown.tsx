@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRef, useEffect } from 'react';
 import Skeleton from '../../UI/Skeleton';
 import { UserCircle, LogOut, User } from 'lucide-react';
 
@@ -29,12 +30,32 @@ export default function UserDropdown({
   setDropdownOpen,
   handleLogout,
 }: UserDropdownProps) {
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Limpar timeout ao desmontar
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
     setDropdownOpen(true);
   };
 
   const handleMouseLeave = () => {
-    setTimeout(() => setDropdownOpen(false), 200);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
+      setDropdownOpen(false);
+    }, 200);
   };
 
   const getInitials = (name: string) => {
@@ -91,10 +112,12 @@ export default function UserDropdown({
       {/* Dropdown Menu */}
       {dropdownOpen && (
         <div
-          className="absolute right-0 mt-2 w-56 bg-background rounded-lg border border-accent/20 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+          className="absolute right-0 mt-1 w-56 bg-background rounded-lg border border-accent/20 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="user-menu"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
           {/* User Info */}
           <div className="px-4 py-3 border-b border-accent/10">

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import Image from 'next/image';
 import Button from '@/components/UI/Button';
 import ReviewCard from '@/components/Cards/ReviewCard';
@@ -281,16 +281,13 @@ const levelColors: Record<string, string> = {
   avancado: 'bg-red-100 text-red-800 border-red-200',
 };
 
-export default function CoursePage({ params }: { params: { id: string } }) {
+export default function CoursePage() {
   const [activeTab, setActiveTab] = useState<
     'sobre' | 'conteudo' | 'instrutor' | 'avaliacoes'
   >('sobre');
   const router = useRouter();
-
-  // `params` can be a Promise in this Next.js version — unwrap it with React.use()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const resolvedParams = (React as any).use(params);
-  const course = coursesData.find((c) => c.id === parseInt(resolvedParams.id));
+  const params = useParams() as { id?: string } | undefined;
+  const course = coursesData.find((c) => c.id === parseInt(params?.id ?? '', 10));
 
   if (!course) {
     return (
