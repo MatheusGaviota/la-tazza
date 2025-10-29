@@ -8,11 +8,7 @@ import React, {
   useCallback,
   ReactNode,
 } from 'react';
-import {
-  onAuthStateChanged,
-  signOut,
-  User,
-} from 'firebase/auth';
+import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 
 interface AuthContextType {
@@ -57,12 +53,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const currentUser = auth.currentUser;
       if (currentUser) {
         await currentUser.reload();
-        
+
         console.log('🔄 RefreshUser chamado');
         console.log('📷 PhotoURL após reload:', currentUser.photoURL);
-        
+
         // Incrementar contador para forçar re-render em componentes que dependem do user
-        setRefreshCount(prev => prev + 1);
+        setRefreshCount((prev) => prev + 1);
         // Atualizar o user novamente para garantir que os dados mais recentes sejam propagados
         setUser(auth.currentUser);
       }
@@ -100,9 +96,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [refreshCount]);
 
-  return (
-    <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

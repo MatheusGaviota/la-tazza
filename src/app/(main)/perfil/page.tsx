@@ -18,7 +18,7 @@ import { logout } from '@/lib/auth.service';
 export default function ProfilePage() {
   const router = useRouter();
   const { user, loading } = useProtectedRoute({ redirectTo: '/login' });
-  
+
   const {
     userData,
     isSaving,
@@ -68,7 +68,11 @@ export default function ProfilePage() {
     }
   };
 
-  const onChangePassword = async (data: { currentPassword: string; newPassword: string; confirmPassword: string }) => {
+  const onChangePassword = async (data: {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }) => {
     // Apenas tenta alterar a senha e deixa o hook/feedback cuidar do resto.
     // Não redirecionamos nem desconectamos o usuário automaticamente.
     await handleChangePassword(data);
@@ -119,11 +123,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Toast de feedback */}
-      <Toast
-        message={toast.message}
-        show={toast.show}
-        onClose={closeToast}
-      />
+      <Toast message={toast.message} show={toast.show} onClose={closeToast} />
 
       {/* Modal de confirmação de exclusão */}
       <DeleteAccountModal
@@ -139,4 +139,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
