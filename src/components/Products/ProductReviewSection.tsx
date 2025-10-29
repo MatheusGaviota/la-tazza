@@ -16,6 +16,7 @@ import type { ProductReview, AdminUser } from '@/types/admin.types';
 interface ProductReviewSectionProps {
   productId: string;
   isAdmin?: boolean;
+  onReviewsUpdate?: (count: number, averageRating: number) => void;
 }
 
 interface ReviewWithUser extends ProductReview {
@@ -26,6 +27,7 @@ interface ReviewWithUser extends ProductReview {
 export default function ProductReviewSection({
   productId,
   isAdmin = false,
+  onReviewsUpdate,
 }: ProductReviewSectionProps) {
   const { user } = useAuth();
   const [reviews, setReviews] = useState<ReviewWithUser[]>([]);
