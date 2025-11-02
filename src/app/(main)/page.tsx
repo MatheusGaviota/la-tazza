@@ -11,7 +11,8 @@ import ReviewCard from '@/components/Cards/ReviewCard';
 import Input from '@/components/UI/Input';
 import Button from '@/components/UI/Button';
 import { ArrowRight } from 'lucide-react';
-import { collection, getDocs, query, limit } from 'firebase/firestore';
+import { collection, getDocs, query, limit, where, orderBy } from 'firebase/firestore';
+import type { BlogPost as AdminBlogPost } from '@/types/admin.types';
 import { db } from '@/config/firebase/client';
 
 interface Product {
@@ -33,17 +34,11 @@ interface Course {
   price: string;
 }
 
-interface BlogPost {
-  id: string;
-  slug: string;
-  imageUrl: string;
-  title: string;
-  excerpt: string;
-  author: string;
-  publishedAt: string;
-  readTime: string;
-  category: string;
-}
+// UI type for blog posts shown on the homepage. We reuse the server/admin type
+// for the stored shape and normalize the date field to `publishedAt`.
+type UIBlogPost = Pick<AdminBlogPost, 'id' | 'slug' | 'imageUrl' | 'title' | 'excerpt' | 'author' | 'readTime' | 'category'> & {
+  publishedAt?: string;
+};
 
 interface Review {
   id: string;
@@ -56,7 +51,7 @@ interface Review {
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [blogPosts, setBlogPosts] = useState<UIBlogPost[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -138,20 +133,31 @@ export default function Home() {
         // Buscar posts do blog
         try {
           const blogRef = collection(db, 'blog-posts');
-          // Tentar sem orderBy primeiro
-          const blogQuery = query(blogRef, limit(10));
-          const blogSnapshot = await getDocs(blogQuery);
-          let blogData = blogSnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          })) as BlogPost[];
-
-          // Ordenar no cliente se necessário
-          blogData.sort((a, b) => {
-            const dateA = new Date(a.publishedAt || 0).getTime();
-            const dateB = new Date(b.publishedAt || 0).getTime();
-            return dateB - dateA;
-          });
+          // Buscar somente posts publicados (permitido a usuários não autenticados)
+          const blogQuery = query(
+            blogRef,
+            where('published', '==', true),
+            orderBy('date', 'desc'),
+            limit(10)
+          );
+                  const blogSnapshot = await getDocs(blogQuery);
+                  let blogData = blogSnapshot.docs.map((doc) => {
+                    // Tipar o conteúdo do documento com o tipo de admin (parcial)
+                    const data = doc.data() as Partial<AdminBlogPost> & Record<string, unknown>;
+                    const item: UIBlogPost = {
+                      id: doc.id,
+                      slug: data.slug as string,
+                      imageUrl: (data.imageUrl as string) || '',
+                      title: (data.title as string) || '',
+                      excerpt: (data.excerpt as string) || '',
+                      author: (data.author as string) || '',
+                      readTime: (data.readTime as string) || '',
+                      category: (data.category as string) || '',
+                      // Normalizar nome do campo de data para manter compatibilidade
+                      publishedAt: (data.date as string) || (data.publishedAt as string) || undefined,
+                    };
+                    return item;
+                  }) as UIBlogPost[];
 
           // Se tiver posts mas menos que 3, repetir até completar 3
           if (blogData.length > 0 && blogData.length < 3) {
@@ -518,11 +524,15 @@ export default function Home() {
                 title={post.title}
                 excerpt={post.excerpt}
                 author={post.author}
-                date={new Date(post.publishedAt).toLocaleDateString('pt-BR', {
-                  day: 'numeric',
-                  month: 'short',
-                  year: 'numeric',
-                })}
+                date={
+                  post.publishedAt
+                    ? new Date(post.publishedAt).toLocaleDateString('pt-BR', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                      })
+                    : ''
+                }
                 readTime={post.readTime}
                 category={post.category}
               />
