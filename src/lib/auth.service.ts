@@ -196,6 +196,20 @@ export async function loginWithGoogle(): Promise<AuthResponse> {
       success: true,
     };
   } catch (error) {
+    // Detect common unauthorized-domain error and return actionable message
+    try {
+      const err = error as AuthError;
+      if (err?.code === 'auth/unauthorized-domain') {
+        // runtime-only value — only available in browser
+        const origin = typeof window !== 'undefined' ? window.location.origin : 'DOMÍNIO_DESCONHECIDO';
+        const msg = `A autenticação com Google foi bloqueada: domínio não autorizado (${origin}). Adicione este domínio em Console Firebase → Authentication → Sign-in method → Authorized domains.`;
+        console.error('Firebase auth/unauthorized-domain:', origin);
+        throw new Error(msg);
+      }
+    } catch {
+      /* fallthrough */
+    }
+
     throw new Error(getErrorMessage(error));
   }
 }
@@ -231,8 +245,24 @@ async function reauthenticateUser(
 
     if (providerId === 'google.com') {
       const provider = new GoogleAuthProvider();
-      await reauthenticateWithPopup(user, provider);
-      return;
+      try {
+        await reauthenticateWithPopup(user, provider);
+        return;
+      } catch (error) {
+        // Provide actionable message for unauthorized-domain when reauthenticating
+        try {
+          const err = error as AuthError;
+          if (err?.code === 'auth/unauthorized-domain') {
+            const origin = typeof window !== 'undefined' ? window.location.origin : 'DOMÍNIO_DESCONHECIDO';
+            const msg = `A reautenticação com Google foi bloqueada: domínio não autorizado (${origin}). Adicione este domínio em Console Firebase → Authentication → Sign-in method → Authorized domains.`;
+            console.error('Firebase auth/unauthorized-domain (reauth):', origin);
+            throw new Error(msg);
+          }
+        } catch {
+          /* fallthrough */
+        }
+        throw new Error(getErrorMessage(error));
+      }
     }
 
     // Se logou com email/senha, precisa da senha atual
