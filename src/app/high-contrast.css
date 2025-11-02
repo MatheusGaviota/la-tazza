@@ -1,266 +1,95 @@
-/* High Contrast Mode */
-body.high-contrast {
-  --background: #ffffff;
-  --foreground: #000000;
-  --accent: #0057ff;
-  background-color: var(--background);
-  color: var(--foreground);
-  filter: none !important;
+/* High Contrast Mode - compact, priorizado e comentado */
+body.high-contrast{
+  --background:#ffffff;--foreground:#000000;--accent:#0057ff;
+  background:var(--background);color:var(--foreground);filter:none!important
 }
 
-/* Links */
-body.high-contrast a {
-  color: #0044ff;
-  text-decoration: underline;
+/* Links & focus */
+body.high-contrast a{color:#0044ff;text-decoration:underline}
+body.high-contrast a:hover,body.high-contrast a:focus-visible{color:#001e99}
+body.high-contrast button,body.high-contrast [role='button']{outline-color:var(--accent)}
+body.high-contrast button:focus-visible,body.high-contrast [role='button']:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+
+/* Media & overlays */
+body.high-contrast img,body.high-contrast video,body.high-contrast picture,body.high-contrast canvas,body.high-contrast svg,body.high-contrast [data-media],body.high-contrast [role='img'],body.high-contrast [style*='background-image']{filter:grayscale(1) contrast(1.3) brightness(0.95)!important;opacity:1!important}
+body.high-contrast [style*='background-image']{background-color:transparent!important}
+body.high-contrast .backdrop-blur-sm{backdrop-filter:blur(4px)!important}
+
+/* Accent backgrounds: text branco e filhos herdam cor/traço */
+body.high-contrast .bg-accent,body.high-contrast [class*='bg-accent/']{color:var(--background)!important}
+body.high-contrast .bg-accent *,body.high-contrast [class*='bg-accent/'] *{color:inherit!important;fill:currentColor!important;stroke:currentColor!important}
+
+/* Badges (verde / laranja / vermelho / azul) */
+body.high-contrast .text-green-600,body.high-contrast .bg-green-600\/10,body.high-contrast [class*='text-green-600'],body.high-contrast [class*='bg-green-600/']{color:var(--background)!important;background-color:var(--accent)!important;border-color:transparent!important}
+body.high-contrast .text-orange-600,body.high-contrast .bg-orange-600\/10,body.high-contrast [class*='text-orange-600'],body.high-contrast [class*='bg-orange-600/']{color:var(--background)!important;background-color:#d43f00!important;border-color:transparent!important}
+body.high-contrast .text-red-600,body.high-contrast .bg-red-600\/10,body.high-contrast [class*='text-red-600'],body.high-contrast [class*='bg-red-600/']{color:var(--background)!important;background-color:#b30000!important;border-color:transparent!important}
+body.high-contrast .text-blue-600,body.high-contrast .bg-blue-600\/10,body.high-contrast [class*='text-blue-600'],body.high-contrast [class*='bg-blue-600/']{color:var(--background)!important;background-color:var(--accent)!important;border-color:transparent!important}
+body.high-contrast .text-green-600 *,body.high-contrast .text-orange-600 *,body.high-contrast .text-red-600 *,body.high-contrast .text-blue-600 *,body.high-contrast [class*='bg-green-600/'] *,body.high-contrast [class*='bg-orange-600/'] *,body.high-contrast [class*='bg-red-600/'] *,body.high-contrast [class*='bg-blue-600/'] *{color:inherit!important;fill:currentColor!important;stroke:currentColor!important}
+
+/* Combinações text-accent sobre bg-accent (forçar leitura) */
+body.high-contrast .bg-accent .text-accent,body.high-contrast .bg-accent.text-accent,body.high-contrast [class*='bg-accent/'] .text-accent,body.high-contrast [class*='bg-accent/'][class*='text-accent']{color:var(--background)!important;background-color:var(--accent)!important;border-color:transparent!important}
+
+/* Page hero */
+body.high-contrast .page-hero{background-color:var(--accent)!important;color:var(--background)!important;border-color:var(--foreground)!important}
+body.high-contrast .page-hero *{color:var(--background)!important;fill:currentColor!important;stroke:currentColor!important}
+
+/* Sobre La Tazza (agrupado) */
+body.high-contrast section[aria-label='Sobre La Tazza'],body.high-contrast section[data-section='sobre-la-tazza']{background-color:var(--foreground)!important}
+body.high-contrast section[aria-label='Sobre La Tazza'] h2,body.high-contrast section[data-section='sobre-la-tazza'] h2,body.high-contrast section[aria-label='Sobre La Tazza'] > div > p:first-of-type,body.high-contrast section[data-section='sobre-la-tazza'] > div > p:first-of-type{color:var(--background)!important}
+body.high-contrast section[aria-label='Sobre La Tazza'] h3,body.high-contrast section[data-section='sobre-la-tazza'] h3{color:var(--foreground)!important}
+body.high-contrast section[aria-label='Sobre La Tazza'] .bg-background\/90,body.high-contrast section[data-section='sobre-la-tazza'] .bg-background\/90{background-color:var(--background)!important;border-color:var(--foreground)!important;border-width:2px!important}
+body.high-contrast section[aria-label='Sobre La Tazza'] .bg-background\/90 p,body.high-contrast section[data-section='sobre-la-tazza'] .bg-background\/90 p{color:var(--foreground)!important}
+body.high-contrast section[aria-label='Sobre La Tazza'] .backdrop-blur-sm,body.high-contrast section[data-section='sobre-la-tazza'] .backdrop-blur-sm{backdrop-filter:none!important}
+
+/* Variantes de accent (CTA/FAQ/Location) */
+body.high-contrast [class*='bg-accent/10'] h2,body.high-contrast [class*='bg-accent/10'] p,body.high-contrast [class*='bg-accent/5'] h3,body.high-contrast [class*='bg-accent/5'] p,body.high-contrast [class*='bg-accent/5'] a{color:var(--foreground)!important}
+body.high-contrast [class*='bg-accent/5'] svg,body.high-contrast [class*='bg-accent/5'] [class*='bg-accent/10'] svg{color:var(--foreground)!important;fill:currentColor!important;stroke:currentColor!important}
+
+/* Google button */
+body.high-contrast button[aria-label*='Google']{color:var(--foreground)!important;border-color:var(--foreground)!important;border-width:2px!important}
+body.high-contrast button[aria-label*='Google'] span,body.high-contrast button[aria-label*='Google'] svg{color:var(--foreground)!important;fill:var(--foreground)!important}
+
+/* Botões sobre fundo claro (ex: bg-background/90) — texto e ícones escuros */
+body.high-contrast .bg-background\/90 button,body.high-contrast .bg-background\/90 [role='button'],body.high-contrast button[class*='bg-background'],body.high-contrast [role='button'][class*='bg-background']{color:var(--foreground)!important;border-color:var(--foreground)!important}
+body.high-contrast .bg-background\/90 button svg,body.high-contrast .bg-background\/90 [role='button'] svg,body.high-contrast button[class*='bg-background'] svg,body.high-contrast [role='button'][class*='bg-background'] svg{fill:var(--foreground)!important;color:var(--foreground)!important;stroke:var(--foreground)!important}
+body.high-contrast .bg-background\/90 .text-accent,body.high-contrast .bg-background\/90 [class*='text-accent']{color:var(--foreground)!important}
+
+/* Botão esconder/mostrar sidebar - alvo por aria-labels (PT) */
+body.high-contrast [role='button'][aria-label*='Esconder'],body.high-contrast [role='button'][aria-label*='Mostrar'],body.high-contrast [role='button'][aria-label*='Ocultar'],body.high-contrast button[aria-label*='Esconder'],body.high-contrast button[aria-label*='Mostrar'],body.high-contrast button[aria-label*='Ocultar'],body.high-contrast [aria-label*='Esconder'],body.high-contrast [aria-label*='Mostrar'],body.high-contrast [aria-label*='Ocultar']{color:var(--foreground)!important;fill:var(--foreground)!important;stroke:var(--foreground)!important;border-color:var(--foreground)!important}
+body.high-contrast [role='button'][aria-label*='Esconder'] svg,body.high-contrast [role='button'][aria-label*='Mostrar'] svg,body.high-contrast [role='button'][aria-label*='Ocultar'] svg,body.high-contrast button[aria-label*='Esconder'] svg,body.high-contrast button[aria-label*='Mostrar'] svg,body.high-contrast button[aria-label*='Ocultar'] svg,body.high-contrast [aria-label*='Esconder'] svg,body.high-contrast [aria-label*='Mostrar'] svg,body.high-contrast [aria-label*='Ocultar'] svg{fill:var(--foreground)!important;stroke:var(--foreground)!important;color:var(--foreground)!important}
+
+/* Footer: ícones sociais e de contato — só traço branco; logo permanece preenchida */
+body.high-contrast footer svg{stroke:var(--background)!important;fill:none!important;color:var(--background)!important}
+body.high-contrast footer svg[aria-label='La Tazza'],body.high-contrast footer svg[aria-label='La Tazza'] *{fill:var(--background)!important;stroke:none!important;color:var(--background)!important}
+body.high-contrast footer svg[role='img']:not([aria-label='La Tazza']),body.high-contrast footer svg[role='img']:not([aria-label='La Tazza']) *,body.high-contrast footer svg.text-accent:not([aria-label='La Tazza']),body.high-contrast footer svg.text-accent:not([aria-label='La Tazza']) *{fill:none!important;stroke:var(--background)!important;color:var(--background)!important}
+body.high-contrast footer [class*='bg-accent/'] svg,body.high-contrast footer [class*='bg-accent/'] svg *{fill:none!important;stroke:var(--background)!important;color:var(--background)!important}
+
+/* Accessibility tray icons: apenas traço branco no modo high-contrast.
+   Alvo por aria-label do container para evitar afetar outros svgs. */
+body.high-contrast [aria-label='Ferramentas de acessibilidade'] svg,
+body.high-contrast [aria-label='Ferramentas de acessibilidade'] svg * {
+  fill: none !important;
+  stroke: var(--background) !important;
+  color: var(--background) !important;
 }
 
-body.high-contrast a:hover,
-body.high-contrast a:focus-visible {
-  color: #001e99;
+/* Navbar icons: apenas traço branco em alto contraste (exclui o logo) */
+body.high-contrast nav[aria-label='Navegação principal'] svg:not([aria-label='La Tazza']),
+body.high-contrast nav[aria-label='Navegação principal'] svg:not([aria-label='La Tazza']) * {
+  fill: none !important;
+  stroke: var(--background) !important;
+  color: var(--background) !important;
 }
 
-/* Interactive Elements */
-body.high-contrast button,
-body.high-contrast [role='button'] {
-  outline-color: var(--accent);
-}
-
-body.high-contrast button:focus-visible,
-body.high-contrast [role='button']:focus-visible {
-  outline: 3px solid var(--accent);
-  outline-offset: 3px;
-}
-
-/* All Media Elements - Grayscale with Enhanced Contrast */
-body.high-contrast img,
-body.high-contrast video,
-body.high-contrast picture,
-body.high-contrast canvas,
-body.high-contrast svg,
-body.high-contrast [data-media],
-body.high-contrast [role='img'],
-body.high-contrast [style*='background-image'] {
-  filter: grayscale(1) contrast(1.3) brightness(0.95) !important;
-  opacity: 1 !important;
-}
-
-/* Preserve Transparency */
-body.high-contrast [style*='background-image'] {
-  background-color: transparent !important;
-}
-
-/* Overlay Elements */
-body.high-contrast .backdrop-blur-sm {
-  backdrop-filter: blur(4px) !important;
-}
-
-/* Buttons and elements that use the accent background should show white text
-   in high-contrast mode so text remains legible against the accent color. */
-body.high-contrast .bg-accent,
-body.high-contrast [class*='bg-accent/'] {
-  color: var(--background) !important; /* usually white */
-}
-
-/* Ensure any children (icons, spans, svgs) inside accent backgrounds also
-   get the adjusted color for consistent contrast. */
-body.high-contrast .bg-accent *,
-body.high-contrast [class*='bg-accent/'] * {
-  color: inherit !important;
+/* Garantir que todo o conteúdo da hero seja branco — regra final com
+   especificidade para sobrescrever combinações com bg-accent/* aplicadas
+   posteriormente. */
+body.high-contrast .page-hero p,
+body.high-contrast .page-hero *,
+body.high-contrast .page-hero[class*='bg-accent/10'] p,
+body.high-contrast .page-hero[class*='bg-accent/5'] p {
+  color: var(--background) !important;
   fill: currentColor !important;
   stroke: currentColor !important;
 }
 
-/* Badges: garantir contraste adequado para badges coloridas (verde, laranja,
-   vermelho, azul) usadas no painel admin. No modo de alto contraste mapeamos
-   as badges para o accent do sistema (ou cores de alto contraste) e forçamos
-   ícones/filhos a herdarem a cor para consistência. */
-body.high-contrast .text-green-600,
-body.high-contrast .bg-green-600\/10,
-body.high-contrast [class*='text-green-600'],
-body.high-contrast [class*='bg-green-600/'] {
-  color: var(--background) !important; /* branco */
-  background-color: var(--accent) !important; /* usar accent para destaque */
-  border-color: transparent !important;
-}
-
-body.high-contrast .text-orange-600,
-body.high-contrast .bg-orange-600\/10,
-body.high-contrast [class*='text-orange-600'],
-body.high-contrast [class*='bg-orange-600/'] {
-  color: var(--background) !important;
-  background-color: #d43f00 !important; /* laranja mais escuro para contraste */
-  border-color: transparent !important;
-}
-
-body.high-contrast .text-red-600,
-body.high-contrast .bg-red-600\/10,
-body.high-contrast [class*='text-red-600'],
-body.high-contrast [class*='bg-red-600/'] {
-  color: var(--background) !important;
-  background-color: #b30000 !important; /* vermelho escuro */
-  border-color: transparent !important;
-}
-
-body.high-contrast .text-blue-600,
-body.high-contrast .bg-blue-600\/10,
-body.high-contrast [class*='text-blue-600'],
-body.high-contrast [class*='bg-blue-600/'] {
-  color: var(--background) !important;
-  background-color: var(--accent) !important;
-  border-color: transparent !important;
-}
-
-/* Garantir que ícones e textos internos nas badges sigam a cor definida */
-body.high-contrast .text-green-600 *,
-body.high-contrast .text-orange-600 *,
-body.high-contrast .text-red-600 *,
-body.high-contrast .text-blue-600 *,
-body.high-contrast [class*='bg-green-600/'] *,
-body.high-contrast [class*='bg-orange-600/'] *,
-body.high-contrast [class*='bg-red-600/'] *,
-body.high-contrast [class*='bg-blue-600/'] * {
-  color: inherit !important;
-  fill: currentColor !important;
-  stroke: currentColor !important;
-}
-
-/* Some interactive elements use text-accent on top of accent backgrounds;
-   force them to inherit the background text color when inside an accent
-   background. This helps login buttons and workshop CTAs remain white. */
-body.high-contrast .bg-accent .text-accent,
-body.high-contrast .bg-accent.text-accent,
-body.high-contrast [class*='bg-accent/'] .text-accent,
-body.high-contrast [class*='bg-accent/'][class*='text-accent'] {
-  color: inherit !important;
-}
-
-/* Caso um elemento combine `text-accent` e `bg-accent/10` (badge "Você"),
-   garantir que o texto fique branco e o fundo use a cor de accent sólida para
-   contraste (override de baixa opacidade). */
-body.high-contrast [class*='bg-accent/'][class*='text-accent'],
-body.high-contrast .bg-accent.text-accent {
-  color: var(--background) !important;
-  background-color: var(--accent) !important;
-  border-color: transparent !important;
-}
-
-/* Blog Hero Section - High Contrast */
-body.high-contrast .page-hero {
-  background-color: var(--accent) !important;
-  color: var(--background) !important;
-  border-color: var(--foreground) !important;
-}
-
-body.high-contrast .page-hero h1,
-body.high-contrast .page-hero p {
-  color: var(--background) !important;
-}
-
-/* Seção Sobre La Tazza - High Contrast */
-body.high-contrast section[aria-label='Sobre La Tazza'],
-body.high-contrast section[data-section='sobre-la-tazza'] {
-  background-color: var(--foreground) !important;
-}
-
-/* Título e subtítulo principais em branco */
-body.high-contrast section[aria-label='Sobre La Tazza'] > div > h2,
-body.high-contrast section[data-section='sobre-la-tazza'] > div > h2,
-body.high-contrast section[aria-label='Sobre La Tazza'] > div > p:first-of-type,
-body.high-contrast
-  section[data-section='sobre-la-tazza']
-  > div
-  > p:first-of-type {
-  color: var(--background) !important;
-}
-
-/* Títulos e textos dos cards em preto */
-body.high-contrast section[aria-label='Sobre La Tazza'] h3,
-body.high-contrast section[data-section='sobre-la-tazza'] h3 {
-  color: var(--foreground) !important;
-}
-
-body.high-contrast section[aria-label='Sobre La Tazza'] .bg-background\/90 p,
-body.high-contrast section[data-section='sobre-la-tazza'] .bg-background\/90 p {
-  color: var(--foreground) !important;
-}
-
-body.high-contrast section[aria-label='Sobre La Tazza'] .bg-background\/90,
-body.high-contrast section[data-section='sobre-la-tazza'] .bg-background\/90 {
-  background-color: var(--background) !important;
-  border-color: var(--foreground) !important;
-  border-width: 2px !important;
-}
-
-body.high-contrast section[aria-label='Sobre La Tazza'] .backdrop-blur-sm,
-body.high-contrast section[data-section='sobre-la-tazza'] .backdrop-blur-sm {
-  backdrop-filter: none !important;
-}
-
-/* Courses Page CTA Section - "Não encontrou o curso ideal?" */
-body.high-contrast section.bg-accent\/10 h2,
-body.high-contrast section.bg-accent\/10 p,
-body.high-contrast section[class*='bg-accent/10'] h2,
-body.high-contrast section[class*='bg-accent/10'] p {
-  color: var(--foreground) !important;
-}
-
-/* Contact Page - FAQ Section */
-body.high-contrast .bg-accent\/5 h3,
-body.high-contrast .bg-accent\/5 p,
-body.high-contrast [class*='bg-accent/5'] h3,
-body.high-contrast [class*='bg-accent/5'] p,
-body.high-contrast .bg-accent\/5 a,
-body.high-contrast [class*='bg-accent/5'] a {
-  color: var(--foreground) !important;
-}
-
-/* Contact Page - Location Section */
-body.high-contrast section.bg-accent\/5 h2,
-body.high-contrast section[class*='bg-accent/5'] h2,
-body.high-contrast section.bg-accent\/5 .text-foreground\/70,
-body.high-contrast section[class*='bg-accent/5'] .text-foreground\/70,
-body.high-contrast section.bg-accent\/5 .text-foreground\/50,
-body.high-contrast section[class*='bg-accent/5'] .text-foreground\/50 {
-  color: var(--foreground) !important;
-}
-
-/* Contact Page - MapPin Icon and inner content in Location Section */
-body.high-contrast section.bg-accent\/5 svg,
-body.high-contrast section[class*='bg-accent/5'] svg,
-body.high-contrast section.bg-accent\/5 .bg-accent\/10 svg,
-body.high-contrast section[class*='bg-accent/5'] [class*='bg-accent/10'] svg {
-  color: var(--foreground) !important;
-  fill: currentColor !important;
-  stroke: currentColor !important;
-}
-
-/* Contact Page - Location Section inner content */
-body.high-contrast section.bg-accent\/5 .bg-accent\/10 p,
-body.high-contrast section[class*='bg-accent/5'] [class*='bg-accent/10'] p {
-  color: var(--foreground) !important;
-}
-
-/* Google Login Button - ensure black text, icon and strong borders */
-body.high-contrast button[aria-label*='Google'] {
-  color: var(--foreground) !important;
-  border-color: var(--foreground) !important;
-  border-width: 2px !important;
-}
-
-body.high-contrast button[aria-label*='Google'] span {
-  color: var(--foreground) !important;
-}
-
-body.high-contrast button[aria-label*='Google'] svg {
-  filter: none !important;
-  fill: var(--foreground) !important;
-  color: var(--foreground) !important;
-}
-
-/* Course Card - difficulty badge should have black text */
-body.high-contrast .bg-background\/90.backdrop-blur-sm,
-body.high-contrast .bg-background\/90.backdrop-blur-sm.text-foreground {
-  color: var(--foreground) !important;
-  background-color: var(--background) !important;
-  border-color: var(--foreground) !important;
-}
